@@ -10,10 +10,9 @@ class EmailThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run (self):
-        print('email run method')
-        from_email = 'alchemsmtp@gmail.com'
+        from_email = 'pms@alchemdigital.com'
         text_content = self.html_content
         html_content = self.html_content
-        msg = EmailMultiAlternatives('New Alchem Digital Lead', text_content, from_email, self.recipient_list)
+        msg = EmailMultiAlternatives('Registered with PMS', text_content, from_email, self.recipient_list)
         msg.attach_alternative(html_content, "text/html")
         msg.send()

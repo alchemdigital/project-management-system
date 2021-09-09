@@ -9,23 +9,37 @@ from .forms import ProfilePictureForm
 from django.contrib.auth.models import Group
 from projects.email import EmailThread
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordResetForm
+from django.db.models import Q
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.template.loader import render_to_string
+from django.core.mail import send_mail, BadHeaderError
 
 # Create your views here.
 def register(request):
     if request.method == 'POST':
-        changedRequest = request.POST.copy()
+        changed_request = request.POST.copy()
         generated_password = User.objects.make_random_password()
-        print(generated_password)
-        changedRequest.update({'password1': [generated_password]})
-        form = RegistrationForm(changedRequest)
+        changed_request.update({'password1': [generated_password]})
+        form = RegistrationForm(changed_request)
         roles = Group.objects.all().order_by('id')
-        context = {
-            'form':form,
-            'roles' : roles
-        }
         role = request.POST.get('role')
+        errors = {}
+        if role == None:
+            errors = {'role': ('Role is required',)}
+        context = {
+            'form': form,
+            'roles': roles,
+            'errors': errors
+        }
+        if role == None:
+            return render(request, 'register/reg_form.html', context)
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit = False)
+            user.set_password(generated_password)
+            user.save()
             thisRole = Group.objects.get(id = role)
             thisRole.user_set.add(user)
             # Email send functionality starts
@@ -99,7 +113,7 @@ def newCompany(request):
             context = {
                 'created' : created,
                 'form' : form,
-                       }
+            }
             return render(request, 'register/new_company.html', context)
         else:
             return render(request, 'register/new_company.html', context)
@@ -114,16 +128,30 @@ def get_active_profile(request):
     user_id = request.user.userprofile_set.values_list()[0][0]
     return UserProfile.objects.get(id=user_id)
 
-def friends(request):
-    if request.user.is_authenticated:
-        user = get_active_profile(request)
-        friends = user.friends.all()
-        context = {
-            'friends' : friends,
-        }
-    else:
-        users_prof = UserProfile.objects.all()
-        context= {
-            'users_prof' : users_prof,
-        }
-    return render(request, 'register/friends.html', context)
+def password_reset_request(request):
+    if request.method == "POST":
+        password_reset_form = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            data = password_reset_form.cleaned_data['email']
+            associated_users = User.objects.filter(Q(email=data))
+            if associated_users.exists():
+                for user in associated_users:
+                    subject = "Password Reset Requested"
+                    email_template_name = "register/password_reset_email.txt"
+                    context = {
+                        "email": user.email,
+                        'domain': '127.0.0.1:8000',
+                        'site_name': 'Website',
+                        "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                        "user": user,
+                        'token': default_token_generator.make_token(user),
+                        'protocol': 'http',
+                    }
+                    email = render_to_string(email_template_name, context)
+                    try:
+                        send_mail(subject, email, 'admin@example.com' , [user.email], fail_silently=False)
+                    except BadHeaderError:
+                        return HttpResponse('Invalid header found.')
+                    return redirect ("register/password_reset/done/")
+    password_reset_form = PasswordResetForm()
+    return render(request=request, template_name="register/password_reset.html", context={"password_reset_form":password_reset_form})
