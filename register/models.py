@@ -10,7 +10,6 @@ class Company(SafeDeleteModel):
 
     social_name = models.CharField(max_length=80)
     name = models.CharField(max_length=80)
-    email = models.EmailField()
     city = models.CharField(max_length=50)
     found_date = models.DateField()
     client = models.ForeignKey(User, on_delete=models.CASCADE, null = True, blank = True)

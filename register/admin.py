@@ -4,7 +4,7 @@ from .models import UserProfile
 
 
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ['name','email','city','found_date']
+    list_display = ['name','city', 'found_date']
     search_fields = ['name', 'social_name','city']
 
 class UserProfileAdmin(admin.ModelAdmin):

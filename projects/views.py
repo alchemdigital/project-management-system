@@ -2,24 +2,36 @@ from django.shortcuts import render
 from django.db.models import Avg
 from register.models import Project
 from projects.models import Task
-from projects.forms import TaskRegistrationForm
-from projects.forms import ProjectRegistrationForm
+from projects.forms import ProjectRegistrationForm, TaskRegistrationForm, ChecklistRegistrationForm
+from django.contrib.auth.decorators import user_passes_test
+from django.db.models import Q
+
+
+def is_project_manager(user):
+    return user.groups.filter(name='project_manager').exists()
+
+def is_admin(user):
+    return user.groups.filter(name='admin').exists()
+
+def is_pm_or_admin(user):
+    return user.groups.filter(Q(name='project_manager') | Q(name='admin')).exists()
 
 # Create your views here.
+@user_passes_test(is_pm_or_admin)
 def projects(request):
     projects = Project.objects.all()
-    avg_projects = Project.objects.all().aggregate(Avg('complete_per'))['complete_per__avg']
+    avg_projects = Project.objects.all()
     tasks = Task.objects.all()
-    overdue_tasks = tasks.filter(due='2')
     context = {
         'avg_projects' : avg_projects,
         'projects' : projects,
         'tasks' : tasks,
-        'overdue_tasks' : overdue_tasks,
+        'overdue_tasks' : (),
     }
     return render(request, 'projects/projects.html', context)
 
-def newTask(request):
+@user_passes_test(is_pm_or_admin)
+def new_task(request):
     if request.method == 'POST':
         form = TaskRegistrationForm(request.POST)
         context = {'form': form}
@@ -40,7 +52,8 @@ def newTask(request):
         }
         return render(request,'projects/new_task.html', context)
 
-def newProject(request):
+@user_passes_test(is_pm_or_admin)
+def new_project(request):
     if request.method == 'POST':
         form = ProjectRegistrationForm(request.POST)
         context = {'form': form}
@@ -61,3 +74,25 @@ def newProject(request):
             'form': form,
         }
         return render(request,'projects/new_project.html', context)
+
+def new_checklist(request):
+    if request.method == 'POST':
+        form = ChecklistRegistrationForm(request.POST)
+        context = {'form': form}
+        if form.is_valid():
+            form.save()
+            created = True
+            form = ChecklistRegistrationForm()
+            context = {
+                'form': form,
+                'created': created,
+            }
+            return render(request, 'projects/new_checklist.html', context)
+        else:
+            return render(request, 'projects/new_checklist.html', context)
+    else:
+        form = ChecklistRegistrationForm()
+        context = {
+            'form': form,
+        }
+        return render(request,'projects/new_checklist.html', context)

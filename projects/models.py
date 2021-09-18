@@ -5,9 +5,10 @@ from safedelete.models import SafeDeleteModel
 from safedelete.models import SOFT_DELETE
 
 status = (
-    ('1', 'Stuck'),
-    ('2', 'Working'),
-    ('3', 'Done'),
+    ('1', 'Yet to Start'),
+    ('2', 'In Progress'),
+    ('3', 'QC Pending'),
+    ('4', 'Completed'),
 )
 
 # Create your models here.
@@ -31,10 +32,10 @@ class Task(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    assign = models.ManyToManyField(User)
+    employee = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     # assigned_by = models.ManyToManyField(User)
     task_name = models.CharField(max_length=80)
-    status = models.IntegerField(choices=status, default=1)
+    status = models.CharField(max_length=7, choices=status, default=1)
     deadline = models.DateField(null = True)
     start_date = models.DateField(null = True)
     hours = models.IntegerField(max_length = 5, default = 0)
@@ -53,7 +54,7 @@ class Checklist(SafeDeleteModel):
 
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     checklist_name = models.CharField(max_length=255)
-    status = models.IntegerField(choices=status, default=1)
+    status = models.CharField(max_length=7, choices=status, default=1)
     created_at = models.DateTimeField(auto_now_add = True, null = True)
     updated_at = models.DateTimeField(auto_now = True, null = True)
 

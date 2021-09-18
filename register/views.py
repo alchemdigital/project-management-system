@@ -16,8 +16,19 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, BadHeaderError
+from django.contrib.auth.decorators import user_passes_test
+
+def is_project_manager(user):
+    return user.groups.filter(name='project_manager').exists()
+
+def is_admin(user):
+    return user.groups.filter(name='admin').exists()
+
+def is_pm_or_admin(user):
+    return user.groups.filter(Q(name='project_manager') | Q(name='admin')).exists()
 
 # Create your views here.
+@user_passes_test(is_admin)
 def register(request):
     if request.method == 'POST':
         changed_request = request.POST.copy()
@@ -66,7 +77,7 @@ def register(request):
         }
         return render(request, 'register/reg_form.html', context)
 
-
+@user_passes_test(is_pm_or_admin)
 def usersView(request):
     users = UserProfile.objects.all()
     tasks = Task.objects.all()
@@ -76,6 +87,7 @@ def usersView(request):
     }
     return render(request, 'register/users.html', context)
 
+@user_passes_test(is_pm_or_admin)
 def user_view(request, profile_id):
     user = UserProfile.objects.get(id=profile_id)
     context = {
@@ -101,7 +113,7 @@ def profile(request):
         context = {'img_form' : img_form }
         return render(request, 'register/profile.html', context)
 
-
+@user_passes_test(is_admin)
 def newCompany(request):
     if request.method == 'POST':
         form = CompanyRegistrationForm(request.POST)
@@ -124,6 +136,7 @@ def newCompany(request):
         }
         return render(request, 'register/new_company.html', context)
 
+@user_passes_test(is_pm_or_admin)
 def get_active_profile(request):
     user_id = request.user.userprofile_set.values_list()[0][0]
     return UserProfile.objects.get(id=user_id)
@@ -152,6 +165,6 @@ def password_reset_request(request):
                         send_mail(subject, email, 'admin@example.com' , [user.email], fail_silently=False)
                     except BadHeaderError:
                         return HttpResponse('Invalid header found.')
-                    return redirect ("register/password_reset/done/")
+                    return redirect ("password-reset/done/")
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="register/password_reset.html", context={"password_reset_form":password_reset_form})
