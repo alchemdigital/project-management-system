@@ -98,9 +98,9 @@
                                 <div class="input-group-append">
                                     <span class="input-group-text"><i class="fa fa-envelope"></i></span>
                                 </div>
-                                {% if form.role.errors %}
+                                {% if errors.role %}
                                     <ol>
-                                    {% for error in form.role.errors %}
+                                    {% for error in errors.role %}
                                         <li><strong>{{ error|escape }}</strong></li>
                                     {% endfor %}
                                     </ol>

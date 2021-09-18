@@ -7,6 +7,7 @@ app_name = 'projects'
 
 urlpatterns = [
     path('', views.projects, name='projects'),
-    path('new-project/', views.newProject, name='new-project'),
-    path('new-task/', views.newTask, name='new-task'),
+    path('new-project/', views.new_project, name='new-project'),
+    path('new-task/', views.new_task, name='new-task'),
+    path('new-checklist/', views.new_checklist, name='new-checklist'),
 ]

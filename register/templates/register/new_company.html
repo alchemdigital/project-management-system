@@ -60,15 +60,15 @@
                                         {% endif %}
                                     </div>
                                 </div>
-                                <div class="form-group">
+                            <div class="form-group">
                                 <div class="input-group">
                                     <div class="input-group-append">
-                                        <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                        <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
                                     </div>
-                                    {{ form.email }}
-                                    {% if form.email.errors %}
+                                    {{ form.client }}
+                                    {% if form.client.errors %}
                                         <ol>
-                                        {% for error in form.email.errors %}
+                                        {% for error in form.client.errors %}
                                             <li><strong>{{ error|escape }}</strong></li>
                                         {% endfor %}
                                         </ol>
