@@ -2,48 +2,47 @@
 {% load static %}
 {% block breadcrumb %}
     <li class="breadcrumb-item">Home</li>
-    <li class="breadcrumb-item">Users</li>
-    <li class="breadcrumb-item active">Create New User</li>
+    <li class="breadcrumb-item">Company</li>
+    <li class="breadcrumb-item active">Company Form</li>
 {% endblock breadcrumb%}
 {% block content %}
     <div class="container animated fadeIn">
         <div class="row justify-content-center">
-            <div class="col-6">
+            <div class="col-md-7">
                 <div class="card-group">
-                    <div class="card p-4 mb-5">
+                    <div class="card p-4">
                         <div class="card-body">
                             {% if created %}
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                     </button>
-                                    User has been created successfully
+                                    Company created successfully
                                 </div>
                             {% elif updated %}
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                     </button>
-                                    User has been updated successfully
+                                    Company updated successfully
                                 </div>
                             {% endif %}
-                            {% csrf_token %}
-                            <h1>Users</h1>
-                            <p class="text-muted">Create users here</p>
-                            <form  action="{%if edit %}{% url 'register:update_user' %}{% endif %}" method="post">
+                            <form method="post" action="{%if edit %}{% url 'register:update_company' %}{% endif %}">
                                 {% csrf_token %}
+                                <h1>Add Company</h1>
+                                <p class="text-muted">Set up a company here</p>
                                 {%if edit %}
                                     <input type="hidden" name="id" value="{{id}}"/>
                                 {% endif %}
                                 <div class="form-group">
                                     <div class="input-group">
-                                        {{ form.username }}
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                            <span class="input-group-text"><i class="fa fa-industry"></i></span>
                                         </div>
-                                        {% if form.username.errors %}
+                                        {{ form.social_name }}
+                                        {% if form.social_name.errors %}
                                             <ol>
-                                                {% for error in form.username.errors %}
+                                                {% for error in form.social_name.errors %}
                                                     <li><strong>{{ error|escape }}</strong></li>
                                                 {% endfor %}
                                             </ol>
@@ -52,14 +51,14 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group">
-                                        {{ form.first_name }}
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                            <span class="input-group-text"><i class="fa fa-industry"></i></span>
                                         </div>
-                                        {% if form.first_name.errors %}
+                                        {{ form.name }}
+                                        {% if form.name.errors %}
                                             <ol>
-                                                {% for error in form.first_name.errors %}
-                                                    <li><strong>{{ error|escape }}</strong></li>
+                                                {% for error in form.name.errors %}
+                                                <li><strong>{{ error|escape }}</strong></li>
                                                 {% endfor %}
                                             </ol>
                                         {% endif %}
@@ -67,14 +66,14 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group">
-                                        {{ form.last_name }}
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                            <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
                                         </div>
-                                        {% if form.last_name.errors %}
+                                        {{ form.client }}
+                                        {% if form.client.errors %}
                                             <ol>
-                                                {% for error in form.last_name.errors %}
-                                                    <li><strong>{{ error|escape }}</strong></li>
+                                                {% for error in form.client.errors %}
+                                                <li><strong>{{ error|escape }}</strong></li>
                                                 {% endfor %}
                                             </ol>
                                         {% endif %}
@@ -82,14 +81,14 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group">
-                                        {{ form.email }}
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                            <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
                                         </div>
-                                        {% if form.email.errors %}
+                                        {{ form.city }}
+                                        {% if form.city.errors %}
                                             <ol>
-                                                {% for error in form.email.errors %}
-                                                    <li><strong>{{ error|escape }}</strong></li>
+                                                {% for error in form.city.errors %}
+                                                <li><strong>{{ error|escape }}</strong></li>
                                                 {% endfor %}
                                             </ol>
                                         {% endif %}
@@ -97,30 +96,30 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <select name="role" class="form-control">
-                                            <option selected disabled>-- Select Role --</option>
-                                            {% for role in roles %}
-                                                <option value="{{ role.id }}" {% if selected_role == role.id %}Selected{% endif %}>{{ role }}</option>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                        {{ form.found_date }}
+                                    </div>
+                                    {% if form.found_date.errors %}
+                                        <ol>
+                                            {% for error in form.found_date.errors %}
+                                                <li><strong>{{ error|escape }}</strong></li>
                                             {% endfor %}
-                                        </select>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
-                                        </div>
-                                        {% if errors.role %}
-                                            <ol>
-                                                {% for error in errors.role %}
-                                                    <li><strong>{{ error|escape }}</strong></li>
-                                                {% endfor %}
-                                            </ol>
-                                        {% endif %}
-                                    </div>
+                                        </ol>
+                                    {% endif %}
                                 </div>
-                                <div class="">
-                                    <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i> Submit</button>
-                                    <button type="reset" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Reset</button>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary px-4">Submit</button>
+                                    </div>
+                                    {% if login_form.errors %}
+                                        <div class="alert alert-danger col-12 mt-3" role="alert">
+                                            Wrong username or password
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </form>
-                            {{ form.errors }}
                         </div>
                     </div>
                 </div>

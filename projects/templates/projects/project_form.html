@@ -1,50 +1,52 @@
 {% extends 'core/base.html' %}
 {% load static %}
-
 {% block breadcrumb %}
-        <li class="breadcrumb-item">Home</li>
-        <li class="breadcrumb-item">Projects</li>
-        <li class="breadcrumb-item active">New Project</li>
+    <li class="breadcrumb-item">Home</li>
+    <li class="breadcrumb-item">Projects</li>
+    <li class="breadcrumb-item active">New Project</li>
 {% endblock breadcrumb%}
-
-
-
-
-
 {% block content %}
-<div class="container animated fadeIn">
+    <div class="container animated fadeIn">
         <div class="row justify-content-center">
             <div class="col-8">
                 <div class="card-group">
                     <div class="card p-4 mb-5">
                         <div class="card-body">
                             {% if created %}
-                              <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                      <span aria-hidden="true">&times;</span>
-                                  </button>
-                                  Congratulations, your project was created!
-                              </div>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    Project has been created successfully
+                                </div>
+                            {% elif updated %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    Project has been updated successfully
+                                </div>
                             {% endif %}
+                            {% csrf_token %}
+                            <h1>Projects</h1>
+                            <p class="text-muted">Create your projects here</p>
+                            <form action="{%if edit %}{% url 'projects:update_project' %}{% endif %}" method="post">
                                 {% csrf_token %}
-                                <h1>Projects</h1>
-                                <p class="text-muted">Create your projects here</p>
-
-                            <form action="" method="post">
-                                {% csrf_token %}
+                                {%if edit %}
+                                    <input type="hidden" name="id" value="{{id}}"/>
+                                {% endif %}
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-append">
                                             <span class="input-group-text"><i class="fa fa-user"></i></span>
                                         </div>
-
                                         {{ form.name }}
                                         {% if form.name.errors %}
-                                            <ol>
+                                        <ol>
                                             {% for error in form.name.errors %}
-                                                <li><strong>{{ error|escape }}</strong></li>
+                                            <li><strong>{{ error|escape }}</strong></li>
                                             {% endfor %}
-                                            </ol>
+                                        </ol>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -56,14 +58,13 @@
                                         </div>
                                         {{ form.company }}
                                     </div>
-
                                     {% if form.company.errors %}
-                                            <ol>
-                                            {% for error in form.company.errors %}
-                                                <li><strong>{{ error|escape }}</strong></li>
-                                            {% endfor %}
-                                            </ol>
-                                        {% endif %}
+                                    <ol>
+                                        {% for error in form.company.errors %}
+                                        <li><strong>{{ error|escape }}</strong></li>
+                                        {% endfor %}
+                                    </ol>
+                                    {% endif %}
                                 </div>
                                 <div class="form-group">
                                     <label class="col-form-label">Description</label>
@@ -73,27 +74,24 @@
                                         </div>
                                         {{ form.description }}
                                     </div>
-
                                     {% if form.description.errors %}
-                                            <ol>
-                                            {% for error in form.description.errors %}
-                                                <li><strong>{{ error|escape }}</strong></li>
-                                            {% endfor %}
-                                            </ol>
-                                        {% endif %}
+                                    <ol>
+                                        {% for error in form.description.errors %}
+                                        <li><strong>{{ error|escape }}</strong></li>
+                                        {% endfor %}
+                                    </ol>
+                                    {% endif %}
                                 </div>
-
                                 <div class="">
                                     <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i> Submit</button>
                                     <button type="reset" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Reset</button>
                                 </div>
                             </form>
                             {{ form.errors }}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
 {% endblock %}

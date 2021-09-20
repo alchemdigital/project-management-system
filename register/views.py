@@ -2,10 +2,8 @@ from django.shortcuts import render
 from django.contrib.auth import login
 from django.shortcuts import redirect
 from projects.models import Task
-from .models import UserProfile
 from .forms import RegistrationForm
 from .forms import CompanyRegistrationForm
-from .forms import ProfilePictureForm
 from django.contrib.auth.models import Group
 from projects.email import EmailThread
 from django.contrib.auth.models import User
@@ -17,6 +15,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, BadHeaderError
 from django.contrib.auth.decorators import user_passes_test
+from .models import Company
+from  django.core.paginator import Paginator
 
 def is_project_manager(user):
     return user.groups.filter(name='project_manager').exists()
@@ -27,7 +27,6 @@ def is_admin(user):
 def is_pm_or_admin(user):
     return user.groups.filter(Q(name='project_manager') | Q(name='admin')).exists()
 
-# Create your views here.
 @user_passes_test(is_admin)
 def register(request):
     if request.method == 'POST':
@@ -77,47 +76,58 @@ def register(request):
         }
         return render(request, 'register/reg_form.html', context)
 
-@user_passes_test(is_pm_or_admin)
-def usersView(request):
-    users = UserProfile.objects.all()
-    tasks = Task.objects.all()
-    context = {
-        'users': users,
-        'tasks': tasks,
-    }
+@user_passes_test(is_admin)
+def users(request):
+    users = User.objects.all().order_by('-id')
+    paginated_users = Paginator(users, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginated_users.get_page(page_number)
+    context = { 'page_obj': page_obj }
     return render(request, 'register/users.html', context)
 
-@user_passes_test(is_pm_or_admin)
-def user_view(request, profile_id):
-    user = UserProfile.objects.get(id=profile_id)
+@user_passes_test(is_admin)
+def edit_user(request, user_id):
+    user = User.objects.get(id=user_id)
+    form = RegistrationForm(instance=user)
+    roles = Group.objects.all().order_by('id')
+    selected_role = Group.objects.filter(user = user)
     context = {
-        'user_view' : user,
+        'id': user.id,
+        'form': form,
+        'roles' : roles,
+        'selected_role': selected_role[0].id,
+        'edit': True 
     }
-    return render(request, 'register/user.html', context)
-
-
-def profile(request):
-    if request.method == 'POST':
-        img_form = ProfilePictureForm(request.POST, request.FILES)
-        print('PRINT 1: ', img_form)
-        context = {'img_form' : img_form }
-        if img_form.is_valid():
-            img_form.save(request)
-            updated = True
-            context = {'img_form' : img_form, 'updated' : updated }
-            return render(request, 'register/profile.html', context)
-        else:
-            return render(request, 'register/profile.html', context)
-    else:
-        img_form = ProfilePictureForm()
-        context = {'img_form' : img_form }
-        return render(request, 'register/profile.html', context)
+    return render(request, 'register/reg_form.html', context)
 
 @user_passes_test(is_admin)
-def newCompany(request):
+def update_user(request):
+    id = request.POST.get('id')
+    instance = User.objects.get(id = id)
+    changed_request = request.POST.copy()
+    changed_request.update({'password1': None}) # This will not be updated
+    print(changed_request)
+    form = RegistrationForm(changed_request, instance=instance)
+    context = { 'form': form, 'id': instance.id, 'edit': True}
+    if form.is_valid():
+        form.save()
+        thisRole = Group.objects.get(id = role)
+        thisRole.user_set.add(user)
+        context['updated'] = True
+    return render(request, 'register/reg_form.html', context)
+
+@user_passes_test(is_admin)
+def delete_user(request, user_id):
+    user = User.objects.get(id = user_id)
+    user.delete()
+    return redirect('register:users')
+
+#Company CRUD - start
+@user_passes_test(is_admin)
+def new_company(request):
     if request.method == 'POST':
         form = CompanyRegistrationForm(request.POST)
-        context = {'form':form}
+        context = { 'form': form }
         if form.is_valid():
             form.save()
             created = True
@@ -126,20 +136,52 @@ def newCompany(request):
                 'created' : created,
                 'form' : form,
             }
-            return render(request, 'register/new_company.html', context)
-        else:
-            return render(request, 'register/new_company.html', context)
+        
+        return render(request, 'register/company_form.html', context)
     else:
         form = CompanyRegistrationForm()
         context = {
             'form' : form,
         }
-        return render(request, 'register/new_company.html', context)
+        return render(request, 'register/company_form.html', context)
 
-@user_passes_test(is_pm_or_admin)
-def get_active_profile(request):
-    user_id = request.user.userprofile_set.values_list()[0][0]
-    return UserProfile.objects.get(id=user_id)
+@user_passes_test(is_admin)
+def companies(request):
+    companies = Company.objects.all().order_by('-id')
+    paginated_companies = Paginator(companies, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginated_companies.get_page(page_number)
+    context = { 'page_obj': page_obj }
+    return render(request, 'register/companies.html', context)
+
+@user_passes_test(is_admin)
+def edit_company(request, company_id):
+    company = Company.objects.get(id=company_id)
+    form = CompanyRegistrationForm(instance=company)
+    context = {
+        'id': company.id,
+        'form': form,
+        'edit': True
+    }
+    return render(request, 'register/company_form.html', context)
+
+@user_passes_test(is_admin)
+def update_company(request):
+    id = request.POST.get('id')
+    instance = Company.objects.get(id = id)
+    form = CompanyRegistrationForm(request.POST, instance=instance)
+    context = { 'form': form, 'id': instance.id, 'edit': True}
+    if form.is_valid():
+        form.save(id = instance.id)
+        context['updated'] = True
+    return render(request, 'register/company_form.html', context)
+
+@user_passes_test(is_admin)
+def delete_company(request, company_id):
+    company = Company.objects.get(id = company_id)
+    company.delete()
+    return redirect('register:companies')
+#Company CRUD - end
 
 def password_reset_request(request):
     if request.method == "POST":

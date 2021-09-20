@@ -1,0 +1,178 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">Home</li>
+    <li class="breadcrumb-item">Projects</li>
+    <li class="breadcrumb-item active">Task Form</li>
+{% endblock breadcrumb%}
+{% block content %}
+    <div class="container animated fadeIn">
+        <div class="row justify-content-center">
+            <div class="col-7">
+                <div class="card-group">
+                    <div class="card p-4 mb-5">
+                        <div class="card-body">
+                            {% if created %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    Task has been created successfully
+                                </div>
+                            {% elif updated %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    Task has been updated successfully
+                                </div>
+                            {% endif %}
+                            {% csrf_token %}
+                            <h1>Tasks</h1>
+                            <p class="text-muted">Create your tasks here</p>
+                            <form action="{%if edit %}{% url 'projects:update_task' %}{% endif %}" method="post">
+                                {% csrf_token %}
+                                {%if edit %}
+                                    <input type="hidden" name="id" value="{{id}}"/>
+                                {% endif %}
+                                <div class="form-group">
+                                    <label class="col-form-label">Project</label>
+                                    <div class="input-group">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-puzzle-piece"></i></span>
+                                        </div>
+                                        {{ form.project }}
+                                        {% if form.project.errors %}
+                                        <ol>
+                                            {% for error in form.project.errors %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">Assign</label>
+                                    <div class="input-group">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                        </div>
+                                        {{ form.employee }}
+                                        {% if form.employee.errors %}
+                                        <ol>
+                                            {% for error in form.employee.errors %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">Task name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-align-center"></i></span>
+                                        </div>
+                                        {{ form.task_name }}
+                                        {% if form.task_name.errors %}
+                                        <ol>
+                                            {% for error in form.task_name.errors %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">Status</label>
+                                    <div class="input-group">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-circle"></i></span>
+                                        </div>
+                                        {{ form.status }}
+                                        {% if form.status.errors %}
+                                        <ol>
+                                            {% for error in form.status.errors %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">Start Date</label>
+                                    <div class="input-group">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-circle"></i></span>
+                                        </div>
+                                        {{ form.start_date }}
+                                        {% if form.start_date.errors %}
+                                        <ol>
+                                            {% for error in form.start_date.errors %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">Deadline</label>
+                                    <div class="input-group">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-circle"></i></span>
+                                        </div>
+                                        {{ form.deadline }}
+                                        {% if form.deadline.errors %}
+                                        <ol>
+                                            {% for error in form.deadline.errors %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">Hours</label>
+                                    <div class="input-group">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-circle"></i></span>
+                                        </div>
+                                        {{ form.hours }}
+                                        {% if form.hours.errors %}
+                                        <ol>
+                                            {% for error in form.hours.errors %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">Description</label>
+                                    <div class="input-group">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-circle"></i></span>
+                                        </div>
+                                        {{ form.description }}
+                                        {% if form.description.errors %}
+                                        <ol>
+                                            {% for error in form.description.errors %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i> Submit</button>
+                                    <button type="reset" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Reset</button>
+                                </div>
+                            </form>
+                            {{ form.errors }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

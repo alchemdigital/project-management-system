@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from safedelete.models import SafeDeleteModel
-from safedelete.models import SOFT_DELETE
+from safedelete.models import SOFT_DELETE, SOFT_DELETE_CASCADE
 
 status = (
     ('1', 'Yet to Start'),
@@ -13,7 +13,7 @@ status = (
 
 # Create your models here.
 class Project(SafeDeleteModel):
-    _safedelete_policy = SOFT_DELETE
+    _safedelete_policy = SOFT_DELETE_CASCADE
 
     name = models.CharField(max_length=80)
     slug = models.SlugField('shortcut', blank=True)
@@ -29,7 +29,7 @@ class Project(SafeDeleteModel):
         return (self.name)
 
 class Task(SafeDeleteModel):
-    _safedelete_policy = SOFT_DELETE
+    _safedelete_policy = SOFT_DELETE_CASCADE
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     employee = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -50,7 +50,7 @@ class Task(SafeDeleteModel):
         return(self.task_name)
 
 class Checklist(SafeDeleteModel):
-    _safedelete_policy = SOFT_DELETE
+    _safedelete_policy = SOFT_DELETE_CASCADE
 
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     checklist_name = models.CharField(max_length=255)

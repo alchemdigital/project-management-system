@@ -2,13 +2,13 @@
 {% load static %}
 {% block breadcrumb %}
     <li class="breadcrumb-item">Home</li>
-    <li class="breadcrumb-item">Users</li>
-    <li class="breadcrumb-item active">Create New User</li>
+    <li class="breadcrumb-item">Projects</li>
+    <li class="breadcrumb-item active">New Checklist</li>
 {% endblock breadcrumb%}
 {% block content %}
     <div class="container animated fadeIn">
         <div class="row justify-content-center">
-            <div class="col-6">
+            <div class="col-7">
                 <div class="card-group">
                     <div class="card p-4 mb-5">
                         <div class="card-body">
@@ -17,98 +17,66 @@
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                     </button>
-                                    User has been created successfully
+                                    Checklist has been created successfully
                                 </div>
                             {% elif updated %}
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                     </button>
-                                    User has been updated successfully
+                                    Checklist has been updated successfully
                                 </div>
                             {% endif %}
                             {% csrf_token %}
-                            <h1>Users</h1>
-                            <p class="text-muted">Create users here</p>
-                            <form  action="{%if edit %}{% url 'register:update_user' %}{% endif %}" method="post">
+                            <h1>Checklist</h1>
+                            <p class="text-muted">Create your checklists here</p>
+                            <form action="{%if edit %}{% url 'projects:update_checklist' %}{% endif %}" method="post">
                                 {% csrf_token %}
                                 {%if edit %}
                                     <input type="hidden" name="id" value="{{id}}"/>
                                 {% endif %}
                                 <div class="form-group">
+                                    <label class="col-form-label">Task</label>
                                     <div class="input-group">
-                                        {{ form.username }}
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-puzzle-piece"></i></span>
+                                        </div>
+                                        {{ form.task }}
+                                        {% if form.task.errors %}
+                                            <ol>
+                                                {% for error in form.task.errors %}
+                                                    <li><strong>{{ error|escape }}</strong></li>
+                                                {% endfor %}
+                                            </ol>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">Name</label>
+                                    <div class="input-group">
                                         <div class="input-group-append">
                                             <span class="input-group-text"><i class="fa fa-user"></i></span>
                                         </div>
-                                        {% if form.username.errors %}
+                                        {{ form.checklist_name }}
+                                        {% if form.checklist_name.errors %}
                                             <ol>
-                                                {% for error in form.username.errors %}
-                                                    <li><strong>{{ error|escape }}</strong></li>
+                                                {% for error in form.checklist_name.errors %}
+                                                <li><strong>{{ error|escape }}</strong></li>
                                                 {% endfor %}
                                             </ol>
                                         {% endif %}
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label class="col-form-label">Status</label>
                                     <div class="input-group">
-                                        {{ form.first_name }}
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                            <span class="input-group-text"><i class="fa fa-circle"></i></span>
                                         </div>
-                                        {% if form.first_name.errors %}
+                                        {{ form.status }}
+                                        {% if form.status.errors %}
                                             <ol>
-                                                {% for error in form.first_name.errors %}
-                                                    <li><strong>{{ error|escape }}</strong></li>
-                                                {% endfor %}
-                                            </ol>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        {{ form.last_name }}
-                                        <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
-                                        </div>
-                                        {% if form.last_name.errors %}
-                                            <ol>
-                                                {% for error in form.last_name.errors %}
-                                                    <li><strong>{{ error|escape }}</strong></li>
-                                                {% endfor %}
-                                            </ol>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        {{ form.email }}
-                                        <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
-                                        </div>
-                                        {% if form.email.errors %}
-                                            <ol>
-                                                {% for error in form.email.errors %}
-                                                    <li><strong>{{ error|escape }}</strong></li>
-                                                {% endfor %}
-                                            </ol>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <select name="role" class="form-control">
-                                            <option selected disabled>-- Select Role --</option>
-                                            {% for role in roles %}
-                                                <option value="{{ role.id }}" {% if selected_role == role.id %}Selected{% endif %}>{{ role }}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
-                                        </div>
-                                        {% if errors.role %}
-                                            <ol>
-                                                {% for error in errors.role %}
+                                                {% for error in form.status.errors %}
                                                     <li><strong>{{ error|escape }}</strong></li>
                                                 {% endfor %}
                                             </ol>
