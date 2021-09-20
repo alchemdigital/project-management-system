@@ -2,11 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from projects.models import Project
 from safedelete.models import SafeDeleteModel
-from safedelete.models import SOFT_DELETE
+from safedelete.models import SOFT_DELETE, SOFT_DELETE_CASCADE
 
-# Create your models here.
 class Company(SafeDeleteModel):
-    _safedelete_policy = SOFT_DELETE
+    _safedelete_policy = SOFT_DELETE_CASCADE # SOFT_DELETE -> Only delete current record, SOFT_DELETE_CASCADE -> Also delete relationships
 
     social_name = models.CharField(max_length=80)
     name = models.CharField(max_length=80)
@@ -23,12 +22,3 @@ class Company(SafeDeleteModel):
 
     def __str__(self):
         return (self.name)
-
-class UserProfile(SafeDeleteModel):
-    user    = models.ForeignKey(User, on_delete=models.CASCADE)
-    img    = models.ImageField(upload_to='core/avatar', blank=True, default='core/avatar/blank_profile.png')
-    created_at = models.DateTimeField(auto_now_add = True, null = True)
-    updated_at = models.DateTimeField(auto_now = True, null = True)
-
-    def __str__(self):
-        return (str(self.user))

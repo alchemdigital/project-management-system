@@ -4,7 +4,7 @@
 {% block breadcrumb %}
         <li class="breadcrumb-item">Home</li>
         <li class="breadcrumb-item">Users</li>
-        <li class="breadcrumb-item active">Users</li>
+        <li class="breadcrumb-item active">Projects</li>
 {% endblock breadcrumb%}
 
 {% block content %}
@@ -14,31 +14,27 @@
             <table class="table table-responsive-sm table-hover table-outline mb-5 ">
                 <thead class="thead-light">
                 <tr>
-                    <th class="text-center">Username</th>
-                    <th class="text-center">Email</th>
-                    <th class="text-center">Role</th>
-                    <th class="text-center">Last Logged In</th>
+                    <th class="text-center">Task</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Status</th>
                     <th class="text-center">Action</th>
                 </tr>
             </thead>
                     <tbody>
-                        {% for user in page_obj %}
+                        {% for checklist in page_obj %}
                             <tr>
                                 <td class="text-center">
-                                    {{ user.username }}
+                                    {{ checklist.task }}
                                 </td>
                                 <td class="text-center">
-                                    {{ user.email }}
+                                    {{ checklist.checklist_name }}
                                 </td>
                                 <td class="text-center">
-                                    {{ user.groups.all.0 }}
+                                    {{ checklist.get_status_display }}
                                 </td>
                                 <td class="text-center">
-                                    {{ user.last_login }}
-                                </td>
-                                <td class="text-center">
-                                    <a class="text-primary" href="#" onclick="edit_user(event, {{ user.id }});"><i class="fa fa-edit"></i></a>
-                                    <a class="text-danger" href="#" onclick="delete_user(event, {{ user.id }});"><i class="fa fa-trash"></i></a>
+                                    <a class="text-primary" href="#" onclick="edit_checklist(event, {{ checklist.id }});"><i class="fa fa-edit"></i></a>
+                                    <a class="text-danger" href="#" onclick="delete_checklist(event, {{ checklist.id }});"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -66,13 +62,13 @@
     </div>
 </div>
 <script type="text/javascript">
-    function edit_user(e, user_id) {
-        window.location.href = '/register/edit-user/' + user_id
+    function edit_checklist(e, checklist_id) {
+        window.location.href = '/projects/edit-checklist/' + checklist_id
     }
-    function delete_user(e, user_id){
+    function delete_checklist(e, checklist_id){
         e.preventDefault()
         if (confirm('Are you sure?'))
-            window.location.href = '/register/delete-user/' + user_id
+            window.location.href = '/projects/delete-checklist/' + checklist_id
     }
 </script>
 {% endblock %}

@@ -13,9 +13,40 @@ status = (
     ('4', 'Completed'),
 )
 
+class ProjectRegistrationForm(forms.ModelForm):
+    name = forms.CharField(max_length=80)
+    # slug = forms.SlugField('shortcut')
+    company = forms.ModelChoiceField(queryset=Company.objects.all(), empty_label='Select a Company')
+    description = forms.CharField(widget=forms.Textarea)
+
+    class Meta:
+        model = Project
+        fields = '__all__'
+
+
+    def save(self, commit=True):
+        Project = super(ProjectRegistrationForm, self).save(commit=False)
+        Project.name = self.cleaned_data['name']
+        Project.company = self.cleaned_data['company']
+        Project.description = self.cleaned_data['description']
+        Project.slug = slugify(str(self.cleaned_data['name']))
+        Project.save()
+        return Project
+
+    def __init__(self, *args, **kwargs):
+        super(ProjectRegistrationForm, self).__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs['class'] = 'form-control'
+        self.fields['name'].widget.attrs['placeholder'] = 'Project Name'
+        self.fields['company'].widget.attrs['class'] = 'form-control'
+        self.fields['company'].widget.attrs['placeholder'] = 'Company'
+        self.fields['description'].widget.attrs['class'] = 'form-control'
+        self.fields['description'].widget.attrs['placeholder'] = 'Type here the project description...'
+
 class TaskRegistrationForm(forms.ModelForm):
-    project = forms.ModelChoiceField(queryset=Project.objects.all())
-    employee = forms.ModelChoiceField(queryset=User.objects.filter(groups=3))
+    forms.DateInput.input_type="date"
+
+    project = forms.ModelChoiceField(queryset=Project.objects.all(), empty_label='Select a Project')
+    employee = forms.ModelChoiceField(queryset=User.objects.filter(groups=3), empty_label='Select an employee')
     task_name = forms.CharField(max_length=80)
     status = forms.ChoiceField(choices=status)
     deadline = forms.DateField()
@@ -26,7 +57,6 @@ class TaskRegistrationForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = '__all__'
-
 
     def save(self, commit=True):
         task = super(TaskRegistrationForm, self).save(commit=False)
@@ -57,38 +87,8 @@ class TaskRegistrationForm(forms.ModelForm):
         self.fields['description'].widget.attrs['class'] = 'form-control'
         self.fields['description'].widget.attrs['placeholder'] = 'Description'
 
-
-class ProjectRegistrationForm(forms.ModelForm):
-    name = forms.CharField(max_length=80)
-    # slug = forms.SlugField('shortcut')
-    company = forms.ModelChoiceField(queryset=Company.objects.all())
-    description = forms.CharField(widget=forms.Textarea)
-
-    class Meta:
-        model = Project
-        fields = '__all__'
-
-
-    def save(self, commit=True):
-        Project = super(ProjectRegistrationForm, self).save(commit=False)
-        Project.name = self.cleaned_data['name']
-        Project.company = self.cleaned_data['company']
-        Project.description = self.cleaned_data['description']
-        Project.slug = slugify(str(self.cleaned_data['name']))
-        Project.save()
-        return Project
-
-    def __init__(self, *args, **kwargs):
-        super(ProjectRegistrationForm, self).__init__(*args, **kwargs)
-        self.fields['name'].widget.attrs['class'] = 'form-control'
-        self.fields['name'].widget.attrs['placeholder'] = 'Project Name'
-        self.fields['company'].widget.attrs['class'] = 'form-control'
-        self.fields['company'].widget.attrs['placeholder'] = 'Company'
-        self.fields['description'].widget.attrs['class'] = 'form-control'
-        self.fields['description'].widget.attrs['placeholder'] = 'Type here the project description...'
-
 class ChecklistRegistrationForm(forms.ModelForm):
-    task = forms.ModelChoiceField(queryset=Task.objects.all())
+    task = forms.ModelChoiceField(queryset=Task.objects.all(), empty_label='Select a Task')
     checklist_name = forms.CharField()
     status = forms.ChoiceField(choices=status)
 
