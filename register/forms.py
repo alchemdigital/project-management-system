@@ -7,7 +7,6 @@ forms.DateInput.input_type="date"
 
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(label='E-mail', required=True)
-    password1 = None
     password2 = None
 
     class Meta:
@@ -56,7 +55,7 @@ class RegistrationForm(UserCreationForm):
         self.fields['last_name'].widget.attrs['placeholder'] = 'Last name'
         self.fields['email'].widget.attrs['class'] = 'form-control'
         self.fields['email'].widget.attrs['placeholder'] = 'E-mail'
-        del self.fields['password1']
+        self.fields['password1'].required = False
 
 class CompanyRegistrationForm(forms.ModelForm):
     social_name = forms.CharField(max_length=80)

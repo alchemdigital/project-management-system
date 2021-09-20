@@ -103,16 +103,19 @@ def edit_user(request, user_id):
 @user_passes_test(is_admin)
 def update_user(request):
     id = request.POST.get('id')
+    role = request.POST.get('role')
     instance = User.objects.get(id = id)
     changed_request = request.POST.copy()
-    changed_request.update({'password1': None}) # This will not be updated
-    print(changed_request)
+    # changed_request.update({'password1': 'asas'}) # This will not be updated
     form = RegistrationForm(changed_request, instance=instance)
-    context = { 'form': form, 'id': instance.id, 'edit': True}
+    roles = Group.objects.all().order_by('id')
+    selected_role = Group.objects.filter(user = instance)
+    context = { 'form': form, 'id': instance.id, 'roles' : roles,
+        'selected_role': selected_role[0].id, 'edit': True}
     if form.is_valid():
         form.save()
         thisRole = Group.objects.get(id = role)
-        thisRole.user_set.add(user)
+        thisRole.user_set.add(instance)
         context['updated'] = True
     return render(request, 'register/reg_form.html', context)
 
