@@ -10,7 +10,7 @@ class Company(SafeDeleteModel):
     social_name = models.CharField(max_length=80)
     name = models.CharField(max_length=80)
     city = models.CharField(max_length=50)
-    found_date = models.DateField()
+    found_date = models.DateField(null=True)
     client = models.ForeignKey(User, on_delete=models.CASCADE, null = True, blank = True)
     created_at = models.DateTimeField(auto_now_add = True, null = True)
     updated_at = models.DateTimeField(auto_now = True, null = True)
