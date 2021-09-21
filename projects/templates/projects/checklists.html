@@ -11,12 +11,18 @@
 <div class="container-fluid">
     <div class="animated fade-in">
         <div class="row">
+            <div class="pull-right"> 
+                <input type="text" name="search_term" id="search-term" />
+                <i class="fa fa-search" onclick="search()"></i>
+                <span id="filter-info"></span>
+                <a class="text-primary" onclick="window.location.href = window.location.pathname">Clear Filter</a>
+            </div>
             <table class="table table-responsive-sm table-hover table-outline mb-5 ">
                 <thead class="thead-light">
                 <tr>
-                    <th class="text-center">Task</th>
-                    <th class="text-center">Name</th>
-                    <th class="text-center">Status</th>
+                    <th class="text-center" onclick="order_by_selected('task')">Task</th>
+                    <th class="text-center" onclick="order_by_selected('checklist_name')">Name</th>
+                    <th class="text-center" onclick="order_by_selected('status')">Status</th>
                     <th class="text-center">Action</th>
                 </tr>
             </thead>
@@ -24,13 +30,13 @@
                         {% for checklist in page_obj %}
                             <tr>
                                 <td class="text-center">
-                                    {{ checklist.task }}
+                                    {{ checklist.task | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ checklist.checklist_name }}
+                                    {{ checklist.checklist_name | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ checklist.get_status_display }}
+                                    {{ checklist.get_status_display | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
                                     <a class="text-primary" href="#" onclick="edit_checklist(event, {{ checklist.id }});"><i class="fa fa-edit"></i></a>
@@ -70,5 +76,40 @@
         if (confirm('Are you sure?'))
             window.location.href = '/projects/delete-checklist/' + checklist_id
     }
+    function order_by_selected(field_name) {
+        let urlParams = new URLSearchParams(window.location.search)
+        let to_url = '?'
+        if (urlParams.get('direction') == 'asc'){
+            to_url = '?order_by='+ field_name +'&direction=desc'
+        } else {
+            to_url = '?order_by='+ field_name +'&direction=asc'
+        }
+        if ($('#search-term').val() != '')
+            to_url +=  '&search=' + $('#search-term').val()
+        window.location.href = to_url
+    }
+    function search() {
+        let search_term = $('#search-term').val()
+        let joiner = '&'
+        if (window.location.search == '')
+            joiner = ''
+        let url_params = new URLSearchParams(window.location.search)
+        url_params.delete('search')
+        to_url = '?' + url_params.toString()
+        if ($('#search-term').val() != '')
+            to_url +=  joiner + 'search=' + search_term
+        window.location.href = to_url
+    }
+    $(function(){
+        let url_params = new URLSearchParams(window.location.search)
+        if (url_params.get('search') != null)
+            $('#search-term').val(url_params.get('search'))
+        if (url_params.get('order_by') != null) {
+            let filter_info = 'Filtered: ' + url_params.get('order_by')
+            if (url_params.get('direction') != null)
+                filter_info += '(' + url_params.get('direction') + ')'
+            $('#filter-info').html(filter_info)
+        }
+    })
 </script>
 {% endblock %}

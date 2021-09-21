@@ -16,8 +16,8 @@ status = (
 class ProjectRegistrationForm(forms.ModelForm):
     name = forms.CharField(max_length=80)
     # slug = forms.SlugField('shortcut')
-    company = forms.ModelChoiceField(queryset=Company.objects.all(), empty_label='Select a Company')
-    description = forms.CharField(widget=forms.Textarea)
+    company = forms.ModelChoiceField(queryset=Company.objects.all(), empty_label='Select a Company *')
+    description = forms.CharField(widget=forms.Textarea, required=False)
 
     class Meta:
         model = Project
@@ -36,23 +36,22 @@ class ProjectRegistrationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProjectRegistrationForm, self).__init__(*args, **kwargs)
         self.fields['name'].widget.attrs['class'] = 'form-control'
-        self.fields['name'].widget.attrs['placeholder'] = 'Project Name'
+        self.fields['name'].widget.attrs['placeholder'] = 'Project Name *'
         self.fields['company'].widget.attrs['class'] = 'form-control'
-        self.fields['company'].widget.attrs['placeholder'] = 'Company'
         self.fields['description'].widget.attrs['class'] = 'form-control'
         self.fields['description'].widget.attrs['placeholder'] = 'Type here the project description...'
 
 class TaskRegistrationForm(forms.ModelForm):
     forms.DateInput.input_type="date"
 
-    project = forms.ModelChoiceField(queryset=Project.objects.all(), empty_label='Select a Project')
-    employee = forms.ModelChoiceField(queryset=User.objects.filter(groups=3), empty_label='Select an employee')
+    project = forms.ModelChoiceField(queryset=Project.objects.all(), empty_label='Select a Project *')
+    employee = forms.ModelChoiceField(queryset=User.objects.filter(groups=3), empty_label='Select an employee', required=False)
     task_name = forms.CharField(max_length=80)
-    status = forms.ChoiceField(choices=status)
-    deadline = forms.DateField()
-    start_date = forms.DateField()
-    hours = forms.IntegerField()
-    description = forms.CharField(widget=forms.Textarea)
+    status = forms.ChoiceField(choices=status, required=False)
+    deadline = forms.DateField(required=False)
+    start_date = forms.DateField(required=False)
+    hours = forms.IntegerField(required=False)
+    description = forms.CharField(widget=forms.Textarea, required=False)
 
     class Meta:
         model = Task
@@ -71,11 +70,9 @@ class TaskRegistrationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TaskRegistrationForm, self).__init__(*args, **kwargs)
         self.fields['project'].widget.attrs['class'] = 'form-control'
-        self.fields['project'].widget.attrs['placeholder'] = 'Project'
         self.fields['employee'].widget.attrs['class'] = 'form-control'
-        self.fields['employee'].widget.attrs['placeholder'] = 'Assignee'
         self.fields['task_name'].widget.attrs['class'] = 'form-control'
-        self.fields['task_name'].widget.attrs['placeholder'] = 'Name'
+        self.fields['task_name'].widget.attrs['placeholder'] = 'Name *'
         self.fields['status'].widget.attrs['class'] = 'form-control'
         self.fields['status'].widget.attrs['placeholder'] = 'Status'
         self.fields['deadline'].widget.attrs['class'] = 'form-control'
@@ -88,9 +85,9 @@ class TaskRegistrationForm(forms.ModelForm):
         self.fields['description'].widget.attrs['placeholder'] = 'Description'
 
 class ChecklistRegistrationForm(forms.ModelForm):
-    task = forms.ModelChoiceField(queryset=Task.objects.all(), empty_label='Select a Task')
+    task = forms.ModelChoiceField(queryset=Task.objects.all(), empty_label='Select a Task *')
     checklist_name = forms.CharField()
-    status = forms.ChoiceField(choices=status)
+    status = forms.ChoiceField(choices=status, required=False)
 
     class Meta:
         model = Checklist
@@ -109,8 +106,7 @@ class ChecklistRegistrationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ChecklistRegistrationForm, self).__init__(*args, **kwargs)
         self.fields['task'].widget.attrs['class'] = 'form-control'
-        self.fields['task'].widget.attrs['placeholder'] = 'Task'
         self.fields['checklist_name'].widget.attrs['class'] = 'form-control'
-        self.fields['checklist_name'].widget.attrs['placeholder'] = 'Name'
+        self.fields['checklist_name'].widget.attrs['placeholder'] = 'Name *'
         self.fields['status'].widget.attrs['class'] = 'form-control'
         self.fields['status'].widget.attrs['placeholder'] = 'Status'

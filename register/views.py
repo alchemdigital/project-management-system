@@ -106,14 +106,14 @@ def update_user(request):
     role = request.POST.get('role')
     instance = User.objects.get(id = id)
     changed_request = request.POST.copy()
-    # changed_request.update({'password1': 'asas'}) # This will not be updated
+    changed_request.update({'password1': 'asas'}) # This will not be updated. Only for validation
     form = RegistrationForm(changed_request, instance=instance)
     roles = Group.objects.all().order_by('id')
     selected_role = Group.objects.filter(user = instance)
     context = { 'form': form, 'id': instance.id, 'roles' : roles,
         'selected_role': selected_role[0].id, 'edit': True}
     if form.is_valid():
-        form.save()
+        form.update(id = instance.id)
         thisRole = Group.objects.get(id = role)
         thisRole.user_set.add(instance)
         context['updated'] = True
@@ -129,12 +129,12 @@ def delete_user(request, user_id):
 @user_passes_test(is_admin)
 def new_company(request):
     if request.method == 'POST':
-        form = CompanyRegistrationForm(request.POST)
+        form = CompanyRegistrationForm(request.POST, use_required_attribute=False)
         context = { 'form': form }
         if form.is_valid():
             form.save()
             created = True
-            form = CompanyRegistrationForm()
+            form = CompanyRegistrationForm(use_required_attribute=False)
             context = {
                 'created' : created,
                 'form' : form,
@@ -142,7 +142,7 @@ def new_company(request):
         
         return render(request, 'register/company_form.html', context)
     else:
-        form = CompanyRegistrationForm()
+        form = CompanyRegistrationForm(use_required_attribute=False)
         context = {
             'form' : form,
         }
@@ -150,7 +150,27 @@ def new_company(request):
 
 @user_passes_test(is_admin)
 def companies(request):
-    companies = Company.objects.all().order_by('-id')
+    order_by = request.GET.get('order_by')
+    if order_by == None:
+        order_by = 'id'
+    direction = request.GET.get('direction')
+    if direction == None:
+        direction = 'desc'
+    if direction == 'desc':
+        ordering = '-{}'.format(order_by)
+    else:
+        ordering = order_by
+    search_term = request.GET.get('search')
+    if search_term is not None:
+        companies = Company.objects.filter(
+            Q(social_name__icontains=search_term) | 
+            Q(name__icontains=search_term) | 
+            Q(city__icontains=search_term) | 
+            Q(found_date__icontains=search_term) | 
+            Q(client__username__icontains=search_term)
+        ).order_by(ordering)
+    else:
+        companies = Company.objects.all().order_by(ordering)
     paginated_companies = Paginator(companies, 10)
     page_number = request.GET.get('page')
     page_obj = paginated_companies.get_page(page_number)
@@ -160,7 +180,7 @@ def companies(request):
 @user_passes_test(is_admin)
 def edit_company(request, company_id):
     company = Company.objects.get(id=company_id)
-    form = CompanyRegistrationForm(instance=company)
+    form = CompanyRegistrationForm(instance=company, use_required_attribute=False)
     context = {
         'id': company.id,
         'form': form,
@@ -172,7 +192,7 @@ def edit_company(request, company_id):
 def update_company(request):
     id = request.POST.get('id')
     instance = Company.objects.get(id = id)
-    form = CompanyRegistrationForm(request.POST, instance=instance)
+    form = CompanyRegistrationForm(request.POST, instance=instance, use_required_attribute=False)
     context = { 'form': form, 'id': instance.id, 'edit': True}
     if form.is_valid():
         form.save(id = instance.id)

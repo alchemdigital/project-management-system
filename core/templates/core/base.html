@@ -63,8 +63,8 @@
                         <li class="text-muted">Hello, {{ user.first_name }}</li>
                     {% else %}
                         <li class="text-muted">
-                        <a href="{% url 'core:login' %}">sign in</a>
-                    </li>
+                            <a href="{% url 'core:login' %}">sign in</a>
+                        </li>
                     {% endif %}
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
@@ -110,79 +110,77 @@
                                     </li>
                                 </ul>
                                 </li> -->
-                            <li class="nav-title">
-                                Register
-                            </li>
-                            <li class="nav-item nav-dropdown">
-                                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-industry"></i> Company</a>
-                                <ul class="nav-dropdown-items">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{% url 'register:new-company'%}"><i class="fa fa-plus ml-2"></i> New Company</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{% url 'register:companies' %}"><i class="fa fa-plus ml-2"></i> All Companies</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item nav-dropdown">
-                                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> Project</a>
-                                <ul class="nav-dropdown-items">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{% url 'projects:new-project'%}"><i class="fa fa-plus ml-2"></i> New Project</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{% url 'projects:projects'%}"><i class="fa fa-plus ml-2"></i> All Projects</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item nav-dropdown">
-                                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> Task</a>
-                                <ul class="nav-dropdown-items">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{% url 'projects:new-task'%}"><i class="fa fa-plus ml-2"></i> New Task</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{% url 'projects:tasks'%}"><i class="fa fa-plus ml-2"></i> All Tasks</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item nav-dropdown">
-                                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> Checklist</a>
-                                <ul class="nav-dropdown-items">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{% url 'projects:new-checklist'%}"><i class="fa fa-plus ml-2"></i> New Checklist</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{% url 'projects:checklists'%}"><i class="fa fa-plus ml-2"></i> All Checklists</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item nav-dropdown">
-                                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> User</a>
-                                <ul class="nav-dropdown-items">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{% url 'register:new-user' %}"><i class="fa fa-plus ml-2"></i> New User</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{% url 'register:users'%}"><i class="fa fa-plus ml-2"></i> All users</a>
-                                    </li>
-                                </ul>
-                            </li>
+                            {% if user.groups.all.0.name == 'admin' or user.groups.all.0.name == 'project_manager' %}    
+                                <li class="nav-title">
+                                    Register
+                                </li>
+                            {% endif %}
+                            {% if user.groups.all.0.name == 'admin' %}
+                                <li class="nav-item nav-dropdown">
+                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-industry"></i> Company</a>
+                                    <ul class="nav-dropdown-items">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'register:new-company'%}"><i class="fa fa-plus ml-2"></i> New Company</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'register:companies' %}"><i class="fa fa-plus ml-2"></i> All Companies</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            {% if user.groups.all.0.name == 'admin' or user.groups.all.0.name == 'project_manager' %}
+                                <li class="nav-item nav-dropdown">
+                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> Project</a>
+                                    <ul class="nav-dropdown-items">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'projects:new-project'%}"><i class="fa fa-plus ml-2"></i> New Project</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'projects:projects'%}"><i class="fa fa-plus ml-2"></i> All Projects</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            {% if user.groups.all.0.name == 'admin' or user.groups.all.0.name == 'project_manager' %}
+                                <li class="nav-item nav-dropdown">
+                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> Task</a>
+                                    <ul class="nav-dropdown-items">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'projects:new-task'%}"><i class="fa fa-plus ml-2"></i> New Task</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'projects:tasks'%}"><i class="fa fa-plus ml-2"></i> All Tasks</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            {% if user.groups.all.0.name == 'admin' or user.groups.all.0.name == 'project_manager' %}
+                                <li class="nav-item nav-dropdown">
+                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> Checklist</a>
+                                    <ul class="nav-dropdown-items">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'projects:new-checklist'%}"><i class="fa fa-plus ml-2"></i> New Checklist</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'projects:checklists'%}"><i class="fa fa-plus ml-2"></i> All Checklists</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            {% if user.groups.all.0.name == 'admin' or user.groups.all.0.name == 'project_manager' %}
+                                <li class="nav-item nav-dropdown">
+                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> User</a>
+                                    <ul class="nav-dropdown-items">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'register:new-user' %}"><i class="fa fa-plus ml-2"></i> New User</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'register:users'%}"><i class="fa fa-plus ml-2"></i> All users</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
                             <li class="divider"></li>
-                            <li class="nav-title">
-                                Extras
-                            </li>
-                            <li class="nav-item nav-dropdown">
-                                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-star"></i> Pages</a>
-                                <ul class="nav-dropdown-items">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{% url 'core:login' %}" target="_top"><i class="fa fa-sign-in"></i> Login</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{% url 'core:logout' %}" target="_top"><i class="fa fa-sign-out"></i> Logout</a>
-                                    </li>
-                                </ul>
-                            </li>
                         </ul>
                     </nav>
                     <button class="sidebar-minimizer brand-minimizer" type="button"></button>
@@ -192,8 +190,8 @@
                     <!-- Breadcrumb -->
                     <ol class="breadcrumb">
                         {% block breadcrumb %}
-                        <li class="breadcrumb-item active">Home</li>
-                        <li class="breadcrumb-item">Dashboard</li>
+                            <li class="breadcrumb-item active">Home</li>
+                            <li class="breadcrumb-item">Dashboard</li>
                         {% endblock breadcrumb%}
                         <!-- Breadcrumb Menu-->
                         <li class="breadcrumb-menu d-md-down-none">
@@ -318,8 +316,7 @@
             </aside>
             </div>
             <footer class="app-footer">
-                <span><a href="http://coreui.io">Copyright</a> © 2018 | Python Developed by Guilherme Luis.</span>
-                <!--<span class="ml-auto">Powered by <a href="http://coreui.io">CoreUI</a></span>-->
+                <span><a href="https://www.alchemdigital.com">Copyright</a> © 2021 | Alchem Digital LLP</span>
             </footer>
             <!-- Bootstrap and necessary plugins -->
             <script src="{% static 'core/vendors/js/popper.min.js'%}"></script>

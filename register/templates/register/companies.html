@@ -11,34 +11,40 @@
 <div class="container-fluid">
     <div class="animated fade-in">
         <div class="row">
+            <div class="pull-right"> 
+                <input type="text" name="search_term" id="search-term" />
+                <i class="fa fa-search" onclick="search()"></i>
+                <span id="filter-info"></span>
+                <a class="text-primary" onclick="window.location.href = window.location.pathname">Clear Filter</a>
+            </div>
             <table class="table table-responsive-sm table-hover table-outline mb-5 ">
                 <thead class="thead-light">
                 <tr>
-                    <th class="text-center">Social Name</th>
-                    <th class="text-center">Name</th>
-                    <th class="text-center">City</th>
-                    <th class="text-center">Found date</th>
-                    <th class="text-center">Client</th>
-                    <th class="text-center">Action</th>
+                    <th class="text-center"onclick="order_by_selected('social_name')">Social Name</th>
+                    <th class="text-center"onclick="order_by_selected('name')" class="text-center">Name</th>
+                    <th class="text-center"onclick="order_by_selected('city')" class="text-center">City</th>
+                    <th class="text-center"onclick="order_by_selected('found_date')" class="text-center">Found date</th>
+                    <th class="text-center"onclick="order_by_selected('client')" class="text-center">Client</th>
+                    <th class="text-center" class="text-center">Action</th>
                 </tr>
             </thead>
                     <tbody>
                         {% for company in page_obj %}
-                            <tr>
+                            <tr onclick="company_row_click(event, {{ company.id }})">
                                 <td class="text-center">
-                                    {{ company.social_name }}
+                                    {{ company.social_name | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ company.name }}
+                                    {{ company.name | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ company.city }}
+                                    {{ company.city | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ company.found_date }}
+                                    {{ company.found_date | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ company.client }}
+                                    {{ company.client | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
                                     <a class="text-primary" href="#" onclick="edit_company(event, {{ company.id }});"><i class="fa fa-edit"></i></a>
@@ -71,12 +77,51 @@
 </div>
 <script type="text/javascript">
     function edit_company(e, company_id) {
+        e.stopPropagation()
         window.location.href = '/register/edit-company/' + company_id
     }
-    function delete_company(e, company_id){
-        e.preventDefault()
+    function delete_company(e, company_id) {
+        e.stopPropagation()
         if (confirm('Are you sure?'))
             window.location.href = '/register/delete-company/' + company_id
+    }
+    function order_by_selected(field_name) {
+        let urlParams = new URLSearchParams(window.location.search)
+        let to_url = '?'
+        if (urlParams.get('direction') == 'asc'){
+            to_url = '?order_by='+ field_name +'&direction=desc'
+        } else {
+            to_url = '?order_by='+ field_name +'&direction=asc'
+        }
+        if ($('#search-term').val() != '')
+            to_url +=  '&search=' + $('#search-term').val()
+        window.location.href = to_url
+    }
+    function search() {
+        let search_term = $('#search-term').val()
+        let joiner = '&'
+        if (window.location.search == '')
+            joiner = ''
+        let url_params = new URLSearchParams(window.location.search)
+        url_params.delete('search')
+        to_url = '?' + url_params.toString()
+        if ($('#search-term').val() != '')
+            to_url +=  joiner + 'search=' + search_term
+        window.location.href = to_url
+    }
+    $(function(){
+        let url_params = new URLSearchParams(window.location.search)
+        if (url_params.get('search') != null)
+            $('#search-term').val(url_params.get('search'))
+        if (url_params.get('order_by') != null) {
+            let filter_info = 'Filtered: ' + url_params.get('order_by')
+            if (url_params.get('direction') != null)
+                filter_info += '(' + url_params.get('direction') + ')'
+            $('#filter-info').html(filter_info)
+        }
+    })
+    function company_row_click(e, company_id){
+        window.location.href = '/projects/projects/' + company_id
     }
 </script>
 {% endblock %}

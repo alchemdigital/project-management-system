@@ -11,46 +11,52 @@
 <div class="container-fluid">
     <div class="animated fade-in">
         <div class="row">
+            <div class="pull-right"> 
+                <input type="text" name="search_term" id="search-term" />
+                <i class="fa fa-search" onclick="search()"></i>
+                <span id="filter-info"></span>
+                <a class="text-primary" onclick="window.location.href = window.location.pathname">Clear Filter</a>
+            </div>
             <table class="table table-responsive-sm table-hover table-outline mb-5 ">
                 <thead class="thead-light">
                 <tr>
-                    <th class="text-center">Project</th>
-                    <th class="text-center">Employee</th>
-                    <th class="text-center">Task Name</th>
-                    <th class="text-center">Status</th>
-                    <th class="text-center">Start Date</th>
-                    <th class="text-center">Deadline</th>
-                    <th class="text-center">Hours</th>
-                    <th class="text-center">Description</th>
+                    <th class="text-center" onclick="order_by_selected('project')">Project</th>
+                    <th class="text-center" onclick="order_by_selected('employee')">Employee</th>
+                    <th class="text-center" onclick="order_by_selected('task_name')">Task Name</th>
+                    <th class="text-center" onclick="order_by_selected('status')">Status</th>
+                    <th class="text-center" onclick="order_by_selected('start_date')">Start Date</th>
+                    <th class="text-center" onclick="order_by_selected('deadline')">Deadline</th>
+                    <th class="text-center" onclick="order_by_selected('hours')">Hours</th>
+                    <th class="text-center" onclick="order_by_selected('description')">Description</th>
                     <th class="text-center">Action</th>
                 </tr>
             </thead>
                     <tbody>
                         {% for task in page_obj %}
-                            <tr>
+                            <tr onclick="task_row_click(event, {{ task.id }})">
                                 <td class="text-center">
-                                    {{ task.project }}
+                                    {{ task.project | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ task.employee }}
+                                    {{ task.employee | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ task.task_name }}
+                                    {{ task.task_name | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ task.get_status_display }}
+                                    {{ task.get_status_display | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ task.start_date }}
+                                    {{ task.start_date | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ task.deadline }}
+                                    {{ task.deadline | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ task.hours }}
+                                    {{ task.hours | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ task.description }}
+                                    {{ task.description | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
                                     <a class="text-primary" href="#" onclick="edit_task(event, {{ task.id }});"><i class="fa fa-edit"></i></a>
@@ -83,12 +89,51 @@
 </div>
 <script type="text/javascript">
     function edit_task(e, task_id) {
+        e.stopPropagation()
         window.location.href = '/projects/edit-task/' + task_id
     }
     function delete_task(e, task_id){
-        e.preventDefault()
+        e.stopPropagation()
         if (confirm('Are you sure?'))
             window.location.href = '/projects/delete-task/' + task_id
+    }
+    function order_by_selected(field_name) {
+        let urlParams = new URLSearchParams(window.location.search)
+        let to_url = '?'
+        if (urlParams.get('direction') == 'asc'){
+            to_url = '?order_by='+ field_name +'&direction=desc'
+        } else {
+            to_url = '?order_by='+ field_name +'&direction=asc'
+        }
+        if ($('#search-term').val() != '')
+            to_url +=  '&search=' + $('#search-term').val()
+        window.location.href = to_url
+    }
+    function search() {
+        let search_term = $('#search-term').val()
+        let joiner = '&'
+        if (window.location.search == '')
+            joiner = ''
+        let url_params = new URLSearchParams(window.location.search)
+        url_params.delete('search')
+        to_url = '?' + url_params.toString()
+        if ($('#search-term').val() != '')
+            to_url +=  joiner + 'search=' + search_term
+        window.location.href = to_url
+    }
+    $(function(){
+        let url_params = new URLSearchParams(window.location.search)
+        if (url_params.get('search') != null)
+            $('#search-term').val(url_params.get('search'))
+        if (url_params.get('order_by') != null) {
+            let filter_info = 'Filtered: ' + url_params.get('order_by')
+            if (url_params.get('direction') != null)
+                filter_info += '(' + url_params.get('direction') + ')'
+            $('#filter-info').html(filter_info)
+        }
+    })
+    function task_row_click(e, task_id){
+        window.location.href = '/projects/checklists/' + task_id
     }
 </script>
 {% endblock %}

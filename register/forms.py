@@ -45,6 +45,15 @@ class RegistrationForm(UserCreationForm):
             user.save()
         return user
 
+    def update(self, id):
+        user = User.objects.get(id=id)
+        user.username = self.clean_data('username')
+        user.first_name = self.clean_data('first_name')
+        user.last_name = self.clean_data('last_name')
+        user.email = self.clean_data('email')
+        user.save()
+        return user
+
     def __init__(self, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)
         self.fields['username'].widget.attrs['class'] = 'form-control'
@@ -55,14 +64,13 @@ class RegistrationForm(UserCreationForm):
         self.fields['last_name'].widget.attrs['placeholder'] = 'Last name'
         self.fields['email'].widget.attrs['class'] = 'form-control'
         self.fields['email'].widget.attrs['placeholder'] = 'E-mail'
-        self.fields['password1'].required = False
 
 class CompanyRegistrationForm(forms.ModelForm):
     social_name = forms.CharField(max_length=80)
     name = forms.CharField(max_length=80)
-    client = forms.ModelChoiceField(queryset=User.objects.filter(groups=4), empty_label="Select a client")
+    client = forms.ModelChoiceField(queryset=User.objects.filter(groups=4), empty_label="Select a client *")
     city = forms.CharField(max_length=50)
-    found_date = forms.DateField()
+    found_date = forms.DateField(required=False)
 
     class Meta:
         model = Company
@@ -84,13 +92,13 @@ class CompanyRegistrationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CompanyRegistrationForm, self).__init__(*args, **kwargs)
         self.fields['social_name'].widget.attrs['class'] = 'form-control'
-        self.fields['social_name'].widget.attrs['placeholder'] = 'Social Name'
+        self.fields['social_name'].widget.attrs['placeholder'] = 'Social Name *'
         self.fields['name'].widget.attrs['class'] = 'form-control'
-        self.fields['name'].widget.attrs['placeholder'] = 'Name'
+        self.fields['name'].widget.attrs['placeholder'] = 'Name *'
         self.fields['client'].widget.attrs['class'] = 'form-control'
-        self.fields['client'].widget.attrs['placeholder'] = 'Client'
+        self.fields['client'].widget.attrs['placeholder'] = 'Client *'
         self.fields['city'].widget.attrs['class'] = 'form-control'
-        self.fields['city'].widget.attrs['placeholder'] = 'City'
+        self.fields['city'].widget.attrs['placeholder'] = 'City *'
         self.fields['found_date'].widget.attrs['class'] = 'form-control'
         self.fields['found_date'].widget.attrs['type'] = 'date'
         self.fields['found_date'].widget.attrs['placeholder'] = 'Found date'

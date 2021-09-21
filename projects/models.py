@@ -38,7 +38,7 @@ class Task(SafeDeleteModel):
     status = models.CharField(max_length=7, choices=status, default=1)
     deadline = models.DateField(null = True)
     start_date = models.DateField(null = True)
-    hours = models.IntegerField(max_length = 5, default = 0)
+    hours = models.IntegerField(max_length = 5, null=True, default=0)
     description = models.TextField(null = True)
     created_at = models.DateTimeField(auto_now_add = True, null = True)
     updated_at = models.DateTimeField(auto_now = True, null = True)

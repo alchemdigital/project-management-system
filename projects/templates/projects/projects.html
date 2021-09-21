@@ -11,26 +11,32 @@
 <div class="container-fluid">
     <div class="animated fade-in">
         <div class="row">
+            <div class="pull-right"> 
+                <input type="text" name="search_term" id="search-term" />
+                <i class="fa fa-search" onclick="search()"></i>
+                <span id="filter-info"></span>
+                <a class="text-primary" onclick="window.location.href = window.location.pathname">Clear Filter</a>
+            </div>
             <table class="table table-responsive-sm table-hover table-outline mb-5 ">
                 <thead class="thead-light">
                 <tr>
-                    <th class="text-center">Name</th>
-                    <th class="text-center">Company</th>
-                    <th class="text-center">Description</th>
+                    <th class="text-center" onclick="order_by_selected('name')">Name</th>
+                    <th class="text-center" onclick="order_by_selected('company')">Company</th>
+                    <th class="text-center" onclick="order_by_selected('description')">Description</th>
                     <th class="text-center">Action</th>
                 </tr>
             </thead>
                     <tbody>
                         {% for project in page_obj %}
-                            <tr>
+                            <tr onclick="project_row_click(event, {{ project.id }})">
                                 <td class="text-center">
-                                    {{ project.name }}
+                                    {{ project.name | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ project.company }}
+                                    {{ project.company | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ project.description }}
+                                    {{ project.description | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
                                     <a class="text-primary" href="#" onclick="edit_project(event, {{ project.id }});"><i class="fa fa-edit"></i></a>
@@ -63,12 +69,51 @@
 </div>
 <script type="text/javascript">
     function edit_project(e, project_id) {
+        e.stopPropagation()
         window.location.href = '/projects/edit-project/' + project_id
     }
     function delete_project(e, project_id){
-        e.preventDefault()
+        e.stopPropagation()
         if (confirm('Are you sure?'))
             window.location.href = '/projects/delete-project/' + project_id
+    }
+    function order_by_selected(field_name) {
+        let urlParams = new URLSearchParams(window.location.search)
+        let to_url = '?'
+        if (urlParams.get('direction') == 'asc'){
+            to_url = '?order_by='+ field_name +'&direction=desc'
+        } else {
+            to_url = '?order_by='+ field_name +'&direction=asc'
+        }
+        if ($('#search-term').val() != '')
+            to_url +=  '&search=' + $('#search-term').val()
+        window.location.href = to_url
+    }
+    function search() {
+        let search_term = $('#search-term').val()
+        let joiner = '&'
+        if (window.location.search == '')
+            joiner = ''
+        let url_params = new URLSearchParams(window.location.search)
+        url_params.delete('search')
+        to_url = '?' + url_params.toString()
+        if ($('#search-term').val() != '')
+            to_url +=  joiner + 'search=' + search_term
+        window.location.href = to_url
+    }
+    $(function(){
+        let url_params = new URLSearchParams(window.location.search)
+        if (url_params.get('search') != null)
+            $('#search-term').val(url_params.get('search'))
+        if (url_params.get('order_by') != null) {
+            let filter_info = 'Filtered: ' + url_params.get('order_by')
+            if (url_params.get('direction') != null)
+                filter_info += '(' + url_params.get('direction') + ')'
+            $('#filter-info').html(filter_info)
+        }
+    })
+    function project_row_click(e, project_id){
+        window.location.href = '/projects/tasks/' + project_id
     }
 </script>
 {% endblock %}
