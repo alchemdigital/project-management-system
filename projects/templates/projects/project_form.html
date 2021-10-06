@@ -65,6 +65,9 @@
                                         {% endfor %}
                                     </ol>
                                     {% endif %}
+                                    {% if user.groups.all.0.name == 'admin' %}
+                                        <a href="{% url 'register:new-company' %}">Create a company</a>
+                                    {% endif %}
                                 </div>
                                 <div class="form-group">
                                     <label class="col-form-label">Description</label>

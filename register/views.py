@@ -70,10 +70,13 @@ def register(request):
     else:
         form = RegistrationForm()
         roles = Group.objects.all().order_by('id')
+        selected_role = request.GET.get('role', None)
         context = {
             'form' : form,
-            'roles' : roles
+            'roles' : roles,
         }
+        if selected_role is not None:
+            context['selected_role'] = int(selected_role)
         return render(request, 'register/reg_form.html', context)
 
 @user_passes_test(is_admin)
@@ -215,7 +218,7 @@ def password_reset_request(request):
             if associated_users.exists():
                 for user in associated_users:
                     subject = "Password Reset Requested"
-                    email_template_name = "register/password_reset_email.txt"
+                    email_template_name = "register/password_reset_email.html"
                     context = {
                         "email": user.email,
                         'domain': request.get_host(),
@@ -227,7 +230,7 @@ def password_reset_request(request):
                     }
                     email = render_to_string(email_template_name, context)
                     try:
-                        send_mail(subject, email, 'admin@example.com' , [user.email], fail_silently=False)
+                        send_mail(subject, email, 'admin@example.com' , [user.email], fail_silently=False, html_message=email)
                     except BadHeaderError:
                         return HttpResponse('Invalid header found.')
                     return redirect ("password-reset/done/")

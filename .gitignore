@@ -111,3 +111,4 @@ static/*
 **/__pycache__
 **/.DS_Store
 manager/settings.py
+.vscode/*
