@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
-from django.contrib.auth.models import UserManager as UserManagerDjango
+# from django.contrib.auth.models import UserManager as UserManagerDjango
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -26,7 +26,9 @@ class UserManager(BaseUserManager):
             email,
             password=password,
         )
-        user.is_admin = True
+        user.is_superuser = 1
+        user.save(using=self._db)
+        user.admin = user
         user.save(using=self._db)
         return user
 
@@ -40,7 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-    objects = UserManagerDjango()
+    objects = UserManager()
 
     def has_perm(self, perm, obj=None):
         return True
