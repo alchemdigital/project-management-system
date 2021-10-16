@@ -50,7 +50,7 @@
                                             </ol>
                                         {% endif %}
                                     </div>
-                                    {% if user.groups.all.0.name == 'admin' or user.groups.all.0.name == 'project_manager' %}
+                                    {% if user.is_admin or user.is_project_manager %}
                                         <a href="{% url 'projects:new-task' %}">Create a Task</a>
                                     {% endif %}
                                 </div>

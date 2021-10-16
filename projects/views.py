@@ -6,36 +6,30 @@ from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.shortcuts import redirect
-
-
-def is_project_manager(user):
-    return user.groups.filter(name='project_manager').exists()
-
-def is_admin(user):
-    return user.groups.filter(name='admin').exists()
-
-def is_pm_or_admin(user):
-    return user.groups.filter(Q(name='project_manager') | Q(name='admin')).exists()
+import csv
+from django.http import HttpResponse
+from core.views import is_admin, is_project_manager, is_pm_or_admin
 
 # Create your views here.
 @user_passes_test(is_pm_or_admin)
 def new_project(request):
     if request.method == 'POST':
-        form = ProjectRegistrationForm(request.POST, use_required_attribute=False)
+        form = ProjectRegistrationForm(request.POST, user=request.user, use_required_attribute=False)
         context = {'form': form}
         if form.is_valid():
             form.save()
             created = True
-            form = ProjectRegistrationForm(use_required_attribute=False)
+            form = ProjectRegistrationForm(user=request.user, use_required_attribute=False)
             context = {
                 'created': created,
                 'form': form,
             }
             return render(request, 'projects/project_form.html', context)
         else:
+            print(form.errors)
             return render(request, 'projects/project_form.html', context)
     else:
-        form = ProjectRegistrationForm(use_required_attribute=False)
+        form = ProjectRegistrationForm(user=request.user, use_required_attribute=False)
         context = {
             'form': form,
         }
@@ -54,15 +48,16 @@ def projects(request, company_id = None):
     else:
         ordering = order_by
     search_term = request.GET.get('search')
+    this_user = request.user
     if search_term is not None:
         if company_id is not None:
-            projects = Project.objects.filter(
+            projects = Project.objects.filter(admin=this_user.admin).filter(
                 (Q(name__icontains=search_term) | 
                                 Q(description__icontains=search_term) | 
                                 Q(company__name__icontains=search_term))
             ).filter(company_id=company_id).order_by(ordering)
         else:
-            projects = Project.objects.filter(
+            projects = Project.objects.filter(admin=this_user.admin).filter(
                 Q(name__icontains=search_term) | 
                 Q(description__icontains=search_term) | 
                 Q(company__name__icontains=search_term)
@@ -71,7 +66,7 @@ def projects(request, company_id = None):
         if company_id is not None:
             projects = Project.objects.filter(company_id=company_id)
         else:
-            projects = Project.objects.all()
+            projects = Project.objects.filter(admin=this_user.admin)
     paginated_projects = Paginator(projects, 10)
     page_number = request.GET.get('page')
     page_obj = paginated_projects.get_page(page_number)
@@ -80,8 +75,9 @@ def projects(request, company_id = None):
 
 @user_passes_test(is_pm_or_admin)
 def edit_project(request, project_id):
-    project = Project.objects.get(id=project_id)
-    form = ProjectRegistrationForm(instance=project, use_required_attribute=False)
+    this_user = request.user
+    project = Project.objects.filter(admin=this_user.admin).get(id=project_id)
+    form = ProjectRegistrationForm(instance=project, user=request.user, use_required_attribute=False)
     context = {
         'id': project.id,
         'form': form,
@@ -91,9 +87,10 @@ def edit_project(request, project_id):
 
 @user_passes_test(is_pm_or_admin)
 def update_project(request):
+    this_user = request.user
     id = request.POST.get('id')
-    instance = Project.objects.get(id = id)
-    form = ProjectRegistrationForm(request.POST, instance=instance, use_required_attribute=False)
+    instance = Project.objects.filter(admin=this_user.admin).get(id = id)
+    form = ProjectRegistrationForm(request.POST, user=request.user, instance=instance, use_required_attribute=False)
     context = { 'form': form, 'id': instance.id, 'edit': True}
     if form.is_valid():
         form.save()
@@ -102,7 +99,8 @@ def update_project(request):
 
 @user_passes_test(is_pm_or_admin)
 def delete_project(request, project_id):
-    project = Project.objects.get(id=project_id)
+    this_user = request.user
+    project = Project.objects.filter(admin=this_user.admin).get(id=project_id)
     project.delete()
     return redirect('projects:projects')
 
@@ -113,7 +111,9 @@ def new_task(request):
         changed_request = request.POST.copy()
         if request.POST.get('hours') == '':
             changed_request.update({'hours': 0})
-        form = TaskRegistrationForm(changed_request, use_required_attribute=False)
+        if request.POST.get('estimate_hours') == '':
+            changed_request.update({'estimate_hours': 0})
+        form = TaskRegistrationForm(changed_request, user=request.user, use_required_attribute=False)
         context = {'form': form}
         if form.is_valid():
             form.save()
@@ -126,7 +126,7 @@ def new_task(request):
         else:
             return render(request, 'projects/task_form.html', context)
     else:
-        form = TaskRegistrationForm(use_required_attribute=False)
+        form = TaskRegistrationForm(user=request.user,use_required_attribute=False)
         context = {
             'form': form,
         }
@@ -145,11 +145,11 @@ def tasks(request, project_id = None):
     else:
         ordering = order_by
     search_term = request.GET.get('search')
+    this_user = request.user
     if search_term is not None:
         if project_id is not None:
-            tasks = Task.objects.filter(
+            tasks = Task.objects.filter(admin=this_user.admin).filter(
                 Q(project__name__icontains=search_term) |
-                Q(employee__username__icontains=search_term) |
                 Q(task_name__icontains=search_term) |
                 Q(status__icontains=search_term) |
                 Q(deadline__icontains=search_term) |
@@ -158,9 +158,8 @@ def tasks(request, project_id = None):
                 Q(description__icontains=search_term)
             ).filter(project_id=project_id).order_by(ordering)
         else:
-            tasks = Task.objects.filter(
+            tasks = Task.objects.filter(admin=this_user.admin).filter(
                 Q(project__name__icontains=search_term) |
-                Q(employee__username__icontains=search_term) |
                 Q(task_name__icontains=search_term) |
                 Q(status__icontains=search_term) |
                 Q(deadline__icontains=search_term) |
@@ -170,9 +169,9 @@ def tasks(request, project_id = None):
             ).order_by(ordering)
     else:
         if project_id is not None:
-            tasks = Task.objects.filter(project_id=project_id)
+            tasks = Task.objects.filter(admin=this_user.admin).filter(project_id=project_id)
         else:
-            tasks = Task.objects.all()
+            tasks = Task.objects.filter(admin=this_user.admin)
     paginated_tasks = Paginator(tasks, 10)
     page_number = request.GET.get('page')
     page_obj = paginated_tasks.get_page(page_number)
@@ -181,8 +180,9 @@ def tasks(request, project_id = None):
 
 @user_passes_test(is_pm_or_admin)
 def edit_task(request, task_id):
-    task = Task.objects.get(id=task_id)
-    form = TaskRegistrationForm(instance=task, use_required_attribute=False)
+    this_user = request.user
+    task = Task.objects.filter(admin=this_user.admin).get(id=task_id)
+    form = TaskRegistrationForm(instance=task, user=request.user, use_required_attribute=False)
     context = {
         'id': task.id,
         'form': form,
@@ -192,9 +192,10 @@ def edit_task(request, task_id):
 
 @user_passes_test(is_pm_or_admin)
 def update_task(request):
+    this_user = request.user
     id = request.POST.get('id')
-    instance = Task.objects.get(id = id)
-    form = TaskRegistrationForm(request.POST, instance=instance, use_required_attribute=False)
+    instance = Task.objects.filter(admin=this_user.admin).get(id = id)
+    form = TaskRegistrationForm(request.POST, instance=instance, user=request.user, use_required_attribute=False)
     context = { 'form': form, 'id': instance.id, 'edit': True}
     if form.is_valid():
         form.save()
@@ -203,7 +204,8 @@ def update_task(request):
 
 @user_passes_test(is_pm_or_admin)
 def delete_task(request, task_id):
-    task = Task.objects.get(id=task_id)
+    this_user = request.user
+    task = Task.objects.filter(admin=this_user.admin).get(id=task_id)
     task.delete()
     return redirect('projects:tasks')
 # Task CRUD - end
@@ -211,12 +213,12 @@ def delete_task(request, task_id):
 #Checklist CRUD - start
 def new_checklist(request):
     if request.method == 'POST':
-        form = ChecklistRegistrationForm(request.POST, use_required_attribute=False)
+        form = ChecklistRegistrationForm(request.POST, user=request.user, use_required_attribute=False)
         context = {'form': form}
         if form.is_valid():
             form.save()
             created = True
-            form = ChecklistRegistrationForm(use_required_attribute=False)
+            form = ChecklistRegistrationForm(user=request.user, use_required_attribute=False)
             context = {
                 'form': form,
                 'created': created,
@@ -225,7 +227,7 @@ def new_checklist(request):
         else:
             return render(request, 'projects/checklist_form.html', context)
     else:
-        form = ChecklistRegistrationForm(use_required_attribute=False)
+        form = ChecklistRegistrationForm(user=request.user, use_required_attribute=False)
         context = {
             'form': form,
         }
@@ -243,24 +245,25 @@ def checklists(request, task_id = None):
     else:
         ordering = order_by
     search_term = request.GET.get('search')
+    this_user = request.user
     if search_term is not None:
         if task_id is not None:
-            checklists = Checklist.objects.filter(
+            checklists = Checklist.objects.filter(admin=this_user.admin).filter(
                 Q(checklist_name__icontains=search_term) |
                 Q(task__task_name__icontains=search_term) |
                 Q(status__icontains=search_term)
             ).filter(task_id=task_id).order_by(ordering)
         else:
-            checklists = Checklist.objects.filter(
+            checklists = Checklist.objects.filter(admin=this_user.admin).filter(
                 Q(checklist_name__icontains=search_term) |
                 Q(task__task_name__icontains=search_term) |
                 Q(status__icontains=search_term)
             ).order_by(ordering)
     else:
         if task_id is not None:
-            checklists = Checklist.objects.filter(task_id=task_id)
+            checklists = Checklist.objects.filter(admin=this_user.admin).filter(task_id=task_id)
         else:
-            checklists = Checklist.objects.all()
+            checklists = Checklist.objects.filter(admin=this_user.admin)
     paginated_checklists = Paginator(checklists, 10)
     page_number = request.GET.get('page')
     page_obj = paginated_checklists.get_page(page_number)
@@ -268,8 +271,9 @@ def checklists(request, task_id = None):
     return render(request, 'projects/checklists.html', context)
 
 def edit_checklist(request, checklist_id):
-    checklist = Checklist.objects.get(id=checklist_id)
-    form = ChecklistRegistrationForm(instance=checklist, use_required_attribute=False)
+    this_user = request.user
+    checklist = Checklist.objects.filter(admin=this_user.admin).get(id=checklist_id)
+    form = ChecklistRegistrationForm(instance=checklist, user=request.user, use_required_attribute=False)
     context = {
         'id': checklist.id,
         'form': form,
@@ -278,9 +282,10 @@ def edit_checklist(request, checklist_id):
     return render(request, 'projects/checklist_form.html', context)
 
 def update_checklist(request):
+    this_user = request.user
     id = request.POST.get('id')
-    instance = Checklist.objects.get(id = id)
-    form = ChecklistRegistrationForm(request.POST, instance=instance, use_required_attribute=False)
+    instance = Checklist.objects.filter(admin=this_user.admin).get(id = id)
+    form = ChecklistRegistrationForm(request.POST, instance=instance, user=request.user, use_required_attribute=False)
     context = { 'form': form, 'id': instance.id, 'edit': True}
     if form.is_valid():
         form.save()
@@ -288,7 +293,27 @@ def update_checklist(request):
     return render(request, 'projects/checklist_form.html', context)
 
 def delete_checklist(request, checklist_id):
-    checklist = Checklist.objects.get(id=checklist_id)
+    this_user = request.user
+    checklist = Checklist.objects.filter(admin=this_user.admin).get(id=checklist_id)
     checklist.delete()
     return redirect('projects:checklists')
 #Checklist CRUD - end
+
+@user_passes_test(is_admin)
+def export_tasks(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="tasks.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['Task', 'Description', 'Hours', 'Created Date', 'Status', 'POC'])
+
+    tasks = Task.objects.all().values_list('task_name', 'description', 'hours', 'created_at', 'status', 'employee__first_name')
+    total_hours = 0
+    for task in tasks:
+        total_hours += task[2]
+        writer.writerow(task)
+    writer.writerow(())
+    writer.writerow(('', 'Total Hours', total_hours))
+    return response
+
+def last_worked_employee(project_id):
+    Task.objects.get(project_id = project_id)
