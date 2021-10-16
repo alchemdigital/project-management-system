@@ -6,7 +6,8 @@ from .forms import RegistrationForm
 from .forms import CompanyRegistrationForm
 from django.contrib.auth.models import Group
 from projects.email import EmailThread
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 from django.contrib.auth.forms import PasswordResetForm
 from django.db.models import Q
 from django.utils.http import urlsafe_base64_encode
@@ -17,22 +18,16 @@ from django.core.mail import send_mail, BadHeaderError
 from django.contrib.auth.decorators import user_passes_test
 from .models import Company
 from  django.core.paginator import Paginator
-
-def is_project_manager(user):
-    return user.groups.filter(name='project_manager').exists()
-
-def is_admin(user):
-    return user.groups.filter(name='admin').exists()
-
-def is_pm_or_admin(user):
-    return user.groups.filter(Q(name='project_manager') | Q(name='admin')).exists()
+from core.views import is_admin, is_project_manager, is_pm_or_admin
 
 @user_passes_test(is_admin)
 def register(request):
     if request.method == 'POST':
+        admin_id = request.user.id
         changed_request = request.POST.copy()
         generated_password = User.objects.make_random_password()
         changed_request.update({'password1': [generated_password]})
+        changed_request.update({'admin_id': admin_id})
         form = RegistrationForm(changed_request)
         roles = Group.objects.all().order_by('id')
         role = request.POST.get('role')
@@ -53,7 +48,7 @@ def register(request):
             thisRole = Group.objects.get(id = role)
             thisRole.user_set.add(user)
             # Email send functionality starts
-            html_mail_content = f'<table border="1"><thead><th>username</th><th>Email</th><th>Password</th><tbody><td>{user.username}</td><td>{user.email}</td><td>{ generated_password }</td></tbody></table>'
+            html_mail_content = f'<table border="1"><thead><th>Email</th><th>Password</th><tbody><td>{user.email}</td><td>{ generated_password }</td></tbody></table>'
             recipient_list = [user.email]
             EmailThread('Registered With PMS', html_mail_content, recipient_list).start()
             # Email send functionality ends
@@ -70,10 +65,13 @@ def register(request):
     else:
         form = RegistrationForm()
         roles = Group.objects.all().order_by('id')
+        selected_role = request.GET.get('role', None)
         context = {
             'form' : form,
-            'roles' : roles
+            'roles' : roles,
         }
+        if selected_role is not None:
+            context['selected_role'] = int(selected_role)
         return render(request, 'register/reg_form.html', context)
 
 @user_passes_test(is_admin)
@@ -129,12 +127,12 @@ def delete_user(request, user_id):
 @user_passes_test(is_admin)
 def new_company(request):
     if request.method == 'POST':
-        form = CompanyRegistrationForm(request.POST, use_required_attribute=False)
+        form = CompanyRegistrationForm(request.POST, user=request.user, use_required_attribute=False)
         context = { 'form': form }
         if form.is_valid():
             form.save()
             created = True
-            form = CompanyRegistrationForm(use_required_attribute=False)
+            form = CompanyRegistrationForm(user=request.user, use_required_attribute=False)
             context = {
                 'created' : created,
                 'form' : form,
@@ -142,7 +140,7 @@ def new_company(request):
         
         return render(request, 'register/company_form.html', context)
     else:
-        form = CompanyRegistrationForm(use_required_attribute=False)
+        form = CompanyRegistrationForm(user=request.user, use_required_attribute=False)
         context = {
             'form' : form,
         }
@@ -166,8 +164,7 @@ def companies(request):
             Q(social_name__icontains=search_term) | 
             Q(name__icontains=search_term) | 
             Q(city__icontains=search_term) | 
-            Q(found_date__icontains=search_term) | 
-            Q(client__username__icontains=search_term)
+            Q(found_date__icontains=search_term)
         ).order_by(ordering)
     else:
         companies = Company.objects.all().order_by(ordering)
@@ -180,7 +177,7 @@ def companies(request):
 @user_passes_test(is_admin)
 def edit_company(request, company_id):
     company = Company.objects.get(id=company_id)
-    form = CompanyRegistrationForm(instance=company, use_required_attribute=False)
+    form = CompanyRegistrationForm(user=request.user, instance=company, use_required_attribute=False)
     context = {
         'id': company.id,
         'form': form,
@@ -192,7 +189,7 @@ def edit_company(request, company_id):
 def update_company(request):
     id = request.POST.get('id')
     instance = Company.objects.get(id = id)
-    form = CompanyRegistrationForm(request.POST, instance=instance, use_required_attribute=False)
+    form = CompanyRegistrationForm(request.POST, user=request.user, instance=instance, use_required_attribute=False)
     context = { 'form': form, 'id': instance.id, 'edit': True}
     if form.is_valid():
         form.save(id = instance.id)
@@ -215,7 +212,7 @@ def password_reset_request(request):
             if associated_users.exists():
                 for user in associated_users:
                     subject = "Password Reset Requested"
-                    email_template_name = "register/password_reset_email.txt"
+                    email_template_name = "register/password_reset_email.html"
                     context = {
                         "email": user.email,
                         'domain': request.get_host(),
@@ -227,7 +224,7 @@ def password_reset_request(request):
                     }
                     email = render_to_string(email_template_name, context)
                     try:
-                        send_mail(subject, email, 'admin@example.com' , [user.email], fail_silently=False)
+                        send_mail(subject, email, 'admin@example.com' , [user.email], fail_silently=False, html_message=email)
                     except BadHeaderError:
                         return HttpResponse('Invalid header found.')
                     return redirect ("password-reset/done/")

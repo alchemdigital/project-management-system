@@ -50,6 +50,7 @@
                                         </ol>
                                         {% endif %}
                                     </div>
+                                    <a href="{% url 'projects:new-project' %}">Create a Project</a>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-form-label">Assign</label>
@@ -132,6 +133,22 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label class="col-form-label">Estimate Hours</label>
+                                    <div class="input-group">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-circle"></i></span>
+                                        </div>
+                                        {{ form.estimate_hours }}
+                                        {% if form.estimate_hours.errors %}
+                                        <ol>
+                                            {% for error in form.estimate_hours.errors %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label class="col-form-label">Hours</label>
                                     <div class="input-group">
                                         <div class="input-group-append">
@@ -175,4 +192,9 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        $('#id_project').change(function(e){
+            console.log($(this).val())
+        })
+    </script>
 {% endblock %}

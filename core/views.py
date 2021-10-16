@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import logout
 from django.contrib.auth import authenticate
@@ -11,10 +12,20 @@ from register.models import Company
 from register.models import Project
 from projects.models import Task
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 # Create your views here.
 def index(request):
     return render(request, 'core/index.html')
+
+def is_project_manager(user):
+    return user.groups.filter(name='project_manager').exists()
+
+def is_admin(user):
+    return user.groups.filter(name='admin').exists()
+
+def is_pm_or_admin(user):
+    return user.groups.filter(Q(name='project_manager') | Q(name='admin')).exists()
 
 @login_required
 def dashboard(request):
