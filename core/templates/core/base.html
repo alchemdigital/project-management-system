@@ -185,6 +185,20 @@
                             {% endif %}
                             {% if user.groups.all.0.name == 'admin' %}
                                 <li class="nav-item nav-dropdown">
+                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> Import</a>
+                                    <ul class="nav-dropdown-items">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'projects:download_import_sample' %}"><i class="fa fa-plus ml-2"></i> Download sample file</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'projects:import_tasks' %}"><i class="fa fa-plus ml-2"></i> Import
+                                                Tasks</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            {% if user.groups.all.0.name == 'admin' %}
+                                <li class="nav-item nav-dropdown">
                                     <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> Export</a>
                                     <ul class="nav-dropdown-items">
                                         <li class="nav-item">
