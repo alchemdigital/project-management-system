@@ -31,6 +31,8 @@ urlpatterns = [
     path('update-checklist/', views.update_checklist, name='update_checklist'),
     path('delete-checklist/<int:checklist_id>/', views.delete_checklist, name='delete_checklist'),
     # Checklist CRUD - end
+    path('download-import-sample', views.download_import_sample, name='download_import_sample'),
+    path('import-tasks', views.import_tasks, name='import_tasks'),
     path('export-tasks', views.export_tasks, name='export_tasks'),
     path('last-worked-employee/<int:project_id>', views.last_worked_employee, name='last_worked_employee')
 ]

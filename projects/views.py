@@ -7,8 +7,12 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from django.shortcuts import redirect
 import csv
+import codecs
 from django.http import HttpResponse
 from core.views import is_admin, is_project_manager, is_pm_or_admin
+from django.contrib.auth import get_user_model
+User = get_user_model()
+from .forms import status as form_status
 
 # Create your views here.
 @user_passes_test(is_pm_or_admin)
@@ -300,20 +304,111 @@ def delete_checklist(request, checklist_id):
 #Checklist CRUD - end
 
 @user_passes_test(is_admin)
-def export_tasks(request):
+def download_import_sample(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="tasks.csv"'
     writer = csv.writer(response)
-    writer.writerow(['Task', 'Description', 'Hours', 'Created Date', 'Status', 'POC'])
-
-    tasks = Task.objects.all().values_list('task_name', 'description', 'hours', 'created_at', 'status', 'employee__first_name')
-    total_hours = 0
-    for task in tasks:
-        total_hours += task[2]
-        writer.writerow(task)
-    writer.writerow(())
-    writer.writerow(('', 'Total Hours', total_hours))
+    writer.writerow(['Task', 'Description', 'Hours', 'Created Date', 'Status', 'Deadline', 'POC', 'Start Date', 'Estimate Hours'])
+    writer.writerow(['Your Task Name', 'Your Description Here', 8, '2021/10/19 12:21:38', 'Yet to start', '2021/10/19 12:21:38', 'employee@email.com', '2021/10/19 12:21:38', 10])
     return response
+
+@user_passes_test(is_admin)
+def import_tasks(request):
+    context = {}
+    admin = request.user.admin
+    projects = Project.objects.filter(admin=admin)
+    context = {'projects': projects, 'errors': []}
+    if request.method == 'POST':
+        file = request.FILES['file']
+        user = request.user
+        project = Project.objects.filter(admin = admin).get()
+        reader = csv.DictReader(codecs.iterdecode(file, 'utf-8'))
+        for row in reader:
+            task_name = row['Task']
+            description = row['Description']
+            hours = row['Hours']
+            created_at = row['Created Date']
+            status = list(filter(lambda x: x[1].lower() == row['Status'].lower(), form_status))
+            status = status[0][0]
+            deadline = row['Deadline']
+            poc = row['POC']
+            try:
+                employee = User.objects.filter(admin=admin).get(email=row['POC'])
+            except User.DoesNotExist:
+                employee = None
+                context['errors'].append(f'{poc} does not exist')
+            start_date = row['Start Date']
+            estimate_hours= row['Estimate Hours']
+            created = user
+            Task.objects.create(admin=admin, project=project, employee=employee, task_name=task_name, status=status, deadline=deadline, start_date=start_date, estimate_hours=estimate_hours, hours=hours, description=description, created=created, created_at=created_at, updated=created, updated_at=created_at, imported=True)
+        file.close()
+        context['created'] = True
+    return render(request, 'projects/import-tasks.html', context)
+
+@user_passes_test(is_admin)
+def export_tasks(request):
+    admin = request.user.admin
+    projects = Project.objects.filter(admin=admin)
+    fields = [f.name for f in Task._meta.get_fields()]
+    fields.remove('deleted')
+    fields.remove('created')
+    fields.remove('updated')
+    fields.remove('imported')
+    fields.remove('admin')
+    fields.remove('project')
+    context = {'projects': projects, 'fields': fields, 'errors': []}
+    if request.method == 'POST':
+        request_fields = request.POST.getlist('fields')
+        project = Project.objects.filter(admin=admin).get(id=request.POST.get('project'))
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="{project.name}.csv"'
+        writer = csv.writer(response)
+        need_checklist = False
+        if 'checklist' in  request_fields:
+            need_checklist = True
+        request_fields.remove('checklist')
+        writer.writerow([i.title().replace('_', ' ') for i in request_fields])
+        request_columns = list(request_fields)
+        if 'id' not in request_fields:
+            request_columns.append('id')
+        tasks = Task.objects.filter(admin=admin, project=project).values(*request_columns)
+        total_hours = 0
+        empty_row_data = ['' for i in request_fields]
+        date_fields = ['start_date', 'deadline', 'created_at', 'updated_at']
+        for task in tasks:
+            value_row = []
+            for request_field in request_fields:
+                if request_field == 'hours':
+                    total_hours += task[request_field]
+                elif request_field == 'employee':
+                    this_employee = User.objects.filter(admin=admin, id=task[request_field]).values_list('first_name', flat=True).first()
+                    task[request_field] = this_employee
+                elif request_field in date_fields:
+                    task[request_field] = task[request_field].strftime(("%d-%m-%Y %H:%M:%S"))
+                value_row.append(task[request_field])
+            writer.writerow(value_row)
+            if need_checklist:
+                checklists = Checklist.objects.filter(admin=admin, task=task.get('id')).values()
+                for checklist in checklists:
+                    checklist_row = list(empty_row_data)
+                    task_name_index = 0
+                    if 'task_name' in  request_fields:
+                        task_name_index = request_fields.index('task_name')
+                    checklist_row[task_name_index] = checklist.get('checklist_name')
+                    writer.writerow(checklist_row)
+        if total_hours != 0:
+            writer.writerow(())
+            hours_index = request_fields.index('hours')
+            total_hours_row = list(empty_row_data)
+            if hours_index == 0:
+                total_hours_row[0] = 'Total Hours'
+                total_hours_row[1] = total_hours
+            else:
+                total_hours_row[hours_index - 1] = 'Total Hours'
+                total_hours_row[hours_index] = total_hours
+            writer.writerow(total_hours_row)
+        return response
+    return render(request, 'projects/export-tasks.html', context)
 
 def last_worked_employee(project_id):
     Task.objects.get(project_id = project_id)

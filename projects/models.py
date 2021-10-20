@@ -50,6 +50,7 @@ class Task(SafeDeleteModel):
     created_at = models.DateTimeField(auto_now_add = True, null = True)
     updated = models.ForeignKey(User, on_delete=models.CASCADE, related_name='%(class)s_updated', null=True, blank=True)
     updated_at = models.DateTimeField(auto_now = True, null = True)
+    imported = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['project', 'task_name']

@@ -39,7 +39,6 @@ class ProjectRegistrationForm(forms.ModelForm):
             project.created = self.instance.updated
         project.updated = self.user
         project.save()
-        print(project)
         return project
 
     def __init__(self, *args, **kwargs):
