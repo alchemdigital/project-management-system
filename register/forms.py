@@ -54,7 +54,6 @@ class RegistrationForm(UserCreationForm):
         return user
 
     def __init__(self, *args, **kwargs):
-        print(args[0]['admin_id'])
         super(RegistrationForm, self).__init__(*args, **kwargs)
         self.fields['first_name'].widget.attrs['class'] = 'form-control'
         self.fields['first_name'].widget.attrs['placeholder'] = 'First name'
