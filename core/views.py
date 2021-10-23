@@ -10,9 +10,12 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from register.models import Company
 from register.models import Project
+from register.models import Attendance
 from projects.models import Task
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+import datetime
+import subprocess
 
 # Create your views here.
 def index(request):
@@ -51,6 +54,7 @@ def login_view(request):
         if form.is_valid():
             authenticated_user = authenticate(username=request.POST['username'], password=request.POST['password'])
             login(request, authenticated_user)
+            add_attendance(request, authenticated_user)
             return redirect('core:index')
         else:
             return render(request, 'register/login.html', {'login_form':form})
@@ -63,6 +67,16 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('core:index'))
 
+def add_attendance(request, user):
+    subprocess_result = subprocess.Popen('iwgetid',shell=True,stdout=subprocess.PIPE)
+    subprocess_output = subprocess_result.communicate()[0],subprocess_result.returncode
+    network_name = subprocess_output[0].decode('utf-8')
+    type = 2 # Work From Home
+    if 'alchem' in network_name.lower() and 'digital' in network_name.lower():
+        type = 1 # Office
+    today = datetime.date.today()
+    if not Attendance.objects.filter(admin=user.admin, employee=user, work_date__date=today).exists():
+            Attendance.objects.create(admin=user.admin, employee=user, type=type)
 
 def context(request): # send context to base.html
     # if not request.session.session_key:
