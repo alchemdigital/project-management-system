@@ -61,7 +61,10 @@ class RegistrationForm(UserCreationForm):
         self.fields['last_name'].widget.attrs['placeholder'] = 'Last name'
         self.fields['email'].widget.attrs['class'] = 'form-control'
         self.fields['email'].widget.attrs['placeholder'] = 'E-mail'
-        self.admin_id = args[0]['admin_id']
+        if kwargs.get('instance') is not None:
+            self.admin_id = kwargs.get('instance').admin_id
+        else:
+            self.admin_id = args[0]['admin_id']
 
 class CompanyRegistrationForm(forms.ModelForm):
     social_name = forms.CharField(max_length=80)

@@ -16,9 +16,10 @@ from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, BadHeaderError
 from django.contrib.auth.decorators import user_passes_test
-from .models import Company
+from .models import Company, Attendance
 from  django.core.paginator import Paginator
 from core.views import is_admin, is_project_manager, is_pm_or_admin
+import datetime
 
 @user_passes_test(is_admin)
 def register(request):
@@ -63,7 +64,9 @@ def register(request):
         else:
             return render(request, 'register/reg_form.html', context)
     else:
-        form = RegistrationForm()
+        admin_id = request.user.admin_id
+        changed_request = ({'admin_id': admin_id})
+        form = RegistrationForm(changed_request)
         roles = Group.objects.all().order_by('id')
         selected_role = request.GET.get('role', None)
         context = {
@@ -85,12 +88,14 @@ def users(request):
 
 @user_passes_test(is_admin)
 def edit_user(request, user_id):
-    user = User.objects.get(id=user_id)
-    form = RegistrationForm(instance=user)
+    user = request.user
+    this_user = User.objects.filter(admin=user).get(id=user_id)
+    form = RegistrationForm(instance=this_user)
+    print(form)
     roles = Group.objects.all().order_by('id')
-    selected_role = Group.objects.filter(user = user)
+    selected_role = Group.objects.filter(user = this_user)
     context = {
-        'id': user.id,
+        'id': this_user.id,
         'form': form,
         'roles' : roles,
         'selected_role': selected_role[0].id,
@@ -105,7 +110,7 @@ def update_user(request):
     instance = User.objects.get(id = id)
     changed_request = request.POST.copy()
     changed_request.update({'password1': 'asas'}) # This will not be updated. Only for validation
-    form = RegistrationForm(changed_request, instance=instance)
+    form = RegistrationForm(instance=instance)
     roles = Group.objects.all().order_by('id')
     selected_role = Group.objects.filter(user = instance)
     context = { 'form': form, 'id': instance.id, 'roles' : roles,
@@ -230,3 +235,23 @@ def password_reset_request(request):
                     return redirect ("password-reset/done/")
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="register/password_reset.html", context={"password_reset_form":password_reset_form})
+
+def attendance(request):
+    user = request.user
+    admin = request.user.admin
+    today = datetime.date.today()
+    today_present = Attendance.objects.filter(admin=user.admin, employee=user, work_date__date=today).exists()
+    context = {
+        'today_present': today_present
+    }
+    return render(request, 'register/attendance.html', context)
+
+def add_attendance(request):
+    user = request.user
+    type = 2 # Work From Home
+    if True:
+        type = 1 # Office
+    today = datetime.date.today()
+    if not Attendance.objects.filter(admin=user.admin, employee=user, work_date__date=today).exists():
+            Attendance.objects.create(admin=user.admin, employee=user, type=type)
+    return redirect('/register/attendance')
