@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block breadcrumb %}
+        <li class="breadcrumb-item">Home</li>
+        <li class="breadcrumb-item active">Attendance</li>
+{% endblock breadcrumb%}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="animated fade-in">
+        {% if today_present %}
+            <p class="text-success">Today attendance added</p>
+        {% endif %}
+        <a class="btn btn-primary" href="{% url 'register:add_attendance' %}">Add attendance</a>
+    </div>
+</div>
+{% endblock %}

@@ -18,5 +18,7 @@ urlpatterns = [
     # path('users/profile', views.profile, name='profile'),
     # path('users/<int:profile_id>/', views.user_view, name='user'),
     path('', include('django.contrib.auth.urls')),
+    path('attendance/', views.attendance, name='attendance'),
+    path('add-attendance/', views.add_attendance, name='add_attendance'),
 ]
 
