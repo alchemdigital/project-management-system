@@ -62,6 +62,7 @@ class Checklist(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
     admin = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='%(class)s_user', null=True, blank=True)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     checklist_name = models.CharField(max_length=255)
     status = models.CharField(max_length=7, choices=status, default=1)
