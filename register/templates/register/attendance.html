@@ -15,4 +15,29 @@
         <a class="btn btn-primary" href="{% url 'register:add_attendance' %}">Add attendance</a>
     </div>
 </div>
+{% if user.groups.all.0.name == 'admin' or user.groups.all.0.name == 'project_manager' %}
+    <div id="calendar"></div>
+{% endif %}
+<script>
+    $(document).ready(function () {
+        $('#calendar').fullCalendar({
+            defaultDate: new Date().toISOString().slice(0, 10),
+            editable: true,
+            eventLimit: true, // allow "more" link when too many events
+            events: [
+                {% for attendance in this_month_attendance %}
+                    {
+                        title: "{{ attendance.employee.first_name }}",
+                        start: '{{ attendance.datestr }}',
+                        // end: null,
+                        color: '#00ff00',
+                    },
+                {% endfor %}
+            ],
+            eventRender: function (event, element) {
+                element.find('.fc-title').append("<br/>" + event.description);
+            }
+        });
+    });
+</script>
 {% endblock %}

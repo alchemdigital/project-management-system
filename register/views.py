@@ -241,8 +241,12 @@ def attendance(request):
     admin = request.user.admin
     today = datetime.date.today()
     today_present = Attendance.objects.filter(admin=user.admin, employee=user, work_date__date=today).exists()
+    this_month_attendance = Attendance.objects.filter(admin=user.admin).extra(select={'datestr':"DATE_FORMAT(work_date, '%%Y-%%m-%%d')"})
+    all_users = User.objects.filter(admin=admin)
     context = {
-        'today_present': today_present
+        'today_present': today_present,
+        'this_month_attendance': this_month_attendance,
+        'all_users': all_users,
     }
     return render(request, 'register/attendance.html', context)
 
