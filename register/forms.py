@@ -40,7 +40,8 @@ class RegistrationForm(UserCreationForm):
         user.first_name = self.clean_data('first_name')
         user.last_name = self.clean_data('last_name')
         user.email = self.clean_data('email')
-        user.admin = User.objects.get(id=self.admin_id)
+        if self.admin_id is not None:
+            user.admin = User.objects.get(id=self.admin_id)
         if commit:
             user.save()
         return user
@@ -63,8 +64,10 @@ class RegistrationForm(UserCreationForm):
         self.fields['email'].widget.attrs['placeholder'] = 'E-mail'
         if kwargs.get('instance') is not None:
             self.admin_id = kwargs.get('instance').admin_id
-        else:
+        elif 0 in args:
             self.admin_id = args[0]['admin_id']
+        else:
+            self.admin_id = None
 
 class CompanyRegistrationForm(forms.ModelForm):
     social_name = forms.CharField(max_length=80)

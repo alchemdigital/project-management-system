@@ -69,7 +69,10 @@
                         </li>
                     {% else %}
                         <li class="text-muted">
-                            <a href="{% url 'core:login' %}">sign in</a>
+                            <a href="{% url 'core:login' %}"> Login </a>
+                        </li>
+                        <li class="text-muted">
+                            <a href="{% url 'register:admin_register' %}"> Register</a>
                         </li>
                     {% endif %}
                     <li class="nav-item dropdown">
@@ -116,9 +119,11 @@
                                     </li>
                                 </ul>
                                 </li> -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'register:attendance' %}"><i class="fa fa-tachometer-alt"></i> Attendance</a>
-                            </li>
+                            {% if user.groups.all.0.name == 'admin' or user.groups.all.0.name == 'project_manager' or user.groups.all.0.name == 'employee' %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'register:attendance' %}"><i class="fa fa-tachometer-alt"></i> Attendance</a>
+                                </li>
+                            {% endif %}
                             {% if user.groups.all.0.name == 'admin' or user.groups.all.0.name == 'project_manager' %}    
                                 <li class="nav-title">
                                     Register
