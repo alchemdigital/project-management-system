@@ -21,6 +21,38 @@ from  django.core.paginator import Paginator
 from core.views import is_admin, is_project_manager, is_pm_or_admin
 import datetime
 
+def admin_register(request):
+    if request.method == 'POST':
+        password = request.POST.get('password1')
+        # User.objects.create(email=email, first_name=first_name, last_name=last_name, password=password)
+        changed_request = request.POST.copy()
+        form = RegistrationForm(changed_request)
+        created = False
+        if form.is_valid():
+            user = form.save(commit = False)
+            user.save()
+            user.admin = user
+            user.save()
+            thisRole = Group.objects.get(id = 1)
+            thisRole.user_set.add(user)
+            # Email send functionality starts
+            html_mail_content = f'<div>Your account has been created successfully</div>'
+            recipient_list = [user.email]
+            EmailThread('Registered With PMS', html_mail_content, recipient_list).start()
+            # Email send functionality ends
+            created = True
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+        context = {
+            'created' : created,
+        }
+        return redirect('/dashboard')
+    else:
+        form = RegistrationForm()
+        context = {
+            'form': form
+        }
+        return render(request, 'register/admin_register.html', context)
+
 @user_passes_test(is_admin)
 def register(request):
     if request.method == 'POST':
