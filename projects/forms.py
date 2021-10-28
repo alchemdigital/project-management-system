@@ -127,6 +127,7 @@ class ChecklistRegistrationForm(forms.ModelForm):
         else:
             checklist.admin = self.instance.admin
             checklist.created = self.instance.created
+        checklist.user = self.user
         checklist.updated = self.user
         checklist.save()
         return checklist

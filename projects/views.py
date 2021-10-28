@@ -252,22 +252,22 @@ def checklists(request, task_id = None):
     this_user = request.user
     if search_term is not None:
         if task_id is not None:
-            checklists = Checklist.objects.filter(admin=this_user.admin).filter(
+            checklists = Checklist.objects.filter(admin=this_user.admin, task_id=task_id, user=this_user).filter(
                 Q(checklist_name__icontains=search_term) |
                 Q(task__task_name__icontains=search_term) |
                 Q(status__icontains=search_term)
-            ).filter(task_id=task_id).order_by(ordering)
+            ).order_by(ordering)
         else:
-            checklists = Checklist.objects.filter(admin=this_user.admin).filter(
+            checklists = Checklist.objects.filter(admin=this_user.admin, user=this_user).filter(
                 Q(checklist_name__icontains=search_term) |
                 Q(task__task_name__icontains=search_term) |
                 Q(status__icontains=search_term)
             ).order_by(ordering)
     else:
         if task_id is not None:
-            checklists = Checklist.objects.filter(admin=this_user.admin).filter(task_id=task_id)
+            checklists = Checklist.objects.filter(admin=this_user.admin, task_id=task_id, user=this_user)
         else:
-            checklists = Checklist.objects.filter(admin=this_user.admin)
+            checklists = Checklist.objects.filter(admin=this_user.admin, user=this_user)
     paginated_checklists = Paginator(checklists, 10)
     page_number = request.GET.get('page')
     page_obj = paginated_checklists.get_page(page_number)
@@ -276,7 +276,7 @@ def checklists(request, task_id = None):
 
 def edit_checklist(request, checklist_id):
     this_user = request.user
-    checklist = Checklist.objects.filter(admin=this_user.admin).get(id=checklist_id)
+    checklist = Checklist.objects.filter(admin=this_user.admin, user=this_user).get(id=checklist_id)
     form = ChecklistRegistrationForm(instance=checklist, user=request.user, use_required_attribute=False)
     context = {
         'id': checklist.id,
@@ -288,7 +288,7 @@ def edit_checklist(request, checklist_id):
 def update_checklist(request):
     this_user = request.user
     id = request.POST.get('id')
-    instance = Checklist.objects.filter(admin=this_user.admin).get(id = id)
+    instance = Checklist.objects.filter(admin=this_user.admin, user=this_user).get(id = id)
     form = ChecklistRegistrationForm(request.POST, instance=instance, user=request.user, use_required_attribute=False)
     context = { 'form': form, 'id': instance.id, 'edit': True}
     if form.is_valid():
@@ -298,7 +298,7 @@ def update_checklist(request):
 
 def delete_checklist(request, checklist_id):
     this_user = request.user
-    checklist = Checklist.objects.filter(admin=this_user.admin).get(id=checklist_id)
+    checklist = Checklist.objects.filter(admin=this_user.admin, user=this_user).get(id=checklist_id)
     checklist.delete()
     return redirect('projects:checklists')
 #Checklist CRUD - end
