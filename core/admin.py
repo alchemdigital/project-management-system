@@ -22,7 +22,7 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         ("Personal info", {"fields": ()}),
-        ("Permissions", {"fields": ("admin", "is_project_manager", 'is_client')}),
+        ("Permissions", {"fields": ("admin",)}),
         ('Group Permissions', {
             'classes': ('collapse',),
             'fields': ('groups', 'user_permissions', )

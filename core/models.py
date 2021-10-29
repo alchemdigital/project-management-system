@@ -36,6 +36,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=100, null=True)
     is_active = models.BooleanField(default=True)
     admin = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
+    is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -46,8 +47,4 @@ class User(AbstractBaseUser, PermissionsMixin):
         return True
 
     def has_module_perms(self, app_label):
-        return True
-
-    @property
-    def is_staff(self):
         return True

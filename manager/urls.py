@@ -20,7 +20,7 @@ from register import views as register_views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('alchem-admin/', admin.site.urls),
     path('register/', include('register.urls', namespace='register')),
     path('projects/', include('projects.urls', namespace='projects')),
     path('', include('core.urls', namespace='core')),
