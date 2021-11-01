@@ -62,7 +62,7 @@ def register(request):
         changed_request.update({'password1': [generated_password]})
         changed_request.update({'admin_id': admin_id})
         form = RegistrationForm(changed_request)
-        roles = Group.objects.all().order_by('id')
+        roles = Group.objects.all().exclude(name='admin').order_by('id')
         selected_roles = request.POST.getlist('role')
         errors = {}
         if selected_roles == None or not len(selected_roles):
@@ -100,7 +100,7 @@ def register(request):
         admin_id = request.user.admin_id
         changed_request = ({'admin_id': admin_id})
         form = RegistrationForm(changed_request)
-        roles = Group.objects.all().order_by('id')
+        roles = Group.objects.all().exclude(name='admin').order_by('id')
         selected_role = request.GET.get('role', None)
         context = {
             'form' : form,
@@ -124,7 +124,7 @@ def edit_user(request, user_id):
     user = request.user
     this_user = User.objects.get(id=user_id)
     form = RegistrationForm(instance=this_user)
-    roles = Group.objects.all().order_by('id')
+    roles = Group.objects.all().exclude(name='admin').order_by('id')
     selected_roles = Group.objects.filter(user = this_user).values_list('id', flat=True)
     context = {
         'id': this_user.id,
@@ -143,7 +143,7 @@ def update_user(request):
     changed_request = request.POST.copy()
     changed_request.update({'password1': ['this_will_not_be_updated']}) # This will not be updated. Only for validation
     form = RegistrationForm(changed_request, instance=instance)
-    roles = Group.objects.all().order_by('id')
+    roles = Group.objects.all().exclude(name='admin').order_by('id')
     # selected_roles = Group.objects.filter(user = instance)
     context = { 'form': form, 'id': instance.id, 'roles' : roles,
         'selected_roles': selected_roles, 'edit': True}
