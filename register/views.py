@@ -122,15 +122,15 @@ def users(request):
 @user_passes_test(is_admin)
 def edit_user(request, user_id):
     user = request.user
-    this_user = User.objects.filter(admin=user).get(id=user_id)
+    this_user = User.objects.get(id=user_id)
     form = RegistrationForm(instance=this_user)
     roles = Group.objects.all().order_by('id')
-    selected_role = Group.objects.filter(user = this_user)
+    selected_roles = Group.objects.filter(user = this_user).values_list('id', flat=True)
     context = {
         'id': this_user.id,
         'form': form,
         'roles' : roles,
-        'selected_role': selected_role[0].id,
+        'selected_roles': selected_roles,
         'edit': True 
     }
     return render(request, 'register/reg_form.html', context)
@@ -138,19 +138,22 @@ def edit_user(request, user_id):
 @user_passes_test(is_admin)
 def update_user(request):
     id = request.POST.get('id')
-    role = request.POST.get('role')
+    selected_roles = request.POST.getlist('role')
     instance = User.objects.get(id = id)
     changed_request = request.POST.copy()
-    changed_request.update({'password1': 'asas'}) # This will not be updated. Only for validation
-    form = RegistrationForm(instance=instance)
+    changed_request.update({'password1': ['this_will_not_be_updated']}) # This will not be updated. Only for validation
+    form = RegistrationForm(changed_request, instance=instance)
     roles = Group.objects.all().order_by('id')
-    selected_role = Group.objects.filter(user = instance)
+    # selected_roles = Group.objects.filter(user = instance)
     context = { 'form': form, 'id': instance.id, 'roles' : roles,
-        'selected_role': selected_role[0].id, 'edit': True}
+        'selected_roles': selected_roles, 'edit': True}
     if form.is_valid():
         form.update(id = instance.id)
-        thisRole = Group.objects.get(id = role)
-        thisRole.user_set.add(instance)
+        this_roles = Group.objects.filter(id__in = selected_roles)
+        for each_role in roles:
+            each_role.user_set.remove(instance)
+        for this_role in this_roles:
+            this_role.user_set.add(instance)
         context['updated'] = True
     return render(request, 'register/reg_form.html', context)
 
