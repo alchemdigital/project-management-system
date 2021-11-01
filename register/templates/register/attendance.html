@@ -15,9 +15,7 @@
         <a class="btn btn-primary" href="{% url 'register:add_attendance' %}">Add attendance</a>
     </div>
 </div>
-{% if user.groups.all.0.name == 'admin' or user.groups.all.0.name == 'project_manager' %}
-    <div id="calendar"></div>
-{% endif %}
+<div id="calendar"></div>
 <script>
     $(document).ready(function () {
         $('#calendar').fullCalendar({
