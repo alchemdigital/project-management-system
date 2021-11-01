@@ -1,44 +1,496 @@
-{% extends 'core/base.html' %}
 {% load static %}
+<html lang="en">
 
-{% block breadcrumb %}
-<li class="breadcrumb-item active">Home</li>
-{% endblock breadcrumb%}
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link href="{% static 'core/css/stylesheet.css' %}" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+		crossorigin="anonymous"></script>
+	
+</head>
 
-{% block content %}
-<div class="container-fluid">
-  <div id="ui-view" style="opacity: 1;"><div class="animated fadeIn">
-    <div class="row">
-    <div class="col-12">
-      <div class="card">
-      <div class="card-header">
-        <i class="fa fa-align-justify"></i> Main info
-        <div class="card-actions">
-          <a href="" target="_blank">
-            <small class="text-muted">docs</small>
-          </a>
+<body>
+	<header class="header">
+		<nav class="navbar fixed-top navbar-expand-lg" id="navbar">
+			<div>
+				<!-- <a class="navbar-brand" href="#">Physionic</a> -->
+				<img src="{% static 'core/img/alchem-icon.png' %}" />
+			</div>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse  justify-content-center" id="navbarSupportedContent">
+				<ul class="navbar-nav mb-2 mb-lg-0">
+					<!-- <li class="nav-item">
+			<a class="nav-link active" aria-current="page" href="#">Home</a>
+			</li>
+			<li class="nav-item">
+			<a class="nav-link" href="#">Link</a>
+			</li> -->
+					<li><a href="#">Home</a></li>
+					<li><a href="#">Portfolio</a></li>
+					<li><a href="#">How it works</a></li>
+					<li><a href="#">Team</a></li>
+				</ul>
+			</div>
+			<div>
+				<a href="{% url 'core:login' %}"><button class="btn log-in">Login</button></a>
+				<a href="{% url 'register:admin_register' %}"><button class="btn sign-up">Register as Admin</button></a>
+			</div>
+		</nav>
+	</header>
+
+	<!-- Banner -->
+	<section>
+		<div class="background-banner">
+			<div class="container">
+				<div class="banner-details row">
+					<div class="col-lg-6">
+						<!-- <h1>Meet the Best Hospital</h1>
+               <p>We know how large objects will act, 
+                but things on a small scale.</p>
+                <button class="btn banner-btn">Get Quote Now</button>
+                <button class="btn banner-btn">Learn More</button> -->
+						<h1>We Design Beautiful web sites that!</h1>
+						<p>Discuss your goals, determine success meters,
+							identify problems to solve and define visitors
+							of the website
+						</p>
+						<a href="#section2"><button class="btn banner-btn">Get Started</button></a>
+
+					</div>
+					<div class="appoinment col-lg-6">
+						<img src="{% static 'core/img/crm-svg.svg' %}" />
+						<!-- <div class="card appoinment-card">
+                <h1>Book Appoinment</h1>
+                 <form class="form-group">
+                     <label>Name*</label>
+                     <input class="form-control" type="text" placeholder="Full Name"/>
+                     <label>Email address*</label>
+                     <input class="form-control" type="email" placeholder="example@gmail.com"/>
+                     <label>Department*</label>
+                     <select class="form-control">
+                         <option>Please select</option>
+                         <option></option>
+                         <option></option>
+                     </select>
+                     <label>Time*</label>
+                     <select class="form-control">
+                         <option>4:00 pm</option>
+                         <option></option>
+                         <option></option>
+                     </select>
+                     <button class=" btn book-appoinment">Book Appoinment</button>
+                 </form>
+               </div> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Banner -->
+
+	<!-- Leading Medicine -->
+	<section id="alchem-cards">
+		<div class="Leading-Medicine-background">
+			<div class="container">
+				<div class="Leading-Medicine">
+					<!-- <h2>Leading Medicine</h2>
+				<p>Problems trying to resolve the conflict between<br>
+					the two major realms of Classical physics: Newtonian mechanics </p> -->
+					<div class="row Leading-Medicine-block">
+						<div class=" col-lg-4">
+							<div class="header-case">
+								<img src="{% static 'core/img/icn-circle.svg' %}" />
+								<p>Emergency Case</p>
+							</div>
+							<div class="card medicine-card">
+								<ul>
+									<li>The best product starts with figma</li>
+									<li>Design with real data</li>
+									<li>Lightning fast prototyping</li>
+									<li>Fastest way to organize</li>
+									<li>Work at the speed of thought</li>
+									<li>Learn More</li>
+								</ul>
+							</div>
+						</div>
+						<div class=" col-lg-4">
+							<div class="header-case">
+								<img src="{% static 'core/img/icn-circle.svg' %}" />
+								<p>Cancer Case</p>
+							</div>
+							<div class="card medicine-card">
+								<ul>
+									<li>The best product starts with figma</li>
+									<li>Design with real data</li>
+									<li>Lightning fast prototyping</li>
+									<li>Fastest way to organize</li>
+									<li>Work at the speed of thought</li>
+									<li>Learn More</li>
+								</ul>
+							</div>
+						</div>
+						<div class=" col-lg-4">
+							<div class="header-case">
+								<img src="{% static 'core/img/icn-circle.svg' %}" />
+								<p>Health Queries</p>
+							</div>
+							<div class="card medicine-card">
+								<ul>
+									<li>The best product starts with figma</li>
+									<li>Design with real data</li>
+									<li>Lightning fast prototyping</li>
+									<li>Fastest way to organize</li>
+									<li>Work at the speed of thought</li>
+									<li>Learn More</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Leading Medicine -->
+
+	<!-- leading-section -->
+
+	<!-- <section>
+       <div class="leading-section-background">
+       <div class="container">
+        <div class="leading-section">
+           <h3>Leading Medicine</h3>
+           <p>Problems trying to resolve the conflict between 
+            the two major realms of Classical physics: Newtonian mechanics </p>
+            <div class="row person-card-block ">
+              <div class="col-lg-4">
+            <div class="person-card ">
+              <div class="person-card-details">
+                <i class="fa fa-star" aria-hidden="true"></i>
+                <i class="fa fa-star" aria-hidden="true"></i>
+                <i class="fa fa-star" aria-hidden="true"></i>
+                <i class="fa fa-star" aria-hidden="true"></i>
+                <i class="fa fa-star-o" aria-hidden="true"></i>
+                <p>Slate helps you see how many 
+                  more days you need to work to 
+                  reach your financial goal.</p>
+                  <img src="{% static 'core/img/user.jpg' %}"/>
+              </div>
+            </div>
+          </div>
+            <div class=" col-lg-4">
+            <div class="person-card">
+              <div class="person-card-details">
+                <i class="fa fa-star" aria-hidden="true"></i>
+                <i class="fa fa-star" aria-hidden="true"></i>
+                <i class="fa fa-star" aria-hidden="true"></i>
+                <i class="fa fa-star" aria-hidden="true"></i>
+                <i class="fa fa-star-o" aria-hidden="true"></i>
+                <p>Slate helps you see how many 
+                  more days you need to work to 
+                  reach your financial goal.</p>
+                  <img src="{% static 'core/img/user.jpg' %}"/>
+              </div>
+            </div>
+          </div>
+            <div class="col-lg-4">
+            <div class="person-card ">
+              <div class="person-card-details">
+                <i class="fa fa-star" aria-hidden="true"></i>
+                <i class="fa fa-star" aria-hidden="true"></i>
+                <i class="fa fa-star" aria-hidden="true"></i>
+                <i class="fa fa-star" aria-hidden="true"></i>
+                <i class="fa fa-star-o" aria-hidden="true"></i>
+                <p>Slate helps you see how many 
+                  more days you need to work to 
+                  reach your financial goal.</p>
+                  <img src="{% static 'core/img/user.jpg' %}"/>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+       </div>
+      </div>
+     </section> -->
+	<!-- leading-section-->
+
+	<!-- Faq -->
+	<!-- <section>
+       <div class="faq-background">
+          <div class="container">
+             <div class="faqs">
+                <h1>FAQ</h1>
+                <p>Problems trying to resolve the conflict between 
+                  the two major realms of Classical physics: Newtonian mechanics </p>
+                  <div class="row">
+                    <div class="col-lg-4">
+                  <div class="faq-block">
+                     <div class=" faq-card">
+                      <div class="faq-card-details">
+                        <img src="{% static 'core/img/arrow.svg' %}"/>
+                        <h4>FAQ the quick fox jumps over the 
+                           lazy dog
+                        </h4>
+                         <p>Things on very small scale behave like nothing </p>
+                       </div>
+                     </div>
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  <div class="faq-block">
+                     <div class=" faq-card">
+                       <div class="faq-card-details">
+                       <img src="{% static 'core/img/arrow.svg' %}"/>
+                       <h4>FAQ the quick fox jumps over the 
+                          lazy dog
+                       </h4>
+                        <p>Things on very small scale behave like nothing </p>
+                      </div>
+                     </div>
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  <div class="faq-block">
+                     <div class=" faq-card">
+                      <div class="faq-card-details">
+                        <img src="{% static 'core/img/arrow.svg' %}"/>
+                        <h4>FAQ the quick fox jumps over the 
+                           lazy dog
+                        </h4>
+                         <p>Things on very small scale behave like nothing </p>
+                       </div>
+                     </div>
+                  </div>
+                </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-4">
+                <div class="faq-block">
+                   <div class=" faq-card">
+                    <div class="faq-card-details">
+                      <img src="{% static 'core/img/arrow.svg' %}"/>
+                      <h4>FAQ the quick fox jumps over the 
+                         lazy dog
+                      </h4>
+                       <p>Things on very small scale behave like nothing </p>
+                     </div>
+                   </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="faq-block">
+                   <div class=" faq-card">
+                    <div class="faq-card-details">
+                      <img src="{% static 'core/img/arrow.svg' %}"/>
+                      <h4>FAQ the quick fox jumps over the 
+                         lazy dog
+                      </h4>
+                       <p>Things on very small scale behave like nothing </p>
+                     </div>
+                   </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="faq-block">
+                   <div class=" faq-card">
+                    <div class="faq-card-details">
+                      <img src="{% static 'core/img/arrow.svg' %}"/>
+                      <h4>FAQ the quick fox jumps over the 
+                         lazy dog
+                      </h4>
+                       <p>Things on very small scale behave like nothing </p>
+                     </div>
+                   </div>
+                </div>
+              </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-4">
+              <div class="faq-block">
+                 <div class=" faq-card">
+                  <div class="faq-card-details">
+                    <img src="{% static 'core/img/arrow.svg' %}"/>
+                    <h4>FAQ the quick fox jumps over the 
+                       lazy dog
+                    </h4>
+                     <p>Things on very small scale behave like nothing </p>
+                   </div>
+                 </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="faq-block">
+                 <div class=" faq-card">
+                  <div class="faq-card-details">
+                    <img src="{% static 'core/img/arrow.svg' %}"/>
+                    <h4>FAQ the quick fox jumps over the 
+                       lazy dog
+                    </h4>
+                     <p>Things on very small scale behave like nothing </p>
+                   </div>
+                 </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="faq-block">
+                 <div class=" faq-card">
+                  <div class="faq-card-details">
+                    <img src="{% static 'core/img/arrow.svg' %}"/>
+                    <h4>FAQ the quick fox jumps over the 
+                       lazy dog
+                    </h4>
+                     <p>Things on very small scale behave like nothing </p>
+                   </div>
+                 </div>
+              </div>
+            </div>
+            </div>
+             </div>
+          </div>
+       </div>
+     </section> -->
+
+	<!-- Faq -->
+
+	<!-- Subscribe -->
+	<!-- <section>
+      <div class="subscribe-background">
+        <div class="container">
+          <div class="row">
+            <div class="subscription">
+            <div class="col-lg-6">
+               <h1>Get in Touch</h1>
+               <p>The gradual accumulation of information about atomic and 
+                small-scale behaviour during the first quarter of the 20th </p>
+            </div>
+          </div>
+          </div>
         </div>
       </div>
-      <div class="card-body">
-        <div class="jumbotron bg-white">
-          <h1 class="display-4">Hello, world!</h1>
-          <p class="lead">Welcome to the Project Manager System.</p>
-          <hr class="my-4">
-          <p>Register your company and start managing your projects</p>
-          <p>That's it, simple, easy, fast.</p>
-          <p class="lead">
-            <a class="btn btn-primary btn-lg" href="{% url 'register:new-company' %}" role="button">Set up your company</a>
-          </p>
-          {% if not user.is_authenticated %}
-          <a href="{% url 'core:login' %}">Click here if you are already registered</a>
-          {% endif %}
-        </div>
-      </div>
-      </div>
-    </div>
-    </div>
-    </div>
-  </div>
-</div>
+    </section> -->
+	<!-- Subscribe -->
 
-{% endblock %}
+
+
+	<!-- Footer -->
+	<!-- <section>
+		<div class="footer-background">
+			<div class="container">
+				<div class="footer row">
+					<div class="col-lg-3">
+						<ul>
+							<li><img src="{% static 'core/img/alchem-icon-2.png' %}" /></li>
+							<li>Alchem Digital is a 360° full service digital marketing and website design & development
+								agency that helps you add alchemy to your digital presence</li>
+							
+							<li><span><a  target="_blank"  href="https://www.facebook.com/alchemdigital"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>
+									<a  target="_blank"  href="https://www.instagram.com/alchemdigital/"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+									<a  target="_blank"  href="https://twitter.com/alchemdigital"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+									<a  target="_blank"  href="https://www.linkedin.com/company/alchemdigital/"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></span></li>
+							<li><span><a  target="_blank"  href="https://www.quora.com/profile/Alchem-Digital-1"><i class="fa fa-quora" aria-hidden="true"></i></a>
+									<a  target="_blank"  href="https://www.youtube.com/channel/UCYY7UiLUeuQfsmLPfxAwGvw"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+									<a  target="_blank"  href="https://in.pinterest.com/AlchemDigitalLLP/"><i class="fa fa-pinterest-p" aria-hidden="true"></i></a>
+                  <a  target="_blank"  href="https://medium.com/@alchemdigital2020"><i class="fa fa-medium" aria-hidden="true"></i></a></span></li>
+						</ul>
+					</div>
+					<div class="col-lg-3">
+						<ul>
+							<li>SERVICES</li>
+							<li><a href="https://www.alchemdigital.com/services#saas-service">SaaS Development</a></li>
+							<li><a href="https://www.alchemdigital.com/services#Web-dev">Website Development</a></li>
+							<li><a href="https://www.alchemdigital.com/services#brand-ident">Brand Identity</a></li>
+							<li><a href="https://www.alchemdigital.com/services#graphic-desg">Graphic Designing</a></li>
+							<li><a href="https://www.alchemdigital.com/digital-marketing-agency-chennai">Digital Marketing</a></li>
+						</ul>
+					</div>
+					<div class="col-lg-3">
+						<ul>
+							<li>QUICK LINKS</li>
+							<li><a href="https://www.alchemdigital.com/about">About Us</a></li>
+							<li><a href="https://www.alchemdigital.com/services">Our Services</a></li>
+							<li><a href="https://www.alchemdigital.com/portfolio">Our Portfolio</a></li>
+							<li><a href="https://www.alchemdigital.com/contact">Contact Us</a></li>
+						</ul>
+					</div>
+					<div class="col-lg-3">
+						<ul>
+							<li>CONNECT</li>
+							<li>
+                <i class="fa fa-map-marker" aria-hidden="true"></i> 
+                <span>CHENNAI</span> 1st Floor, Flat No.A106/6 and 
+								188/6, Rangarajapuram Main Road, Kodambakkam, Chennai 600 024
+								<span>CHICAGO</span> 415 Howard St #1001, Evanston, IL 60202, United States.</li>
+							<li><i class="fa fa-phone" aria-hidden="true"></i> <a href="tel:7305639892"><span>IN</span> +91 7305639892</a>
+							 <br>	<a href="tel:9840374534">+91 9840374534</a>
+							</li>
+							<li><a href="tel:(469) 929-1097 "> <span>US</span> +1 (469) 929-1097</a></li>
+							<li><i class="fa fa-envelope" aria-hidden="true"></i>
+                <a href="mailto:getintouch@alchemdigital.com">getintouch@alchemdigital.com</a>
+							</li>
+						</ul>
+
+            <!-- <ul>
+               <li>Connect</li>
+               <li>
+                 <ul class="footer-connections">
+                    <li><i class="fa fa-map-marker" aria-hidden="true"></i> 
+                      <span>CHENNAI 1st Floor, Flat No.A106/6 and 
+                        188/6, Rangarajapuram Main Road, Kodambakkam, Chennai 600 024
+                        CHICAGO 415 Howard St #1001, Evanston, IL 60202, United States.</span> </li>
+                 </ul>
+               </li>
+            </ul> -->
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</section> 
+
+	<!-- Footer -->
+
+	<footer>
+		<div class="alchem-footer">
+			<div class="container">
+                <div class="text-center">
+                   <ul>
+					   <li>© 2021 All Rights Reserved by Alchem Digital.</li>
+					   <li><a href="https://www.alchemdigital.com/digital-marketing-agency-chennai">Digital Marketing</a></li>
+					   <li><a href="https://www.alchemdigital.com/responsive-website-design-development">Website design & development</a></li>
+					   <li>SEO agency</li>
+				   </ul>
+				</div>   
+			</div>
+		</div>
+	</footer>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+ 
+	<script>
+		
+      $(window).scroll(function(){
+		  if ($(window).scrollTop() > 10){
+			  $("#navbar").addClass('navbarscroll');
+		  }else{
+			  $("#navbar").removeClass('navbarscroll');
+		  }
+		  
+	  })
+
+	</script>
+
+</body>
+
+</html>
