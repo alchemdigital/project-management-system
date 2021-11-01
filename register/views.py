@@ -63,23 +63,24 @@ def register(request):
         changed_request.update({'admin_id': admin_id})
         form = RegistrationForm(changed_request)
         roles = Group.objects.all().order_by('id')
-        role = request.POST.get('role')
+        selected_roles = request.POST.getlist('role')
         errors = {}
-        if role == None:
+        if selected_roles == None or not len(selected_roles):
             errors = {'role': ('Role is required',)}
         context = {
             'form': form,
             'roles': roles,
             'errors': errors
         }
-        if role == None:
+        if selected_roles == None or not len(selected_roles):
             return render(request, 'register/reg_form.html', context)
         if form.is_valid():
             user = form.save(commit = False)
             user.set_password(generated_password)
             user.save()
-            thisRole = Group.objects.get(id = role)
-            thisRole.user_set.add(user)
+            this_roles = Group.objects.filter(id__in = selected_roles)
+            for this_role in this_roles:
+                this_role.user_set.add(user)
             # Email send functionality starts
             html_mail_content = f'<table border="1"><thead><th>Email</th><th>Password</th><tbody><td>{user.email}</td><td>{ generated_password }</td></tbody></table>'
             recipient_list = [user.email]
@@ -123,7 +124,6 @@ def edit_user(request, user_id):
     user = request.user
     this_user = User.objects.filter(admin=user).get(id=user_id)
     form = RegistrationForm(instance=this_user)
-    print(form)
     roles = Group.objects.all().order_by('id')
     selected_role = Group.objects.filter(user = this_user)
     context = {

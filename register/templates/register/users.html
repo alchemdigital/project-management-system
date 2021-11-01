@@ -31,7 +31,7 @@
                                     {{ user.email }}
                                 </td>
                                 <td class="text-center">
-                                    {{ user.groups.all.0 }}
+                                    {{ user.groups.all|join:", " }}
                                 </td>
                                 <td class="text-center">
                                     {{ user.last_login }}
