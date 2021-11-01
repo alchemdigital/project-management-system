@@ -100,7 +100,7 @@
                                         <select name="role" class="form-control" multiple>
                                             <option selected disabled>-- Select Role --</option>
                                             {% for role in roles %}
-                                                <option value="{{ role.id }}" {% if selected_role == role.id %}Selected{% endif %}>{{ role }}</option>
+                                                <option value="{{ role.id }}" {% if role.id in selected_roles%}Selected{% endif %}>{{ role }}</option>
                                             {% endfor %}
                                         </select>
                                         <div class="input-group-append">

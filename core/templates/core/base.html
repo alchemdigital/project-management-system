@@ -143,7 +143,7 @@
                                     </ul>
                                 </li>
                             {% endif %}
-                            {% if user|has_group:'admin' or user|has_group:'project_manager' %}
+                            {% if user|has_group:'admin' or user|has_group:'project_manager' or user|has_group:'employee' %}
                                 <li class="nav-item nav-dropdown">
                                     <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> Project</a>
                                     <ul class="nav-dropdown-items">
@@ -156,7 +156,7 @@
                                     </ul>
                                 </li>
                             {% endif %}
-                            {% if user|has_group:'admin' or user|has_group:'project_manager' %}
+                            {% if user|has_group:'admin' or user|has_group:'project_manager' or user|has_group:'employee' %}
                                 <li class="nav-item nav-dropdown">
                                     <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> Task</a>
                                     <ul class="nav-dropdown-items">

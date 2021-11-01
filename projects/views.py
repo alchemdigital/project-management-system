@@ -109,7 +109,7 @@ def delete_project(request, project_id):
     return redirect('projects:projects')
 
 # Task CRUD - start
-@user_passes_test(is_pm_or_admin)
+# @user_passes_test(is_pm_or_admin)
 def new_task(request):
     if request.method == 'POST':
         changed_request = request.POST.copy()
@@ -136,7 +136,7 @@ def new_task(request):
         }
         return render(request,'projects/task_form.html', context)
 
-@user_passes_test(is_pm_or_admin)
+# @user_passes_test(is_pm_or_admin)
 def tasks(request, project_id = None):
     order_by = request.GET.get('order_by')
     if order_by == None:
@@ -182,7 +182,7 @@ def tasks(request, project_id = None):
     context = { 'page_obj': page_obj }
     return render(request, 'projects/tasks.html', context)
 
-@user_passes_test(is_pm_or_admin)
+# @user_passes_test(is_pm_or_admin)
 def edit_task(request, task_id):
     this_user = request.user
     task = Task.objects.filter(admin=this_user.admin).get(id=task_id)
@@ -194,7 +194,7 @@ def edit_task(request, task_id):
     }
     return render(request, 'projects/task_form.html', context)
 
-@user_passes_test(is_pm_or_admin)
+# @user_passes_test(is_pm_or_admin)
 def update_task(request):
     this_user = request.user
     id = request.POST.get('id')
