@@ -51,7 +51,7 @@ def login_view(request):
         if form.is_valid():
             authenticated_user = authenticate(username=request.POST['username'], password=request.POST['password'])
             login(request, authenticated_user)
-            return redirect('core:index')
+            return redirect('core:dashboard')
         else:
             return render(request, 'register/login.html', {'login_form':form})
     else:
