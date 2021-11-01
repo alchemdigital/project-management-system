@@ -1,0 +1,454 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root{
+      --primary-color: #44b78b; 
+    --second-color: #D8F8B7;
+    --third-color : #FF9A8C;
+    --fourth-color: #CE1F6A;
+}
+html {
+    scroll-behavior: smooth;
+  }
+body{
+    margin: 0%;
+}
+.header{
+    padding: 20px 30px 0px 30px;
+    transition: 0.4s all ease;
+}
+.navbar{
+    height: 65px;
+    background-color: #fff;
+    margin: 0px 0px;
+    padding: 20px 30px 20px 30px !important;
+    
+}
+.navbar img{
+    width: 230px;
+}
+.navbar-brand{
+    padding-left: 40px;
+    font-size: 24px;
+    font-weight: bold;
+}
+.navbarscroll{
+    box-shadow: 0 4px 40px rgb(0 0 0 / 8%);
+    -moz-box-shadow: 0 4px 40px rgb(0 0 0 / 8%);
+    -webkit-box-shadow: 0 4px 40px rgb(0 0 0 / 8%);
+    transition: 0.4s all ease;
+}
+.navbar ul {
+   padding-left: 50px
+}
+.navbar ul li{
+    padding-left: 30px;
+}
+.navbar ul li a{
+    text-decoration: none;
+    font-size: 18px;
+    color: #000;
+    font-weight: 500;
+    display: none;
+}
+.navbar .log-in{
+  font-size: 18px;
+  font-weight: 500;
+  color: #000;
+  margin-right: 20px;
+  border-radius: 0px !important;
+  padding: 10px 28px 10px 25px;
+}
+.navbar .sign-up{
+    background-color: var(--primary-color);
+    color: #fff;
+    margin-right: 20px;
+    border-radius: 30px;
+    font-weight: 500;
+    padding: 10px 28px 10px 25px;
+  }
+  .navbar .sign-up:hover{
+   border:  1px solid var(--primary-color) ;
+   color: var(--primary-color);
+   background: none;
+  }
+/* .navbar .quote-btn img{
+    padding-left: 7px;
+} */
+.background-banner{
+   
+    height: 817px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+.banner-details{
+  padding-top: 10rem;
+}
+.banner-details h1{
+    font-style: normal;
+    font-weight: 800;
+    font-size: 64px;
+    font-family: Montserrat;
+    padding-bottom: 35px;
+}
+.banner-details p{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    padding-right: 130px;
+    padding-bottom: 35px;
+}
+.banner-details .banner-btn{
+    background-color: var(--primary-color) !important;
+    color: #fff;
+    font-size: 18px;
+    padding: 15px 45px;
+    border-radius: 35px;
+}
+.banner-details .banner-btn:hover{
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    background: none !important;
+}
+.banner-details .banner-btn:focus{
+    box-shadow: none;
+}
+/* .banner-details .banner-btn:hover{
+    background: none;
+    border: 1px solid #fff;
+    color: #fff;
+} */
+.appoinment{
+    position: relative;
+    top: -50px;
+}
+.appoinment-card{
+    /* width: 328px;
+    height: 610px; */
+    padding: 40px;
+    
+    float: right;
+}
+.appoinment-card h1{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    color: #000;
+    
+}
+.appoinment-card label{
+    color:  #252B42;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    padding-top: 25px;
+}
+.appoinment-card .book-appoinment{
+  background-color: #23A6F0;
+  padding: 15px 55px;
+  color: #fff;
+  /* margin-top: 50px; */
+}
+.Leading-Medicine-background{
+    background: url("../img/Screenshot.png");
+    height: auto;
+    padding: 70px 0px;
+    background-repeat: no-repeat;
+    /* background-color: #f4f5fa; */
+    background-size: cover;
+    background-position: top center;
+}
+.Leading-Medicine{
+     /* background: url("{% static 'core/img/glassmorphism.png' %}");
+    height: 700px; */
+    /* padding: 100px 0px; */
+    text-align: center;
+    
+}
+.Leading-Medicine h2{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    color: #252B42;
+}
+.Leading-Medicine p{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    padding-top: 15px;
+    color: #737373;
+}
+.Leading-Medicine-block{
+    margin-top: 100px;
+}
+.Leading-Medicine .header-case{
+    padding: 25px 50px 30px 50px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10.1px);
+    -webkit-backdrop-filter: blur(10.1px);
+}
+.Leading-Medicine .medicine-card{
+    /* width: 328px;
+    height: 253px; */
+    padding: 30px 50px ;
+   
+}
+.header-case{
+
+}
+.header-case img{
+    /* float: left;
+    padding: 30px 0px 0px 50px; */
+}
+.Leading-Medicine .header-case p{
+    color: #fff;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    padding-left: 10px;
+    /* padding-top: 50px;
+    margin-right: 75px; */
+}
+.medicine-card ul{
+    list-style: none;
+    padding-top: 30px;
+}
+.medicine-card ul li{
+    color: #737373;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    float: left;
+    padding-bottom: 10px;
+}
+.medicine-card ul li:nth-child(6){
+    color: #23A6F0;
+}
+.leading-section-background{
+    background: #FAFAFA;
+}
+.leading-section{
+   
+ padding: 110px 0px 110px 0px
+}
+.leading-section h3{
+    text-align: center;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    color: #252B42;
+}
+.leading-section>p{
+    text-align: center;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    padding-top: 15px;
+    color: #737373;
+}
+.person-card-block{
+    padding: 80px 0px 40px 0px;
+}
+.person-card{
+    background-color: #fff;
+     width: 327px;
+    height: 244px;
+}
+.person-card-details{
+    padding-top: 40px;
+    padding-bottom: 11rem;
+    padding-left: 2.5rem;
+}
+.person-card-details .fa-star{
+    color: gold;
+    
+}
+.person-card-details .fa-star-o{
+    color: gold;
+}
+.person-card-details p{
+    color: #737373;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    float: left;
+    padding-top: 20px;
+    padding-right: 63px;
+}
+.faq-background{
+    background: #FAFAFA;
+    padding: 50px 0px 80px 0px;
+}
+.faqs{
+
+}
+.faqs h1{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    color: #252B42;
+    text-align: center;
+}
+.faqs p{
+    font-family: Montserrat;
+    font-style: normal;
+    font-size: 14px;
+    color:  #737373;
+    text-align: center;
+}
+.faq-block{
+    padding-top: 90px;
+}
+.faq-block .faq-card{
+    background: #FFFFFF;
+    /* width: 333px;
+    height: 151px; */
+}
+.faq-card .faq-card-details{
+    padding: 15px 20px 25px 10px;
+}
+.faq-block .faq-card img{
+    height: 25px;
+    padding-left: 30px;
+    margin-top: 25px;
+}
+.faq-card h4{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    padding-left: 55px;
+    margin-top: -20px;
+    letter-spacing: 0.1px;  
+    color: #252B42;
+}
+.faq-card p{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    color: #737373;
+    padding-left:58px;
+    padding-right: 5px;
+    text-align: left;
+}
+.subscribe-background{
+    background: #252B42;
+}
+.subscription{
+
+}
+.subscription h1{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    color: #fff;
+}
+
+
+
+.footer-background{
+   background-color: #222222;
+}
+.footer{
+    position: relative;
+    /* top: 10px; */
+    padding: 30px 0px;
+}
+.footer img{
+    width: 230px;
+}
+.footer ul{
+    list-style: none;
+}
+.footer ul li {
+    color: #8b8b8b ;
+    font-size: 16px;
+    padding-bottom: 15px;
+}
+.footer ul li a{
+    color: #8b8b8b !important;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+}
+.footer ul li span{
+    color: #fff;
+    font-weight: bold;
+}
+.footer ul li a:hover{
+    color: #f9423a !important;
+}
+.footer ul li:nth-child(1){
+    color: #fff;
+    font-weight: bold;
+    font-size: 24px;
+    padding-bottom: 18px;
+}
+
+.footer ul li span i{
+    padding: 0px 0px 0px 15px;
+    font-size: 20px;
+}
+.alchem-footer{
+    background-color: #fff;
+}
+.fa-map-marker{
+    color: #f9423a !important;
+    font-size: 25px;
+    margin-left: -20px;
+    padding-right: 8px;
+}
+.fa-phone{
+    color: #f9423a !important;
+    font-size: 25px;
+    margin-left: -20px;
+    padding-right: 8px;
+}
+.fa-envelope{
+    color: #f9423a !important;
+    font-size: 25px;
+    margin-left: -20px;
+    padding-right: 8px;
+}
+
+.text-center{
+
+}
+.text-center ul{
+    list-style: none !important;
+    padding: 12px 0px 1px 0px;
+}
+.text-center ul li{
+    display: inline-block;
+    padding-left: 1rem;
+    font-weight: 500;
+}
+.text-center ul li a{
+    text-decoration: none;
+    color: #000 !important;
+}
+.text-center ul li a:hover{
+    color: #f9423a !important;
+}
+.text-center ul li::after{
+    content: "|";
+    margin-left: 2rem;
+}
