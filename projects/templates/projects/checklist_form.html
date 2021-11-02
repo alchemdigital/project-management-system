@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %}
 {% load static %}
+{% load has_group %}
 {% block breadcrumb %}
     <li class="breadcrumb-item">Home</li>
     <li class="breadcrumb-item">Projects</li>
@@ -50,7 +51,7 @@
                                             </ol>
                                         {% endif %}
                                     </div>
-                                    {% if user.is_admin or user.is_project_manager %}
+                                    {% if user|has_group:'admin' or user|has_group:'project_manager' %}
                                         <a href="{% url 'projects:new-task' %}">Create a Task</a>
                                     {% endif %}
                                 </div>

@@ -56,7 +56,7 @@ class TaskRegistrationForm(forms.ModelForm):
     forms.DateTimeInput.input_type = 'datetime-local'
     
     project = forms.ModelChoiceField(queryset=Project.objects.all(), empty_label='Select a Project *')
-    employee = forms.ModelChoiceField(queryset=User.objects.filter(groups=3), empty_label='Select an employee', required=False)
+    employee = forms.ModelChoiceField(queryset=User.objects.filter(groups__in=(1, 2, 3)), empty_label='Select an employee', required=False)
     task_name = forms.CharField(max_length=80)
     status = forms.ChoiceField(choices=status, required=False)
     deadline = forms.DateTimeField(required=False)
