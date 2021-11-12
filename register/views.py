@@ -15,7 +15,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, BadHeaderError
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import user_passes_test, login_required
 from .models import Company, Attendance
 from  django.core.paginator import Paginator
 from core.views import is_admin, is_project_manager, is_pm_or_admin
@@ -112,7 +112,7 @@ def register(request):
 
 @user_passes_test(is_admin)
 def users(request):
-    users = User.objects.all().order_by('-id')
+    users = User.objects.filter(admin=request.user.admin).order_by('-id')
     paginated_users = Paginator(users, 10)
     page_number = request.GET.get('page')
     page_obj = paginated_users.get_page(page_number)
@@ -122,7 +122,7 @@ def users(request):
 @user_passes_test(is_admin)
 def edit_user(request, user_id):
     user = request.user
-    this_user = User.objects.get(id=user_id)
+    this_user = User.objects.get(id=user_id, admin=request.user.admin)
     form = RegistrationForm(instance=this_user)
     roles = Group.objects.all().exclude(name='admin').order_by('id')
     selected_roles = Group.objects.filter(user = this_user).values_list('id', flat=True)
@@ -139,7 +139,7 @@ def edit_user(request, user_id):
 def update_user(request):
     id = request.POST.get('id')
     selected_roles = request.POST.getlist('role')
-    instance = User.objects.get(id = id)
+    instance = User.objects.get(id = id, admin=request.user.admin)
     changed_request = request.POST.copy()
     changed_request.update({'password1': ['this_will_not_be_updated']}) # This will not be updated. Only for validation
     form = RegistrationForm(changed_request, instance=instance)
@@ -199,15 +199,16 @@ def companies(request):
     else:
         ordering = order_by
     search_term = request.GET.get('search')
+    this_user = request.user
     if search_term is not None:
-        companies = Company.objects.filter(
+        companies = Company.objects.filter(admin=this_user.admin).filter(
             Q(social_name__icontains=search_term) | 
             Q(name__icontains=search_term) | 
             Q(city__icontains=search_term) | 
             Q(found_date__icontains=search_term)
         ).order_by(ordering)
     else:
-        companies = Company.objects.all().order_by(ordering)
+        companies = Company.objects.filter(this_user = request.user).order_by(ordering)
     paginated_companies = Paginator(companies, 10)
     page_number = request.GET.get('page')
     page_obj = paginated_companies.get_page(page_number)
@@ -216,7 +217,8 @@ def companies(request):
 
 @user_passes_test(is_admin)
 def edit_company(request, company_id):
-    company = Company.objects.get(id=company_id)
+    this_user = request.user
+    company = Company.objects.get(id=company_id, admin=this_user.admin)
     form = CompanyRegistrationForm(user=request.user, instance=company, use_required_attribute=False)
     context = {
         'id': company.id,
@@ -228,7 +230,8 @@ def edit_company(request, company_id):
 @user_passes_test(is_admin)
 def update_company(request):
     id = request.POST.get('id')
-    instance = Company.objects.get(id = id)
+    this_user = request.user
+    instance = Company.objects.get(id = id, admin=this_user.admin)
     form = CompanyRegistrationForm(request.POST, user=request.user, instance=instance, use_required_attribute=False)
     context = { 'form': form, 'id': instance.id, 'edit': True}
     if form.is_valid():
@@ -238,7 +241,8 @@ def update_company(request):
 
 @user_passes_test(is_admin)
 def delete_company(request, company_id):
-    company = Company.objects.get(id = company_id)
+    this_user = request.user
+    company = Company.objects.get(id = company_id, admin=this_user.admin)
     company.delete()
     return redirect('register:companies')
 #Company CRUD - end
@@ -271,6 +275,7 @@ def password_reset_request(request):
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="register/password_reset.html", context={"password_reset_form":password_reset_form})
 
+@login_required
 def attendance(request):
     user = request.user
     admin = request.user.admin
@@ -285,6 +290,7 @@ def attendance(request):
     }
     return render(request, 'register/attendance.html', context)
 
+@login_required
 def add_attendance(request):
     user = request.user
     type = 2 # Work From Home
