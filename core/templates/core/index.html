@@ -7,13 +7,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link href="{% static 'core/css/stylesheet.css' %}" rel="stylesheet">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-		crossorigin="anonymous"></script>
 	
+	<link href="{% static 'core/css/stylesheet.css' %}" rel="stylesheet">
+	<link rel="stylesheet" href="{% static 'core/css/responsive.css' %}">
+
+	<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+	<link rel="stylesheet" href="{% static 'core/css/bootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'core/css/bootstrap.min.css' %}">
+  <!-- <link rel="stylesheet" href="{% static 'core/css/bootstrap.rtl.css' %}"> -->
+  <!-- <link rel="stylesheet" href="{% static 'core/css/bootstrap.rtl.min.css' %}"> -->
+
 </head>
 
 <body>
@@ -26,26 +30,30 @@
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
 				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
 				aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
+				<!-- <span class="navbar-toggler-icon"></span> -->
+				<i class="fa fa-bars" aria-hidden="true"></i>
 			</button>
-			<div class="collapse navbar-collapse  justify-content-center" id="navbarSupportedContent">
-				<ul class="navbar-nav mb-2 mb-lg-0">
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
 					<!-- <li class="nav-item">
 			<a class="nav-link active" aria-current="page" href="#">Home</a>
 			</li>
 			<li class="nav-item">
 			<a class="nav-link" href="#">Link</a>
 			</li> -->
-					<li><a href="#">Home</a></li>
+					<!-- <li><a href="#">Home</a></li>
 					<li><a href="#">Portfolio</a></li>
 					<li><a href="#">How it works</a></li>
-					<li><a href="#">Team</a></li>
+					<li><a href="#">Team</a></li> -->
+					<li><a href="{% url 'core:login' %}"><button class="btn log-in">Login</button></a></li>
+					<li><a href="{% url 'register:admin_register' %}"><button class="btn sign-up">Register
+								as Admin</button></a></li>
 				</ul>
 			</div>
-			<div>
+			<!-- <div>
 				<a href="{% url 'core:login' %}"><button class="btn log-in">Login</button></a>
 				<a href="{% url 'register:admin_register' %}"><button class="btn sign-up">Register as Admin</button></a>
-			</div>
+			</div> -->
 		</nav>
 	</header>
 
@@ -69,7 +77,7 @@
 
 					</div>
 					<div class="appoinment col-lg-6">
-						<img src="{% static 'core/img/crm-svg.svg' %}" />
+						<img src="{% static 'core/img/crm-icon.svg' %}" />
 						<!-- <div class="card appoinment-card">
                 <h1>Book Appoinment</h1>
                  <form class="form-group">
@@ -108,7 +116,7 @@
 				<p>Problems trying to resolve the conflict between<br>
 					the two major realms of Classical physics: Newtonian mechanics </p> -->
 					<div class="row Leading-Medicine-block">
-						<div class=" col-lg-4">
+						<div class=" col-lg-4 col-md-6">
 							<div class="header-case">
 								<img src="{% static 'core/img/icn-circle.svg' %}" />
 								<p>Emergency Case</p>
@@ -124,7 +132,7 @@
 								</ul>
 							</div>
 						</div>
-						<div class=" col-lg-4">
+						<div class=" col-lg-4 col-md-6">
 							<div class="header-case">
 								<img src="{% static 'core/img/icn-circle.svg' %}" />
 								<p>Cancer Case</p>
@@ -453,43 +461,53 @@
                </li>
             </ul> -->
 
-					</div>
-				</div>
-			</div>
-		</div>
-	</section> 
+	</div>
+	</div>
+	</div>
+	</div>
+	</section>
 
 	<!-- Footer -->
 
 	<footer>
 		<div class="alchem-footer">
 			<div class="container">
-                <div class="text-center">
-                   <ul>
-					   <li>© 2021 All Rights Reserved by Alchem Digital.</li>
-					   <li><a href="https://www.alchemdigital.com/digital-marketing-agency-chennai">Digital Marketing</a></li>
-					   <li><a href="https://www.alchemdigital.com/responsive-website-design-development">Website design & development</a></li>
-					   <li>SEO agency</li>
-				   </ul>
-				</div>   
+				<div class="text-center">
+					<ul>
+						<li>© 2021 All Rights Reserved by Alchem Digital.</li>
+						<li><a href="https://www.alchemdigital.com/digital-marketing-agency-chennai">Digital
+								Marketing</a></li>
+						<li><a href="https://www.alchemdigital.com/responsive-website-design-development">Website design
+								& development</a></li>
+						<li>SEO agency</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</footer>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
- 
-	<script>
-		
-      $(window).scroll(function(){
-		  if ($(window).scrollTop() > 10){
-			  $("#navbar").addClass('navbarscroll');
-		  }else{
-			  $("#navbar").removeClass('navbarscroll');
-		  }
-		  
-	  })
 
-	</script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script> -->
+  <link rel="stylesheet" href="{% static 'core/js/bootstrap.bundle.js' %}">
+  <link rel="stylesheet" href="{% static 'core/js/bootstrap.bundle.min.js' %}">
+
+
+ <script>
+
+		$(window).scroll(function () {
+			if ($(window).scrollTop() > 10) {
+				$("#navbar").addClass('navbarscroll');
+			} else {
+				$("#navbar").removeClass('navbarscroll');
+			}
+
+		})
+
+	</script> 
+
+
 
 </body>
 

@@ -8,63 +8,107 @@
 {% endblock breadcrumb%}
 
 {% block body %}
-<body class="app flex-row align-items-center">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card-group">
-                    <div class="card p-4">
-                        <div class="card-body">
-                            <form method="post" action="{% url 'core:login' %}">
-                                {% csrf_token %}
-                                <h1>Login</h1>
-                                <p class="text-muted">Sign In to your account</p>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fa fa-user"></i></span>
-                                    </div>
-                                    <input type="text"
-                                       class="form-control"
-                                       name="{{ login_form.username.name }}"
-                                       placeholder="{{ login_form.username.label }}"
-                                       id="{{ login_form.username.id_for_label }}"
-                                       {% if login_form.username.value != None %}value="{{ login_form.username.value|stringformat:'s' }}"{% endif %}
-                                       maxlength="{{ login_form.username.field.max_length }}"
-                                       {% if login_form.username.field.required %}required{% endif %}>
-                                </div>
-                                <div class="input-group mb-4">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
-                                    </div>
-                                    <input type="password"
-                                       class="form-control"
-                                       name="{{ login_form.password.name }}"
-                                       placeholder="{{ login_form.password.label }}"
-                                       id="{{ login_form.password.id_for_label }}"
-                                       {% if login_form.password.value != None %}value="{{ login_form.password.value|stringformat:'s' }}"{% endif %}
-                                       maxlength="{{ login_form.password.field.max_length }}"
-                                       {% if login_form.password.field.required %}required{% endif %}>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <button type="submit" class="btn btn-primary px-4">Login</button>
-                                    </div>
-                                    <div class="col-6 text-right">
-                                        <a href="{% url 'password_reset' %}">Forgot password?</a>
-                                    </div>
-                                    {% if login_form.errors %}
-                                    <div class="alert alert-danger col-12 mt-3" role="alert">
-                                        Wrong username or password
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </form>
-                        </div>
+
+
+
+
+
+<body>
+
+   
+    <!-- <section>
+        <div class="row">
+            <div class="login-background col-lg-6">
+                
+            </div>
+            <div class="login-form col-lg-6">
+                <p>Already have an account? <span>Login</span></p>
+                   <div class="login-form-details d-flex justify-content-center align-items-center">
+                    <div>
+                     <form class="form-group">
+                        <h3>Sign Up</h3>
+                         <label>Name</label>
+                         <input class=" text-box form-control" type="text"/>
+                         <label>Email ID</label>
+                         <input class=" text-box form-control" type="text"/>
+                         <label>Password</label>
+                         <input class=" text-box form-control" type="text"/>
+                         <label>Confirm Password</label>
+                         <input class=" text-box form-control" type="text"/>
+
+                         <input class="checkbox" type="checkbox"/>
+                         <p class="terms">I agree to the <span>Terms of Service </span> and <span>privacy policy</span></p>
+                     
+                     </form>
+                     <button class="sign-up ">Sign Up</button>
                     </div>
-                </div>
+                   </div>
             </div>
         </div>
-    </div>
+     </section> -->
+
+     
+     <div class="">
+        <div class="">
+            <div class=" row">
+                <div class="card-group col-lg-6">
+                    
+                 </div> 
+                    <div class="card-body  col-lg-6">
+                        <div class=" login-form-details d-flex justify-content-center align-items-end">
+                        <form method="post" action="{% url 'core:login' %}">
+                            {% csrf_token %}
+                            <h1>Login</h1>
+                            <p class="text-muted">Sign In to your account</p>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                </div>
+                                <input type="text"
+                                   class="form-control"
+                                   name="{{ login_form.username.name }}"
+                                   placeholder="{{ login_form.username.label }}"
+                                   id="{{ login_form.username.id_for_label }}"
+                                   {% if login_form.username.value != None %}value="{{ login_form.username.value|stringformat:'s' }}"{% endif %}
+                                   maxlength="{{ login_form.username.field.max_length }}"
+                                   {% if login_form.username.field.required %}required{% endif %}>
+                            </div>
+                            <div class="input-group mb-4">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                                </div>
+                                <input type="password"
+                                   class="form-control"
+                                   name="{{ login_form.password.name }}"
+                                   placeholder="{{ login_form.password.label }}"
+                                   id="{{ login_form.password.id_for_label }}"
+                                   {% if login_form.password.value != None %}value="{{ login_form.password.value|stringformat:'s' }}"{% endif %}
+                                   maxlength="{{ login_form.password.field.max_length }}"
+                                   {% if login_form.password.field.required %}required{% endif %}>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <button type="submit" class="btn btn-primary px-4">Login</button>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <a href="{% url 'password_reset' %}">Forgot password?</a>
+                                </div>
+                                {% if login_form.errors %}
+                                <div class="alert alert-danger col-12 mt-3" role="alert">
+                                    Wrong username or password
+                                </div>
+                                {% endif %}
+                            </div>
+                        </form>
+                      </div>
+                    </div>
+                
+            </div>
+        </div>
+    </div> 
+
+ 
+    
 
   <!-- Bootstrap and necessary plugins -->
     <script src="{% static 'core/vendors/js/jquery.min.js'%}"></script>

@@ -78,6 +78,9 @@
 *::after {
   box-sizing: border-box; }
 
+
+  
+
 html {
   font-family: sans-serif;
   line-height: 1.15;
@@ -85,6 +88,63 @@ html {
   -ms-text-size-adjust: 100%;
   -ms-overflow-style: scrollbar;
   -webkit-tap-highlight-color: transparent; }
+
+  .login-background{
+    background: url("../img/galaxy-2.jpg") !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    background-position: center !important;
+    height: 937px !important;
+    width: 100% !important;
+  }
+  .login-form p{
+    float: right;
+    margin-top: 15px;
+    margin-right: 15px;
+  }
+  .login-form-details{
+    margin-top: 10rem;
+    display: flex;
+    align-items: flex-end;
+  }
+  .login-form-details form>h3{
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .login-form-details form label{
+    margin-top: 13px;
+    font-size: 16px;
+    color: #000;
+    font-weight: 500;
+    margin-bottom: 0.3rem !important;
+  }
+  .login-form-details form .form-control{
+    width: 25rem;
+    padding: 8px 0px;
+  }
+  .login-form-details .checkbox {
+   margin-top: 10px;
+  }
+  .login-form-details .terms{
+   font-size: 16px;
+   margin-left: 0px;
+   margin-top: 5px;
+  }
+  .form-group p span{
+    color: #0070cc !important;
+  }
+  .login-form-details .sign-up{
+    background-color: #007ee5 !important;
+    padding: 6px 20px !important;
+    font-size: 18px;
+    border-radius: 6px;
+    outline: none;
+    border: none;
+    margin-top: 20px;
+    color: #fff;
+    font-weight: 500;
+  }
+
 
 @-ms-viewport {
   width: device-width; }
@@ -100,8 +160,10 @@ body {
   line-height: 1.5;
   color: #151b1e;
   text-align: left;
-  background-color: #e4e5e6; }
-
+  background-color: #e4e5e6;
+  overflow-x: hidden;
+}
+  
 [tabindex="-1"]:focus {
   outline: 0 !important; }
 
@@ -4264,7 +4326,7 @@ tbody.collapse.show {
       color: #fff; }
 
 .card {
-  position: relative;
+  /* position: relative;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-direction: column;
@@ -4276,12 +4338,14 @@ tbody.collapse.show {
   border: 1px solid #c2cfd6; }
   .card > hr {
     margin-right: 0;
-    margin-left: 0; }
+    margin-left: 0; } */
 
-.card-body, .card-block {
-  -ms-flex: 1 1 auto;
+/* .card-body, .card-block { */
+  /* -ms-flex: 1 1 auto;
       flex: 1 1 auto;
-  padding: 1.25rem; }
+  padding: 1.25rem;  */
+  
+}
 
 .card-title {
   margin-bottom: 0.75rem; }
@@ -4363,13 +4427,28 @@ tbody.collapse.show {
         margin-bottom: 0;
         margin-left: 15px; } }
 
-.card-group {
+/* .card-group {
   display: -ms-flexbox;
   display: flex;
   -ms-flex-direction: column;
-      flex-direction: column; }
+      flex-direction: column;
+    
+    } */
+    .card-group {
+      background: url("../img/galaxy-2.jpg") !important;
+      background-repeat: no-repeat !important;
+      background-size: cover !important;
+      background-position: center !important;
+      height: 937px !important;
+      width: 100% !important;
+        
+        }
   .card-group > .card {
-    margin-bottom: 15px; }
+    /* margin-bottom: 15px; 
+    background: rgba(255, 255, 255, 0.08) !important;
+      backdrop-filter: blur(10.1px) !important;
+      -webkit-backdrop-filter: blur(10.1px) !important; */
+  }
   @media (min-width: 576px) {
     .card-group {
       -ms-flex-flow: row wrap;
@@ -4468,6 +4547,8 @@ tbody.collapse.show {
   padding: 0.75rem 1.5rem;
   font-size: 1.09375rem;
   line-height: 1.5; }
+
+
 
 .pagination-sm .page-link, .pagination-sm .pagination-datatables li a, .pagination-datatables li .pagination-sm a, .pagination-sm .pagination li a, .pagination li .pagination-sm a {
   padding: 0.25rem 0.5rem;
