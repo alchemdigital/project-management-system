@@ -6,6 +6,7 @@ from .models import Checklist
 from register.models import Company
 from django.contrib.auth import get_user_model
 User = get_user_model()
+from dal import autocomplete
 import datetime
 
 status = (
@@ -16,11 +17,6 @@ status = (
 )
 
 class ProjectRegistrationForm(forms.ModelForm):
-    name = forms.CharField(max_length=80)
-    # slug = forms.SlugField('shortcut')
-    company = forms.ModelChoiceField(queryset=Company.objects.all(), empty_label='Select a Company *')
-    description = forms.CharField(widget=forms.Textarea, required=False)
-
     class Meta:
         model = Project
         fields = ('name', 'company', 'description')
@@ -45,9 +41,12 @@ class ProjectRegistrationForm(forms.ModelForm):
         self.user = kwargs.get('user')
         kwargs.pop('user')
         super(ProjectRegistrationForm, self).__init__(*args, **kwargs)
+        self.fields['name'] = forms.CharField(max_length=80)
         self.fields['name'].widget.attrs['class'] = 'form-control'
         self.fields['name'].widget.attrs['placeholder'] = 'Project Name *'
+        self.fields['company'] = forms.ModelChoiceField(queryset=Company.objects.filter(admin=self.user.admin), widget=autocomplete.ModelSelect2(url='/projects/company-autocomplete'), empty_label='Select a Company*')
         self.fields['company'].widget.attrs['class'] = 'form-control'
+        self.fields['description'] = forms.CharField(widget=forms.Textarea, required=False)
         self.fields['description'].widget.attrs['class'] = 'form-control'
         self.fields['description'].widget.attrs['placeholder'] = 'Type here the project description...'
 
@@ -79,9 +78,9 @@ class TaskRegistrationForm(forms.ModelForm):
         self.user = kwargs.get('user')
         kwargs.pop('user')
         super(TaskRegistrationForm, self).__init__(*args, **kwargs)
-        self.fields['project'] = forms.ModelChoiceField(queryset=Project.objects.filter(admin=self.user.admin), empty_label='Select a Project *')
+        self.fields['project'] = forms.ModelChoiceField(queryset=Project.objects.filter(admin=self.user.admin), widget=autocomplete.ModelSelect2(url='/projects/project-autocomplete'), empty_label='Select a Project *')
         self.fields['project'].widget.attrs['class'] = 'form-control'
-        self.fields['employee'] = forms.ModelChoiceField(queryset=User.objects.filter(groups__in=(1, 2, 3), admin=self.user.admin), empty_label='Select an employee', required=False)
+        self.fields['employee'] = forms.ModelChoiceField(queryset=User.objects.filter(admin=self.user.admin, groups__in=(1, 2,3)), widget=autocomplete.ModelSelect2(url='/projects/employee-autocomplete'), empty_label='Select an employee', required=False)
         self.fields['employee'].widget.attrs['class'] = 'form-control'
         self.fields['task_name'] = forms.CharField(max_length=80)
         self.fields['task_name'].widget.attrs['class'] = 'form-control'
@@ -133,7 +132,7 @@ class ChecklistRegistrationForm(forms.ModelForm):
         self.user = kwargs.get('user')
         kwargs.pop('user')
         super(ChecklistRegistrationForm, self).__init__(*args, **kwargs)
-        self.fields['task'] = forms.ModelChoiceField(queryset=Task.objects.filter(admin=self.user.admin), empty_label='Select a Task *')
+        self.fields['task'] = forms.ModelChoiceField(queryset=Task.objects.filter(admin=self.user.admin), widget=autocomplete.ModelSelect2(url='/projects/task-autocomplete'), empty_label='Select a Task *')
         self.fields['task'].widget.attrs['class'] = 'form-control'
         self.fields['checklist_name'] = forms.CharField()
         self.fields['checklist_name'].widget.attrs['class'] = 'form-control'

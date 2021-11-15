@@ -9,10 +9,12 @@ from django.shortcuts import redirect
 import csv
 import codecs
 from django.http import HttpResponse
-from core.views import is_admin, is_project_manager, is_pm_or_admin
+from core.views import is_admin, is_project_manager, is_pm_or_admin, is_logged_in
 from django.contrib.auth import get_user_model
 User = get_user_model()
 from .forms import status as form_status
+from dal import autocomplete
+from register.models import Company
 
 # Create your views here.
 @user_passes_test(is_pm_or_admin)
@@ -107,6 +109,7 @@ def delete_project(request, project_id):
     project = Project.objects.filter(admin=this_user.admin).get(id=project_id)
     project.delete()
     return redirect('projects:projects')
+#Project CRUD - end
 
 # Task CRUD - start
 # @user_passes_test(is_pm_or_admin)
@@ -412,3 +415,53 @@ def export_tasks(request):
 
 def last_worked_employee(project_id):
     Task.objects.get(project_id = project_id)
+
+# Dropdown autocomplete classes - start
+class CompanyAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        this_user = self.request.user
+        if not is_pm_or_admin(this_user):
+            return Company.objects.none()
+        qs = Company.objects
+        if self.q:
+            qs = qs.filter(admin=this_user.admin, name__icontains=self.q)
+        else:
+            qs.none()
+        return qs
+
+class ProjectAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        this_user = self.request.user
+        if not is_logged_in(this_user):
+            return Project.objects.none()
+        qs = Project.objects
+        if self.q:
+            qs = qs.filter(admin=this_user.admin, name__icontains=self.q)
+        else:
+            qs.none()
+        return qs
+
+class EmployeeAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        this_user = self.request.user
+        if not is_logged_in(this_user):
+            return User.objects.none()
+        qs = User.objects
+        if self.q:
+            qs = qs.filter(admin=this_user.admin, groups__in=(1, 2, 3)).filter(Q(email__icontains=self.q) | Q(first_name__icontains=self.q))
+        else:
+            qs.none()
+        return qs
+
+class TaskAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        this_user = self.request.user
+        if not is_logged_in(this_user):
+            return Task.objects.none()
+        qs = Task.objects
+        if self.q:
+            qs = qs.filter(admin=this_user.admin, task_name__icontains=self.q)
+        else:
+            qs.none()
+        return qs
+# Dropdown autocomplete classes - end

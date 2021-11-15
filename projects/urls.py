@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls import url
 
 app_name = 'projects'
 
@@ -14,6 +15,7 @@ urlpatterns = [
     path('edit-project/<int:project_id>/', views.edit_project, name='edit_project'),
     path('update-project/', views.update_project, name='update_project'),
     path('delete-project/<int:project_id>/', views.delete_project, name='delete_project'),
+    url(r'^company-autocomplete/$', views.CompanyAutoComplete.as_view(), name='company-autocomplete'),
     # Project CRUD - end
     # Task CRUD - start
     path('new-task/', views.new_task, name='new-task'),
@@ -22,6 +24,8 @@ urlpatterns = [
     path('edit-task/<int:task_id>/', views.edit_task, name='edit_task'),
     path('update-task/', views.update_task, name='update_task'),
     path('delete-task/<int:task_id>/', views.delete_task, name='delete_task'),
+    url(r'^project-autocomplete/$', views.ProjectAutoComplete.as_view(), name='project-autocomplete'),
+    url(r'^employee-autocomplete/$', views.EmployeeAutoComplete.as_view(), name='employee-autocomplete'),
     # Task CRUD - end
     # Checklist CRUD - start
     path('new-checklist/', views.new_checklist, name='new-checklist'),
@@ -30,6 +34,7 @@ urlpatterns = [
     path('edit-checklist/<int:checklist_id>/', views.edit_checklist, name='edit_checklist'),
     path('update-checklist/', views.update_checklist, name='update_checklist'),
     path('delete-checklist/<int:checklist_id>/', views.delete_checklist, name='delete_checklist'),
+    url(r'^task-autocomplete/$', views.TaskAutoComplete.as_view(), name='task-autocomplete'),
     # Checklist CRUD - end
     path('download-import-sample', views.download_import_sample, name='download_import_sample'),
     path('import-tasks', views.import_tasks, name='import_tasks'),

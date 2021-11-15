@@ -19,6 +19,7 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from .models import Company, Attendance
 from  django.core.paginator import Paginator
 from core.views import is_admin, is_project_manager, is_pm_or_admin
+from dal import autocomplete
 import datetime
 
 def admin_register(request):
@@ -208,7 +209,7 @@ def companies(request):
             Q(found_date__icontains=search_term)
         ).order_by(ordering)
     else:
-        companies = Company.objects.filter(this_user = request.user).order_by(ordering)
+        companies = Company.objects.filter(admin=this_user.admin).order_by(ordering)
     paginated_companies = Paginator(companies, 10)
     page_number = request.GET.get('page')
     page_obj = paginated_companies.get_page(page_number)
@@ -300,3 +301,15 @@ def add_attendance(request):
     if not Attendance.objects.filter(admin=user.admin, employee=user, work_date__date=today).exists():
             Attendance.objects.create(admin=user.admin, employee=user, type=type)
     return redirect('/register/attendance')
+
+class ClientAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        this_user = self.request.user
+        if not is_admin(this_user):
+            return User.objects.none()
+        qs = User.objects
+        if self.q:
+            qs = qs.filter(admin=this_user.admin, groups=4).filter(Q(email__icontains=self.q) | Q(first_name__icontains=self.q))
+        else:
+            qs.none()
+        return qs

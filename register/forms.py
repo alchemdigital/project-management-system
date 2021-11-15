@@ -3,6 +3,7 @@ from register.models import Company
 from django.contrib.auth import get_user_model
 User = get_user_model()
 from django.contrib.auth.forms import UserCreationForm
+from dal import autocomplete
 
 forms.DateInput.input_type="date"
 
@@ -70,6 +71,8 @@ class RegistrationForm(UserCreationForm):
             self.admin_id = None
 
 class CompanyRegistrationForm(forms.ModelForm):
+    # client = forms.ModelChoiceField(queryset=User.objects.none(), widget=autocomplete.ModelSelect2(url='register/client-autocomplete'), empty_label="Select a client *")
+
     class Meta:
         model = Company
         fields = ['social_name', 'name', 'client', 'city', 'found_date']
@@ -101,9 +104,8 @@ class CompanyRegistrationForm(forms.ModelForm):
         self.fields['name'] = forms.CharField(max_length=80)
         self.fields['name'].widget.attrs['class'] = 'form-control'
         self.fields['name'].widget.attrs['placeholder'] = 'Name *'
-        self.fields['client'] = forms.ModelChoiceField(queryset=User.objects.filter(groups=4, admin=self.user.admin), empty_label="Select a client *")
+        self.fields['client'] = forms.ModelChoiceField(queryset=User.objects.filter(admin=self.user.admin), widget=autocomplete.ModelSelect2(url='/register/client-autocomplete'), empty_label="Select a client *")
         self.fields['client'].widget.attrs['class'] = 'form-control'
-        self.fields['client'].widget.attrs['placeholder'] = 'Client *'
         self.fields['city'] = forms.CharField(max_length=50)
         self.fields['city'].widget.attrs['class'] = 'form-control'
         self.fields['city'].widget.attrs['placeholder'] = 'City *'
