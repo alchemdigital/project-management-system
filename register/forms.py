@@ -3,6 +3,7 @@ from register.models import Company
 from django.contrib.auth import get_user_model
 User = get_user_model()
 from django.contrib.auth.forms import UserCreationForm
+from dal import autocomplete
 
 forms.DateInput.input_type="date"
 
@@ -70,11 +71,7 @@ class RegistrationForm(UserCreationForm):
             self.admin_id = None
 
 class CompanyRegistrationForm(forms.ModelForm):
-    social_name = forms.CharField(max_length=80)
-    name = forms.CharField(max_length=80)
-    client = forms.ModelChoiceField(queryset=User.objects.filter(groups=4), empty_label="Select a client *")
-    city = forms.CharField(max_length=50)
-    found_date = forms.DateField(required=False)
+    # client = forms.ModelChoiceField(queryset=User.objects.none(), widget=autocomplete.ModelSelect2(url='register/client-autocomplete'), empty_label="Select a client *")
 
     class Meta:
         model = Company
@@ -101,14 +98,18 @@ class CompanyRegistrationForm(forms.ModelForm):
         self.user = kwargs.get('user')
         kwargs.pop('user')
         super(CompanyRegistrationForm, self).__init__(*args, **kwargs)
+        self.fields['social_name'] = forms.CharField(max_length=80)
         self.fields['social_name'].widget.attrs['class'] = 'form-control'
         self.fields['social_name'].widget.attrs['placeholder'] = 'Social Name *'
+        self.fields['name'] = forms.CharField(max_length=80)
         self.fields['name'].widget.attrs['class'] = 'form-control'
         self.fields['name'].widget.attrs['placeholder'] = 'Name *'
+        self.fields['client'] = forms.ModelChoiceField(queryset=User.objects.filter(admin=self.user.admin), widget=autocomplete.ModelSelect2(url='/register/client-autocomplete'), empty_label="Select a client *")
         self.fields['client'].widget.attrs['class'] = 'form-control'
-        self.fields['client'].widget.attrs['placeholder'] = 'Client *'
+        self.fields['city'] = forms.CharField(max_length=50)
         self.fields['city'].widget.attrs['class'] = 'form-control'
         self.fields['city'].widget.attrs['placeholder'] = 'City *'
+        self.fields['found_date'] = forms.DateField(required=False)
         self.fields['found_date'].widget.attrs['class'] = 'form-control'
         self.fields['found_date'].widget.attrs['type'] = 'date'
         self.fields['found_date'].widget.attrs['placeholder'] = 'Found date'

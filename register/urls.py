@@ -1,5 +1,6 @@
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from django.conf.urls import url
 from . import views
 
 app_name = 'register'
@@ -21,5 +22,6 @@ urlpatterns = [
     path('attendance/', views.attendance, name='attendance'),
     path('add-attendance/', views.add_attendance, name='add_attendance'),
     path('admin/', views.admin_register, name='admin_register'),
+    url(r'^client-autocomplete/$', views.ClientAutoComplete.as_view(), name='client-autocomplete'),
 ]
 
