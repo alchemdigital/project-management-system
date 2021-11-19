@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 :root{
-      --primary-color: #44b78b; 
+      --primary-color: #fe2d51; 
     --second-color: #D8F8B7;
     --third-color : #FF9A8C;
     --fourth-color: #CE1F6A;
@@ -11,20 +11,41 @@ html {
   }
 body{
     margin: 0%;
+    font-family: Montserrat !important;
 }
+
+.top-fixed{
+    position: fixed;
+}
+.top-nav{
+ 
+}
+.topnav-ul {
+    list-style: none;
+}
+.top-nav ul li{
+    display: inline-block;
+}
+.menu-btn{
+    color: var(--primary-color);
+    display: none !important;
+}
+
 .header{
-    padding: 20px 30px 0px 30px;
+    /* padding: 20px 30px 0px 30px; */
     transition: 0.4s all ease;
+    z-index: 1;
+    width: 100%;
 }
 .navbar{
-    height: 65px;
+    height: auto;
     background-color: #fff;
     margin: 0px 0px;
-    padding: 20px 30px 20px 30px !important;
+    padding: 10px 30px!important;
     
 }
-.navbar img{
-    width: 230px;
+.alchem-main-logo{
+    width: 250px;
 }
 .navbar-brand{
     padding-left: 40px;
@@ -32,16 +53,18 @@ body{
     font-weight: bold;
 }
 .navbarscroll{
-    box-shadow: 0 4px 40px rgb(0 0 0 / 8%);
-    -moz-box-shadow: 0 4px 40px rgb(0 0 0 / 8%);
-    -webkit-box-shadow: 0 4px 40px rgb(0 0 0 / 8%);
+    box-shadow: 0 30px 40px rgba(0, 0, 0, 0.08);
+    -moz-box-shadow: 0 30px 40px rgba(0, 0, 0, 0.08);
+    -webkit-box-shadow: 0 30px 40px rgba(0, 0, 0, 0.08);
     transition: 0.4s all ease;
 }
 .navbar ul {
-   padding-left: 50px
+   padding-left: 50px;
+   
 }
 .navbar ul li{
-    padding-left: 30px;
+    
+    padding-top: 7px;
 }
 .navbar ul li a{
     text-decoration: none;
@@ -49,23 +72,29 @@ body{
     color: #000;
     font-weight: 500;
     /* display: none; */
+    display: inline-block !important;
 }
 .navbar .log-in{
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
-  color: #000;
+  color: var(--primary-color);
   margin-right: 20px;
-  border-radius: 0px !important;
   font-family: Montserrat !important;
-  padding: 10px 28px 10px 25px;
+  padding: 8px 21px 8px 21px;
+  border: 1px solid var(--primary-color);
+  border-radius: 24px !important;
+}
+.navbar .log-in:hover{
+    background-color: var(--primary-color);
+    color: #fff;
 }
 .navbar .sign-up{
     background-color: var(--primary-color);
     color: #fff;
-    margin-right: 20px;
     border-radius: 30px;
+    font-size: 16px;
     font-weight: 500;
-    padding: 10px 28px 10px 25px;
+    padding: 8px 22px 8px 21px;
     font-family: Montserrat !important;
   }
   .navbar .sign-up:hover{
@@ -77,14 +106,14 @@ body{
     padding-left: 7px;
 } */
 .background-banner{
-   
-    height: 817px;
-    background-repeat: no-repeat;
+    /* height: 817px; */
+    /* background-repeat: no-repeat;
     background-size: cover;
-    background-position: center center;
+    background-position: center center; */
 }
 .banner-details{
-  padding-top: 10rem;
+  padding-top: 9rem;
+  padding-bottom: 4rem;
 }
 .banner-details h1{
     font-style: normal;
@@ -93,13 +122,16 @@ body{
     font-family: Montserrat;
     padding-bottom: 35px;
 }
+.banner-infos{
+    padding-top: 15px;
+}
 .banner-details p{
     font-family: Montserrat;
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
     padding-right: 130px;
-    padding-bottom: 35px;
+    padding-bottom: 25px;
 }
 .banner-details .banner-btn{
     background-color: var(--primary-color) !important;
@@ -122,10 +154,7 @@ body{
     border: 1px solid #fff;
     color: #fff;
 } */
-.appoinment{
-    position: relative;
-    top: -50px;
-}
+
 .appoinment-card{
     /* width: 328px;
     height: 610px; */
@@ -160,21 +189,16 @@ body{
   /* margin-top: 50px; */
 }
 .Leading-Medicine-background{
-    background: url("../img/Screenshot.png");
+    background: url("../img/glassmorphism.png");
     height: auto;
     padding: 70px 0px;
     background-repeat: no-repeat;
     /* background-color: #f4f5fa; */
     background-size: cover;
     background-position: top center;
+    /* margin-top: 4rem; */
 }
-.Leading-Medicine{
-     /* background: url("{% static 'core/img/glassmorphism.png' %}");
-    height: 700px; */
-    /* padding: 100px 0px; */
-    text-align: center;
-    
-}
+
 .Leading-Medicine h2{
     font-family: Montserrat;
     font-style: normal;
@@ -194,15 +218,16 @@ body{
     margin-top: 100px;
 }
 .Leading-Medicine .header-case{
-    padding: 25px 50px 30px 50px;
+    padding: 25px 25px 25px 25px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.14);
     backdrop-filter: blur(10.1px);
     -webkit-backdrop-filter: blur(10.1px);
+    -ms-backdrop-filter: blur(10.1px);
 }
 .Leading-Medicine .medicine-card{
     /* width: 328px;
@@ -214,8 +239,7 @@ body{
 
 }
 .header-case img{
-    /* float: left;
-    padding: 30px 0px 0px 50px; */
+   margin-right: 15px;
 }
 .Leading-Medicine .header-case p{
     color: #fff;
@@ -227,9 +251,13 @@ body{
     /* padding-top: 50px;
     margin-right: 75px; */
 }
+
 .medicine-card ul{
-    list-style: none;
-    padding-top: 30px;
+    /* list-style: none; */
+    padding-top: 0px;
+   margin-bottom: 0px;
+   padding-left: 0.7rem;
+
 }
 .medicine-card ul li{
     color: #737373;
@@ -237,11 +265,7 @@ body{
     font-style: normal;
     font-weight: 600;
     font-size: 14px;
-    float: left;
     padding-bottom: 10px;
-}
-.medicine-card ul li:nth-child(6){
-    color: #44b78b;
 }
 .leading-section-background{
     background: #FAFAFA;
@@ -435,27 +459,45 @@ body{
     margin-left: -20px;
     padding-right: 8px;
 }
-
-.text-center{
-
-}
 .text-center ul{
     list-style: none !important;
-    padding: 12px 0px 1px 0px;
+    padding: 22px 0px 1px 0px;
 }
 .text-center ul li{
     display: inline-block;
     padding-left: 1rem;
     font-weight: 500;
+    font-family: Montserrat;
+    padding-bottom: 10px;
+    font-size: 15px;
 }
 .text-center ul li a{
     text-decoration: none;
     color: #000 !important;
+    font-family: Montserrat;
 }
 .text-center ul li a:hover{
     color: var(--primary-color) !important;
 }
+
 .text-center ul li::after{
     content: "|";
     margin-left: 2rem;
+}
+
+.text-center ul li:last-child::after{
+    content: "";
+    margin-left: 0;
+}
+.learn-more{   color: var(--primary-color) !important;
+    text-decoration: none;
+    display: flex;
+    justify-content: start;
+    font-family: Montserrat;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.admin-column-logo-align{
+    padding: 20px 0px;
 }

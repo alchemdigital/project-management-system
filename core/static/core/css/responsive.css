@@ -7,40 +7,104 @@
 @media (max-width: 1199px){
    
     .Leading-Medicine .medicine-card{
-        padding: 30px 1px;
+        padding: 30px 25px;
     }
     .banner-details h1{
         font-size: 50px;
     }
-    .Leading-Medicine-background{
-        margin-top: -7rem;
-    }
+   
     .Leading-Medicine .header-case{
-        padding: 25px 50px 30px 0px;
+        padding: 25px 25px 25px 25px;
     }
+    
 }
 
-
+@media (max-width: 1440px){
+    .login-form-details{
+        width: 80%;
+    }
+    .admin-column{
+        padding: 2.5rem;
+    }
+    .width-100-percent{
+        width: 100%;
+      }
+      .admin-background{
+          width: 600px;
+      }
+}
+@media (max-width: 1000px){
+    
+}
 @media (max-width: 991px ){
 
+    .navbar .sign-up:hover{
+        border: 1px solid #fe2d51 !important;
+        color: #fe2d51 !important;
+    }
+
+    .banner-infos{
+        padding-top: 45px;
+    }
+    .admin-background {
+        display: none;
+    }
+
+    .admin-column{
+        height: 100%;
+        padding: 4rem;
+    }
+
+    .menu-btn:focus{
+      box-shadow: none !important;
+      
+    }
+  .menu-btn{   
+    font-size: 25px !important;
+  }
+    #top-nav{
+        position: absolute;
+        top: 78px;
+        left: 0;
+        background-color: #fff;
+        width: 100%;   
+    }
+    .top-nav-dropdown{      
+       
+    }
+    .menu-btn{
+        display: block !important;
+    }
+    .top-nav{
+        display: none;
+    }
+    .top-nav ul li{
+        display: block;
+    }
+    .navbar-toggler:focus{
+        border: none !important;
+    }
+  .admin-column{
+     
+  }
     .navbar ul li{
         padding-bottom: 10px;
+        padding-left: 30px;
     }
     .header{
         
     }
-    
     .navbar{
-       height: 80px;
+    
     }
     .navbar .sign-up{
-        background-color: var(--primary-color) !important;
+        background-color: var(--primary-color);
     }
     .navbar-toggler{
-        color: #44b78b !important;
+        color: #fe2d51 !important;
         display: block !important;
         height: 35px;
-        border: 2px solid #44b78b !important;
+        border: 2px solid #fe2d51 !important;
     }
     .navbar-toggler-icon{
         
@@ -55,20 +119,18 @@
     .navbar-collapse{
         background-color: #fff;
     }
-
     /* .navbar-collapse :not(.collapse){
         background-color: #fff;
         width: 50% !important;
     } */
-    
     .navbar .log-in{
         /* margin-top: -18px; */
     }
     .navbar .sign-up{
         /* margin-top: -20px; */
     }
-    .banner-details{
-        padding-top: 11rem;
+    .banner-details-block{
+        /* padding-top: 6rem; */
         display: flex;
         flex-direction: column-reverse;
       }
@@ -78,9 +140,7 @@
     .Leading-Medicine .medicine-card{
         padding: 30px 25px;
     }
-    .Leading-Medicine-background{
-         margin-top: 20rem;
-    }
+
     .Leading-Medicine .medicine-card{
         margin-bottom: 25px;
     }
@@ -89,53 +149,170 @@
     }
 }
 
+@media (max-width: 960px ){
+      
+     .login-banner{
+         display: none;
+     }
+     .login-banner .alchem-logo{
+        display: block !important;
+        width: 250px;
+       }
+       .alchem-logo-hidden{
+        display: block;
+        width: 230px;
+      }
+}
+
 @media (max-width: 767px ){
 
     .banner-details h1{
         font-size: 50px;
     }
-    .Leading-Medicine-background{
-        margin-top: 11rem;
-    }
+   
     .banner-details p{
         padding-right: 33px;
     }
+    .admin-column,
+    .login-right-section{
+        padding: 2rem;
+    }
+    .navbar .log-in{
+        padding: 6px 28px 6px 25px;
+    }
 
+}
+@media (max-width: 670px ){
+
+    .alchem-logo-hidden{
+        width: 180px;
+    }
+    .signup-form-link-align p{
+     font-size: 14px;
+    }
+
+    .alchem-main-logo{
+        width: 180px;
+    }
+    #top-nav{
+    position: absolute;
+    top: 61px;
+    }
 }
 @media (max-width: 575px ){
   
     .banner-details .banner-btn{
         padding: 10px 24px;
     }
+    .login-form-details form .login-inputs{
+        width: 13rem;
+    }
+    .navbar .log-in{
+        padding: 3px 28px 3px 25px;
+    }
+    .navbar .sign-up{
+        padding: 6px 15px 6px 15px;
+        font-size: 14px;
+    }
+    .signup-form-link-align{
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        align-items: start;
+    }
+    .alchem-logo-hidden{
+        margin-bottom: 10px;
+    }
+
+    .login-form-details{
+        width: 100%;
+    }
+   
+}
+
+@media (max-width: 520px ){
+    
 }
 @media (max-width: 480px ){
 
     .banner-details h1{
-        font-size: 36px;
+        font-weight: 600;
+        font-size: 28px;
+        padding-bottom: 20px;
     }
-    .Leading-Medicine-background{
-        margin-top: 5rem;
+     
+    .text-center ul li{
+        padding-left: 0px;
+    }
+    .banner-details h1{
+        font-size: 30px;
+    }
+    
+    .alchem-logo{
+        width: 180px;
+    }
+
+    .text-center ul li{
+        display: block;
+    }
+
+    .text-center ul li::after {
+        content: " ";
+        margin-right: 0px;
+        margin-left: 0px;
     }
 }
 
 @media (max-width: 375px ){
 
+    .banner-details .banner-btn {
+        padding: 8px 20px;
+        font-size: 16px;
+    }
+
+    .navbar .log-in{
+        padding: 3px 20px 3px 20px;
+        margin-top: 13px;
+    }
+    .banner-details h1{
+        font-size: 26px;
+    }
     .banner-details p{
         padding-right: 0px;
     }
     
     .header{
-        padding: 20px 15px 0px 15px;
+        
     }
     .navbar img{
         width: 150px;
     }
+    .navbar .log-in{
+        font-size: 14px;
+        padding: 6px 20px 6px 20px;
+    }
     .navbar .sign-up{
         padding: 8px 19px;
-        font-size: 12px;
+        font-size: 14px;
     }
+    .Leading-Medicine .medicine-card{
+        padding: 30px 20px;
+    }
+    
 }
 
 @media (max-width: 320px ){
 
+    .banner-details h1{
+        font-size: 26px;
+    }
+   
+    .navbar .log-in{
+        padding: 6px 28px 6px 25px;
+        font-size: 14px ;
+    }
+    .navbar .sign-up{
+        padding: 6px 12px 6px 12px;
+        font-size: 14px;
+    }
 }

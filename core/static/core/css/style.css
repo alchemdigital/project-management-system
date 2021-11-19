@@ -82,31 +82,83 @@
   
 
 html {
-  font-family: sans-serif;
+  font-family: Montserrat !important;
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   -ms-overflow-style: scrollbar;
   -webkit-tap-highlight-color: transparent; }
 
-  .login-background{
+  .login-page{
+    height: 100vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  /* .login-background{
     background: url("../img/galaxy-2.jpg") !important;
     background-repeat: no-repeat !important;
     background-size: cover !important;
     background-position: center !important;
     height: 937px !important;
-    width: 100% !important;
+    width: 400px;
+  } */
+  .login-block{
+    background-color: #fff;
   }
+  .login-banner {
+    background: url("../img/mixture-1.png") !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    background-position: center !important;
+    height: 100%;
+    width: 800px;
+    }
   .login-form p{
     float: right;
     margin-top: 15px;
     margin-right: 15px;
   }
   .login-form-details{
-    margin-top: 10rem;
     display: flex;
-    align-items: flex-end;
+    margin: auto;
+    width: 50%;
   }
+
+  .signup-form-link-align{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .signup-form-link-align p{
+    margin-bottom: 0px !important;
+  }
+  .signup-form-link-align a{
+    color: #fe2d51;
+  }
+  .signup-form-link-align a:hover{
+    color: #fe2d51;
+  }
+
+  .login-right-section{
+    flex-grow: 1;
+    height: 100vh;
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+  }
+  .alchem-logo{
+   width: 220px;
+  }
+  .alchem-logo-hidden{
+    display: none;
+  }
+  .login-form-details form{
+    width: 100%;
+  }
+
   .login-form-details form>h3{
     font-size: 24px;
     font-weight: bold;
@@ -118,9 +170,15 @@ html {
     font-weight: 500;
     margin-bottom: 0.3rem !important;
   }
-  .login-form-details form .form-control{
+  .login-form-details form .login-inputs{
     width: 25rem;
-    padding: 8px 0px;
+    padding: 10px 10px;
+    border-radius: 6px !important;
+    background-color: #FFFFFF !important;
+    border: 0.1px solid rgb(177, 174, 174);
+  }
+  .login-inputs:focus{
+    box-shadow: none !important;
   }
   .login-form-details .checkbox {
    margin-top: 10px;
@@ -133,6 +191,7 @@ html {
   .form-group p span{
     color: #0070cc !important;
   }
+  
   .login-form-details .sign-up{
     background-color: #007ee5 !important;
     padding: 6px 20px !important;
@@ -145,7 +204,144 @@ html {
     font-weight: 500;
   }
 
+  .Forgot-password{
+    float: right;
+    padding-top: 15px;
+    color:  #fe2d51;
+    
+  }
+  .Forgot-password:hover{
+    color: #fe2d51;
+  }
+  .admin-page{
+    height: 100vh;
+  }
+  .admin-background{
+    background: url("../img/mixture-2.png");
+    height: 100%;
+    width: 800px;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+  .admin-form-details{
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+  }
+  .admin-form-block{
+    /* margin-top: 100px; */
+    /* padding: 2rem; */
+  }
+  .login-btn{
+    background: #fe2d51;
+    color: #fff;
+  }
 
+  .sign-up-cancel-btn{
+    border: 1px solid #fe2d51 !important;
+    color: #fe2d51;
+    background: transparent;
+    margin-left: 0px !important;
+  }
+
+  .width-100-percent{
+    width: 60%;
+  }
+
+  .admin-column{
+    background-color: #fff;
+    height: 100%;
+    flex-grow: 1;
+    height: 100vh;
+    padding: 4rem;
+    display: flex;
+    /* width: 60%; */
+    flex-direction: column !important;
+  }
+   /* .admin-forms{
+     width: 60%;
+     height: 40px;
+     padding: 20px  ;
+   } */
+   .admin-inputs{
+    margin-bottom: 1rem;
+    flex-direction: column;
+    width: 100%;
+   }
+
+   .admin-inputs input{
+     padding: 10px 10px;
+     width: 100% !important;
+     border-radius: 6px !important;
+    background-color: #FFFFFF !important;
+    border: 0.1px solid rgb(177, 174, 174);
+   }
+   .admin-inputs input:focus{
+     box-shadow: none;
+   }
+
+   .admin-inputs .col-form-label-sm{
+    margin-top: 13px;
+    font-size: 16px;
+    color: #000;
+    font-weight: 500;
+    margin-bottom: 0.3rem !important;
+   }
+   .signup-page{
+     float: right;
+     margin-left: 20rem;
+     margin-top: -16rem;
+   
+   }
+   .signup-page a{
+     text-decoration: none !important;
+     color: #fe2d51;
+   }
+   .button-set{
+     margin-top: 50px;  
+   }
+   .reset-page{
+     height: 100vh;
+   }
+   .reset-password-banner{
+    background: url("../img/mixture-1.png") !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    height: 100%;
+    width: 800px;
+   }
+   .reset-btn{
+     background-color: #fe2d51;
+     color: #fff;
+     font-size: 18px !important;
+     font-weight: 500;
+     border-radius: 6px !important;
+     margin-top: 20px;
+      
+   }
+   .login-form-details form input{
+     width: 100%;
+     border-radius: 6px;
+     outline: none;
+     border: none;
+     border: 1px solid rgb(156, 155, 155);
+     padding: 10px;
+   }
+   .back-btn{
+    border: 1.8px solid #fe2d51 !important;
+    color: #fe2d51;
+    font-size: 18px !important;
+    background: transparent;
+    font-weight: 500;
+    font-family: Montserrat;
+    border-radius: 6px !important;
+    margin-top: 20px;
+    float: right;
+    padding: 6px 27px !important;
+   }
+   
 @-ms-viewport {
   width: device-width; }
 
@@ -3666,7 +3862,9 @@ tbody.collapse.show {
       flex-wrap: wrap;
   -ms-flex-align: stretch;
       align-items: stretch;
-  width: 100%; }
+  width: 100% ;
+/* height: 40px !important; */
+ }
   .input-group > .form-control,
   .input-group > .custom-select,
   .input-group > .custom-file {
@@ -4434,20 +4632,13 @@ tbody.collapse.show {
       flex-direction: column;
     
     } */
-    .card-group {
-      background: url("../img/galaxy-2.jpg") !important;
-      background-repeat: no-repeat !important;
-      background-size: cover !important;
-      background-position: center !important;
-      height: 937px !important;
-      width: 100% !important;
-        
-        }
+    
   .card-group > .card {
     /* margin-bottom: 15px; 
     background: rgba(255, 255, 255, 0.08) !important;
       backdrop-filter: blur(10.1px) !important;
       -webkit-backdrop-filter: blur(10.1px) !important; */
+      height: 100%;
   }
   @media (min-width: 576px) {
     .card-group {
