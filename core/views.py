@@ -27,6 +27,9 @@ def is_admin(user):
 def is_pm_or_admin(user):
     return user.groups.filter(Q(name='project_manager') | Q(name='admin')).exists()
 
+def is_logged_in(user):
+    return user.is_authenticated
+
 @login_required
 def dashboard(request):
     users = User.objects.all()
@@ -51,7 +54,7 @@ def login_view(request):
         if form.is_valid():
             authenticated_user = authenticate(username=request.POST['username'], password=request.POST['password'])
             login(request, authenticated_user)
-            return redirect('core:index')
+            return redirect('core:dashboard')
         else:
             return render(request, 'register/login.html', {'login_form':form})
     else:

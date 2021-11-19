@@ -1,28 +1,20 @@
 # PROJECT MANAGEMENT SYSTEM
 
-**Built with Python and Django.**
+**An AD's free project management system**
 
-## Features
+## Requirements
 
+* python3
+* pip
 
-* Interface to create your Company and Users
-* Create Projects, tasks, update infos
-* Views by Users, by Tasks and Projects
-* Login and Logout, Create your Profile, update Profile picture
-* Interact with other users sending friendly requests, add and remove friends
-* Hosted at: http://gui-projects.herokuapp.com/
-* Integration with Amazon AWS S3 for static files
+## Setup Instruction
 
-## Built With:
-
-* Python 3.8.10 
-* Django Framework 2.0.4
-* CoreUI templates
-
-## Contributing
-
-If you want to contribute, just open an issue and tell me where I can improve.
-Fork the repository and change whatever you'd like.
-Pull requests are always welcome.
-
---------------------------------------------------------------------------------------------
+* create a virtualenv
+* clone the repository and navigate to the project root directory
+* run **pip install -r requirements.txt**
+* Put **settings.py** inside **manager/** directory
+* Create a database with the name in the **settings.py** file
+* run **python manage.py makemigrations**
+* run **python manage.py migrate**
+* run **python manage.py migrate**
+* Now open **http://127.0.0.1:8000** in the browser to see the app up and running
