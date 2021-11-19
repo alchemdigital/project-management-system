@@ -196,7 +196,7 @@
     }
     #top-nav{
     position: absolute;
-    top: 61px;
+    top: 59px;
     }
 }
 @media (max-width: 575px ){
@@ -235,6 +235,10 @@
 }
 @media (max-width: 480px ){
 
+    .banner-details p{
+        font-size: 19px;
+    }
+
     .banner-details h1{
         font-weight: 600;
         font-size: 28px;
@@ -243,9 +247,6 @@
      
     .text-center ul li{
         padding-left: 0px;
-    }
-    .banner-details h1{
-        font-size: 30px;
     }
     
     .alchem-logo{
