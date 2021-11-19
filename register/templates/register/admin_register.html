@@ -1,102 +1,223 @@
-{% extends 'core/base.html' %}
 {% load static %}
-{% block breadcrumb %}
-<li class="breadcrumb-item">Home</li>
-<li class="breadcrumb-item">Users</li>
-<li class="breadcrumb-item active">Create New User</li>
-{% endblock breadcrumb%}
-{% block content %}
-<div class="container animated fadeIn">
-    <div class="row justify-content-center">
-        <div class="col-6">
-            <div class="card-group">
-                <div class="card p-4 mb-5">
-                    <div class="card-body">
-                        {% if created %}
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            Registered successfully
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="{% static 'core/css/estilo.css' %}" rel="stylesheet">
+        <link href="{% static 'core/css/style.css' %}" rel="stylesheet">
+        <link href="{% static 'core/css/bootstrap.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
+        <link href="{% static 'core/css/stylesheet.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'core/css/responsive.css' %}">
+    </head>
+<body>
+
+    <section>
+        <div class=" d-flex align-items-center admin-page">
+            <div class=" admin-column ">
+                <div class=" admin-form-details d-flex width-100 align-items-center ">             
+                    <div class="width-100-percent">
+                        <div class="admin-column-logo-align">
+                            <a href="/"><img class=" alchem-logo" src="{% static 'core/img/alchem-icon.png' %}" /></a>
                         </div>
-                        {% endif %}
-                        {% csrf_token %}
-                        <h1>Admin</h1>
-                        <p class="text-muted">Create account as an admin</p>
-                        <form action="{%if edit %}{% url 'register:update_user' %}{% endif %}" method="post">
+                        <div class=" admin-form-block ">
+                            {% if created %}
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                Registered successfully
+                            </div>
+                            {% endif %}
                             {% csrf_token %}
-                            <div class="form-group">
-                                <div class="input-group">
-                                    {{ form.email }}
-                                    <div class="input-group-append">
-                                        <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                            <h1>Admin</h1>
+                            <p class="text-muted">Create account as a admin</p>
+                            <form action="{%if edit %}{% url 'register:update_user' %}{% endif %}" method="post">
+                                {% csrf_token %}
+                                <div class="  admin-forms form-group">
+                                    <div class="admin-inputs input-group">
+                                        <label class="form-label">Email ID</label>
+                                        {{ form.email }}
+                                        <!-- <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                        </div> -->
+                                        {% if form.email.errors %}
+                                        <ol>
+                                            {% for error in form.email.errors %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
                                     </div>
-                                    {% if form.email.errors %}
-                                    <ol>
-                                        {% for error in form.email.errors %}
-                                        <li><strong>{{ error|escape }}</strong></li>
-                                        {% endfor %}
-                                    </ol>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    {{ form.first_name }}
-                                    <div class="input-group-append">
-                                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                </div>  
+                                <div class="admin-forms form-group">
+                                    <div class="admin-inputs input-group">
+                                        <label class="form-label">First name</label>
+                                        {{ form.first_name }}
+                                        <!-- <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                        </div> -->
+                                        {% if form.first_name.errors %}
+                                        <ol>
+                                            {% for error in form.first_name.errors %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
                                     </div>
-                                    {% if form.first_name.errors %}
-                                    <ol>
-                                        {% for error in form.first_name.errors %}
-                                        <li><strong>{{ error|escape }}</strong></li>
-                                        {% endfor %}
-                                    </ol>
-                                    {% endif %}
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    {{ form.last_name }}
-                                    <div class="input-group-append">
-                                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                <div class=" admin-forms form-group ">
+                                    <div class="admin-inputs input-group ">
+                                        <label class="form-label">Last name</label>
+                                        {{ form.last_name }}
+                                        <!-- <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                        </div> -->
+                                        {% if form.last_name.errors %}
+                                        <ol>
+                                            {% for error in form.last_name.errors %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
                                     </div>
-                                    {% if form.last_name.errors %}
-                                    <ol>
-                                        {% for error in form.last_name.errors %}
-                                        <li><strong>{{ error|escape }}</strong></li>
-                                        {% endfor %}
-                                    </ol>
-                                    {% endif %}
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input type="password" name="password1" class="form-control" placeholder="Password" />
-                                    <div class="input-group-append">
-                                        <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                <div class=" admin-forms form-group">
+                                    <div class="admin-inputs input-group">
+                                        <label class="form-label">Password</label>
+                                        <input type="password" name="password1" class="form-control" placeholder="Password" />
+                                        <!-- <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                        </div> -->
+                                        {% if errors.password1 %}
+                                        <ol>
+                                            {% for error in errors.password1 %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
                                     </div>
-                                    {% if errors.password1 %}
-                                    <ol>
-                                        {% for error in errors.password1 %}
-                                        <li><strong>{{ error|escape }}</strong></li>
-                                        {% endfor %}
-                                    </ol>
-                                    {% endif %}
                                 </div>
+                                <div class="button-set">
+                                    <button type="submit" class="btn login-btn px-4"><i class="fa fa-dot-circle-o"></i>
+                                        Submit</button>
+                                    <button type="reset" class="btn sign-up-cancel-btn ml-xl-3 px-4"><i class="fa fa-ban"></i>
+                                        Reset</button>
+                                </div>
+                            </form>
+                            
+                            {{ form.errors }}
+                        </div>
+                        
+                    </div>
+                    <!-- <div class="d-flex justify-content-center align-items-end">
+                        © 2021 All Rights Reserved by Alchem Digital.
+                    </div> -->
+               
+               
+                </div>
+            </div>
+          <div class=" admin-background ">
+
+          </div>
+        </div>
+    </section>
+
+    <!-- <div class=" animated fadeIn">
+        <div class="row">
+            <div class="col-6">
+                <div class="card-group">
+                    <div class="card p-4 mb-5">
+                        <div class="card-body">
+                            {% if created %}
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                Registered successfully
                             </div>
-                            <div class="">
-                                <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>
-                                    Submit</button>
-                                <button type="reset" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i>
-                                    Reset</button>
-                            </div>
-                        </form>
-                        {{ form.errors }}
+                            {% endif %}
+                            {% csrf_token %}
+                            <h1>Admin</h1>
+                            <p class="text-muted">Create account as a admin</p>
+                            <form action="{%if edit %}{% url 'register:update_user' %}{% endif %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        {{ form.email }}
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                        </div>
+                                        {% if form.email.errors %}
+                                        <ol>
+                                            {% for error in form.email.errors %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        {{ form.first_name }}
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                        </div>
+                                        {% if form.first_name.errors %}
+                                        <ol>
+                                            {% for error in form.first_name.errors %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        {{ form.last_name }}
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                        </div>
+                                        {% if form.last_name.errors %}
+                                        <ol>
+                                            {% for error in form.last_name.errors %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="password" name="password1" class="form-control" placeholder="Password" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                        </div>
+                                        {% if errors.password1 %}
+                                        <ol>
+                                            {% for error in errors.password1 %}
+                                            <li><strong>{{ error|escape }}</strong></li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>
+                                        Submit</button>
+                                    <button type="reset" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i>
+                                        Reset</button>
+                                </div>
+                            </form>
+                            {{ form.errors }}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-{% endblock %}
+    </div> -->
+
+</body>
+</html>
