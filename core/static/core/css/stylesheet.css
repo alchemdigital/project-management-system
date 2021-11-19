@@ -102,6 +102,9 @@ body{
    color: var(--primary-color);
    background: none;
   }
+  /* .navbar .sign-up:focus{
+      box-shadow: none !important;
+  } */
 /* .navbar .quote-btn img{
     padding-left: 7px;
 } */
@@ -112,8 +115,8 @@ body{
     background-position: center center; */
 }
 .banner-details{
-  padding-top: 9rem;
-  padding-bottom: 4rem;
+  padding-top: 8rem;
+  padding-bottom: 3rem;
 }
 .banner-details h1{
     font-style: normal;
