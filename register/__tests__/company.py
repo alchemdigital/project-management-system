@@ -14,6 +14,7 @@ class CompanyTest(TestCase):
     
     def test_add_company(self):
         response = self.client.post('/register/new-company/', self.company, follow=True)
+        print(response)
         json_response = json.loads(response.content)
         print(json_response)
         self.assertTrue(response)

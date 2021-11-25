@@ -34,8 +34,11 @@ def admin_register(request):
             user.save()
             user.admin = user
             user.save()
-            thisRole = Group.objects.get(id = 1)
-            thisRole.user_set.add(user)
+            try:
+                thisRole = Group.objects.get(id = 1)
+                thisRole.user_set.add(user)
+            except Group.DoesNotExist:
+                pass
             # Email send functionality starts
             html_mail_content = f'<div>Your account has been created successfully</div>'
             recipient_list = [user.email]
