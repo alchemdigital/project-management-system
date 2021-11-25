@@ -1,1 +1,2 @@
-from .company import CompanyTest
+from .register import RegisterTest
+# from .company import CompanyTest
