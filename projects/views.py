@@ -15,6 +15,7 @@ User = get_user_model()
 from .forms import status as form_status
 from dal import autocomplete
 from register.models import Company
+import datetime
 
 # Create your views here.
 @user_passes_test(is_pm_or_admin)
@@ -362,6 +363,7 @@ def export_tasks(request):
     context = {'projects': projects, 'fields': fields, 'errors': []}
     if request.method == 'POST':
         request_fields = request.POST.getlist('fields')
+        date_range = request.POST.get('date_range')
         project = Project.objects.filter(admin=admin).get(id=request.POST.get('project'))
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = f'attachment; filename="{project.name}.csv"'
@@ -374,7 +376,15 @@ def export_tasks(request):
         request_columns = list(request_fields)
         if 'id' not in request_fields:
             request_columns.append('id')
-        tasks = Task.objects.filter(admin=admin, project=project).values(*request_columns)
+        if date_range is not None:
+            from_date, to_date = date_range.split(' - ')
+            from_date = datetime.datetime.strptime(from_date, '%m/%d/%Y').strftime('%Y-%m-%d')
+            to_date = datetime.datetime.strptime(to_date, '%m/%d/%Y').strftime('%Y-%m-%d')
+            to_date = datetime.datetime.combine(datetime.datetime.fromisoformat(to_date), datetime.time(23, 59, 59, 999999))
+            filters = Q(admin=admin, project=project, created_at__range=(from_date, to_date))
+        else:
+            filters = Q(admin=admin, project=project)
+        tasks = Task.objects.filter(filters).values(*request_columns)
         total_hours = 0
         empty_row_data = ['' for i in request_fields]
         date_fields = ['start_date', 'deadline', 'created_at', 'updated_at']
@@ -397,7 +407,8 @@ def export_tasks(request):
                     task_name_index = 0
                     if 'task_name' in  request_fields:
                         task_name_index = request_fields.index('task_name')
-                    checklist_row[task_name_index] = checklist.get('checklist_name')
+                    if task_name_index in checklist_row:
+                        checklist_row[task_name_index] = checklist.get('checklist_name')
                     writer.writerow(checklist_row)
         if total_hours != 0:
             writer.writerow(())
