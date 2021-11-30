@@ -35,9 +35,12 @@
         <link href="{% static 'core/css/bootstrap.css' %}" rel="stylesheet">
         <script src="{% static 'core/vendors/js/jquery.min.js'%}"></script>
         {{ form.media.js }}
-        <script src="https://momentjs.com/downloads/moment.js"></script>
+        {% comment %} <script src="https://momentjs.com/downloads/moment.js"></script> {% endcomment %}
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.3/dist/fullcalendar.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     </head>
     {% block body %}
         <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
