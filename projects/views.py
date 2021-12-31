@@ -396,7 +396,7 @@ def export_tasks(request):
                 elif request_field == 'employee':
                     this_employee = User.objects.filter(admin=admin, id=task[request_field]).values_list('first_name', flat=True).first()
                     task[request_field] = this_employee
-                elif request_field in date_fields:
+                elif request_field in date_fields and task[request_field] is not None:
                     task[request_field] = task[request_field].strftime(("%d-%m-%Y %H:%M:%S"))
                 value_row.append(task[request_field])
             writer.writerow(value_row)
