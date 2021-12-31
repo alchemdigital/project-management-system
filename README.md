@@ -17,4 +17,5 @@
 * run **python manage.py makemigrations**
 * run **python manage.py migrate**
 * run **python manage.py migrate**
+* run **python manage.py runserver**
 * Now open **http://127.0.0.1:8000** in the browser to see the app up and running
