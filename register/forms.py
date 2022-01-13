@@ -65,7 +65,7 @@ class RegistrationForm(UserCreationForm):
         self.fields['email'].widget.attrs['placeholder'] = 'E-mail'
         if kwargs.get('instance') is not None:
             self.admin_id = kwargs.get('instance').admin_id
-        elif 'admin_id' in args[0]:
+        elif 0 in args and 'admin_id' in args[0]:
             self.admin_id = args[0]['admin_id']
         else:
             self.admin_id = None
