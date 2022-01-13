@@ -381,7 +381,7 @@ def export_tasks(request):
             from_date = datetime.datetime.strptime(from_date, '%m/%d/%Y').strftime('%Y-%m-%d')
             to_date = datetime.datetime.strptime(to_date, '%m/%d/%Y').strftime('%Y-%m-%d')
             to_date = datetime.datetime.combine(datetime.datetime.fromisoformat(to_date), datetime.time(23, 59, 59, 999999))
-            filters = Q(admin=admin, project=project, created_at__range=(from_date, to_date))
+            filters = Q(admin=admin, project=project, start_date__range=(from_date, to_date))
         else:
             filters = Q(admin=admin, project=project)
         tasks = Task.objects.filter(filters).values(*request_columns)
@@ -396,7 +396,7 @@ def export_tasks(request):
                 elif request_field == 'employee':
                     this_employee = User.objects.filter(admin=admin, id=task[request_field]).values_list('first_name', flat=True).first()
                     task[request_field] = this_employee
-                elif request_field in date_fields:
+                elif request_field in date_fields and task[request_field] is not None:
                     task[request_field] = task[request_field].strftime(("%d-%m-%Y %H:%M:%S"))
                 value_row.append(task[request_field])
             writer.writerow(value_row)
