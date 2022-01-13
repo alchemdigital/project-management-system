@@ -51,7 +51,7 @@ def admin_register(request):
         }
         return redirect('/dashboard')
     else:
-        form = RegistrationForm({})
+        form = RegistrationForm({}) 
         context = {
             'form': form
         }
