@@ -53,6 +53,7 @@ class ProjectRegistrationForm(forms.ModelForm):
 class TaskRegistrationForm(forms.ModelForm):
     forms.DateInput.input_type = 'date'
     forms.DateTimeInput.input_type = 'datetime-local'
+    forms.DateTimeInput.input_formats = '%Y-%m-%d %H:%M:%S'
 
     class Meta:
         model = Task
