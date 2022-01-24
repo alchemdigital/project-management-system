@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 from dal import autocomplete
 import datetime
+from django.forms import DateTimeField
 
 status = (
     ('1', 'Yet to Start'),
@@ -53,6 +54,8 @@ class ProjectRegistrationForm(forms.ModelForm):
 class TaskRegistrationForm(forms.ModelForm):
     forms.DateInput.input_type = 'date'
     forms.DateTimeInput.input_type = 'datetime-local'
+    # deadline = DateTimeField(input_formats=['%Y-%m-%dT%H:%M'])
+    # forms.DateTimeInput.input_formats = '%Y-%m-%d %H:%M:%S'
 
     class Meta:
         model = Task
@@ -88,7 +91,7 @@ class TaskRegistrationForm(forms.ModelForm):
         self.fields['status'] = forms.ChoiceField(choices=status, required=False)
         self.fields['status'].widget.attrs['class'] = 'form-control'
         self.fields['status'].widget.attrs['placeholder'] = 'Status'
-        self.fields['deadline'] = forms.DateTimeField(required=False)
+        self.fields['deadline'] = forms.DateTimeField(required=False, input_formats=['%Y-%m-%dT%H:%M'])
         self.fields['deadline'].widget.attrs['class'] = 'form-control'
         self.fields['deadline'].widget.attrs['placeholder'] = 'Deadline'
         self.fields['start_date'] = forms.DateTimeField(required=False, initial=datetime.datetime.now())
