@@ -1,21 +1,12 @@
 from django import forms
 from django.utils.text import slugify
-from .models import Task
-from .models import Project
-from .models import Checklist
+from .models import Task, Project, Checklist, status
 from register.models import Company
 from django.contrib.auth import get_user_model
 User = get_user_model()
 from dal import autocomplete
 import datetime
 from django.forms import DateTimeField
-
-status = (
-    ('1', 'Yet to Start'),
-    ('2', 'In Progress'),
-    ('3', 'QC Pending'),
-    ('4', 'Completed'),
-)
 
 class ProjectRegistrationForm(forms.ModelForm):
     class Meta:

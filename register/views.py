@@ -310,9 +310,9 @@ class ClientAutoComplete(autocomplete.Select2QuerySetView):
         this_user = self.request.user
         if not is_admin(this_user):
             return User.objects.none()
-        qs = User.objects
         if self.q:
-            qs = qs.filter(admin=this_user.admin, groups=4).filter(Q(email__icontains=self.q) | Q(first_name__icontains=self.q))
+            qs = User.objects.filter(admin=this_user.admin, groups=4).filter(
+                Q(email__icontains=self.q) | Q(first_name__icontains=self.q))
         else:
-            qs.none()
+            qs = User.objects.none()
         return qs
