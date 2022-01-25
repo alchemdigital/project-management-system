@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Avg
-from projects.models import Project, Task, Checklist
+from projects.models import Project, Task, Checklist, status
 from projects.forms import ProjectRegistrationForm, TaskRegistrationForm, ChecklistRegistrationForm
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Q
@@ -12,7 +12,6 @@ from django.http import HttpResponse
 from core.views import is_admin, is_project_manager, is_pm_or_admin, is_logged_in
 from django.contrib.auth import get_user_model
 User = get_user_model()
-from .forms import status as form_status
 from dal import autocomplete
 from register.models import Company
 import datetime
@@ -332,7 +331,7 @@ def import_tasks(request):
             description = row['Description']
             hours = row['Hours']
             created_at = row['Created Date']
-            status = list(filter(lambda x: x[1].lower() == row['Status'].lower(), form_status))
+            status = list(filter(lambda x: x[1].lower() == row['Status'].lower(), status))
             status = status[0][0]
             deadline = row['Deadline']
             poc = row['POC']
@@ -371,7 +370,8 @@ def export_tasks(request):
         need_checklist = False
         if 'checklist' in  request_fields:
             need_checklist = True
-        request_fields.remove('checklist')
+        if 'checklist' in request_fields:
+            request_fields.remove('checklist')
         writer.writerow([i.title().replace('_', ' ') for i in request_fields])
         request_columns = list(request_fields)
         if 'id' not in request_fields:
@@ -388,6 +388,7 @@ def export_tasks(request):
         total_hours = 0
         empty_row_data = ['' for i in request_fields]
         date_fields = ['start_date', 'deadline', 'created_at', 'updated_at']
+        status_values = ('', 'Yet to Start', 'In Progress', 'QC Pending', 'Completed')
         for task in tasks:
             value_row = []
             for request_field in request_fields:
@@ -398,6 +399,8 @@ def export_tasks(request):
                     task[request_field] = this_employee
                 elif request_field in date_fields and task[request_field] is not None:
                     task[request_field] = task[request_field].strftime(("%d-%m-%Y %H:%M:%S"))
+                elif request_field == 'status':
+                    task[request_field] = dict(status)[task[request_field]]
                 value_row.append(task[request_field])
             writer.writerow(value_row)
             if need_checklist:
@@ -433,11 +436,10 @@ class CompanyAutoComplete(autocomplete.Select2QuerySetView):
         this_user = self.request.user
         if not is_pm_or_admin(this_user):
             return Company.objects.none()
-        qs = Company.objects
         if self.q:
-            qs = qs.filter(admin=this_user.admin, name__icontains=self.q)
+            qs = Company.objects.filter(admin=this_user.admin, name__icontains=self.q)
         else:
-            qs.none()
+            qs = Company.objects.none()
         return qs
 
 class ProjectAutoComplete(autocomplete.Select2QuerySetView):
@@ -445,11 +447,11 @@ class ProjectAutoComplete(autocomplete.Select2QuerySetView):
         this_user = self.request.user
         if not is_logged_in(this_user):
             return Project.objects.none()
-        qs = Project.objects
         if self.q:
-            qs = qs.filter(admin=this_user.admin, name__icontains=self.q)
+            qs = Project.objects.filter(
+                admin=this_user.admin, name__icontains=self.q)
         else:
-            qs.none()
+            qs = Project.objects.none()
         return qs
 
 class EmployeeAutoComplete(autocomplete.Select2QuerySetView):
@@ -457,11 +459,10 @@ class EmployeeAutoComplete(autocomplete.Select2QuerySetView):
         this_user = self.request.user
         if not is_logged_in(this_user):
             return User.objects.none()
-        qs = User.objects
         if self.q:
-            qs = qs.filter(admin=this_user.admin, groups__in=(1, 2, 3)).filter(Q(email__icontains=self.q) | Q(first_name__icontains=self.q))
+            qs = User.objects.filter(admin=this_user.admin, groups__in=(1, 2, 3)).filter(Q(email__icontains=self.q) | Q(first_name__icontains=self.q))
         else:
-            qs.none()
+            qs = User.objects.none()
         return qs
 
 class TaskAutoComplete(autocomplete.Select2QuerySetView):
@@ -469,10 +470,9 @@ class TaskAutoComplete(autocomplete.Select2QuerySetView):
         this_user = self.request.user
         if not is_logged_in(this_user):
             return Task.objects.none()
-        qs = Task.objects
         if self.q:
-            qs = qs.filter(admin=this_user.admin, task_name__icontains=self.q)
+            qs = Task.objects.filter(admin=this_user.admin, task_name__icontains=self.q)
         else:
-            qs.none()
+            qs = Task.objects.none()
         return qs
 # Dropdown autocomplete classes - end
