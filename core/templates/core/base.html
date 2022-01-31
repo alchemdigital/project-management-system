@@ -33,7 +33,12 @@
         <link href="{% static 'core/css/estilo.css' %}" rel="stylesheet">
         <link href="{% static 'core/css/style.css' %}" rel="stylesheet">
         <link href="{% static 'core/css/bootstrap.css' %}" rel="stylesheet">
+        <link href="{% static 'core/css/custom.css' %}" rel="stylesheet">
+        <!-- Select2 css -->
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
         <script src="{% static 'core/vendors/js/jquery.min.js'%}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         {{ form.media.js }}
         {% comment %} <script src="https://momentjs.com/downloads/moment.js"></script> {% endcomment %}
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -371,6 +376,8 @@
             <!-- Plugins and scripts required by this views -->
             <!-- Custom scripts required by this view -->
             <script src="{% static 'core/js/main.js'%}"></script>
+            {% block scripts %}
+            {% endblock %}
         </body>
     {% endblock body %}
 </html>
