@@ -97,8 +97,8 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <select name="role" class="form-control" multiple>
-                                            <option selected disabled>-- Select Role --</option>
+                                        <select name="role" class="form-control" multiple="multiple" id="user-role">
+                                            <option disabled>-- Select Role --</option>
                                             {% for role in roles %}
                                                 <option value="{{ role.id }}" {% if role.id in selected_roles%}Selected{% endif %}>{{ role }}</option>
                                             {% endfor %}
@@ -127,4 +127,11 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#user-role').select2();
+    });
+</script>
 {% endblock %}

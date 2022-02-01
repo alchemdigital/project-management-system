@@ -15,7 +15,9 @@
         <a class="btn btn-primary" href="{% url 'register:add_attendance' %}">Add attendance</a>
     </div>
 </div>
-<div id="calendar"></div>
+<div class="card m-3 p-4 px-5 border-0 shadow">
+    <div id="calendar"></div>
+</div>
 <script>
     $(document).ready(function () {
         $('#calendar').fullCalendar({

@@ -1,3 +1,5 @@
+from time import time
+from tracemalloc import start
 from django.shortcuts import render
 from django.db.models import Avg
 from projects.models import Project, Task, Checklist, status
@@ -115,11 +117,19 @@ def delete_project(request, project_id):
 # @user_passes_test(is_pm_or_admin)
 def new_task(request):
     if request.method == 'POST':
+        timezone = request.POST.get('timezone')
+        startDate = request.POST.get('start_date')
+        deadLine = request.POST.get('deadline')
         changed_request = request.POST.copy()
         if request.POST.get('hours') == '':
             changed_request.update({'hours': 0})
         if request.POST.get('estimate_hours') == '':
             changed_request.update({'estimate_hours': 0})
+        if timezone != '':
+            if startDate != '':
+                changed_request.update({'start_date': startDate+timezone})
+            if deadLine != '':
+                changed_request.update({'deadline': deadLine+timezone})
         form = TaskRegistrationForm(changed_request, user=request.user, use_required_attribute=False)
         context = {'form': form}
         if form.is_valid():
@@ -201,6 +211,17 @@ def edit_task(request, task_id):
 def update_task(request):
     this_user = request.user
     id = request.POST.get('id')
+    timezone = request.POST.get('timezone')
+    startDate = request.POST.get('start_date')
+    deadLine = request.POST.get('deadline')
+    changed_request = request.POST.copy()
+    if timezone != '':
+        if startDate != '':
+            changed_request.setlist('start_date', [startDate+timezone])
+        if deadLine != '':
+            changed_request.setlist('deadline', [deadLine+timezone])
+        request.POST = changed_request
+    
     instance = Task.objects.filter(admin=this_user.admin).get(id = id)
     form = TaskRegistrationForm(request.POST, instance=instance, user=request.user, use_required_attribute=False)
     context = { 'form': form, 'id': instance.id, 'edit': True}

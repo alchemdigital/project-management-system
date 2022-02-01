@@ -180,11 +180,14 @@
                                         {% endif %}
                                     </div>
                                 </div>
+                                <input type="hidden" name="timezone" id="timezone">
                                 <div class="">
                                     <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i> Submit</button>
                                     <button type="reset" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Reset</button>
                                 </div>
                             </form>
+                            <!-- {{ form.timezone }} -->
+
                             <!-- {{ form.errors }} -->
                         </div>
                     </div>
@@ -192,9 +195,52 @@
             </div>
         </div>
     </div>
+    
     <script type="text/javascript">
-        $('#id_project').change(function(e){
-            console.log($(this).val())
+        function getTimeZone() {
+            var offset = new Date().getTimezoneOffset(),
+                o = Math.abs(offset);
+            return (offset < 0 ? "+" : "-") + ("00" + Math.floor(o / 60)).slice(-2) + ":" + ("00" + (o % 60)).slice(-2);
+        }
+
+        function localTime(timestamp, response = 'datetime'){
+            if (!timestamp)
+                return null
+            let convertedDateTime = new Date(new Date(timestamp).toLocaleDateString('en-US') + ' ' + new Date(timestamp).toLocaleTimeString('en-US'))
+            switch (response) {
+                case 'date':
+                    // return convertedDateTime.toLocaleDateString('en-US')
+                    return convertedDateTime.getFullYear() + '-' + (convertedDateTime.getMonth() + 1) + '-' + convertedDateTime.getDate()
+                case 'time':
+                    return convertedDateTime.toLocaleTimeString('en-US', { timeStyle: 'short' })
+                default:
+                    return convertedDateTime
+            }
+        }
+
+        function UTCToLocalTime(timestamp){
+            if (!timestamp)
+                return null
+            let convertedTimeStamp = timestamp.replace('T', ' ') + " UTC";
+            let dateTime = new Date(convertedTimeStamp)
+            let hour, minute, second, date, month, year
+            hour = dateTime.getHours() < 10 ? "0" + dateTime.getHours() : dateTime.getHours()
+            minute = dateTime.getMinutes() < 10 ? "0"+ dateTime.getMinutes() : dateTime.getMinutes()
+            second = dateTime.getSeconds() < 10 ? "0" + dateTime.getSeconds() : dateTime.getSeconds()
+            date = dateTime.getDate() < 10 ? "0" + dateTime.getDate() : dateTime.getDate()
+            month = dateTime.getMonth() 
+            year = dateTime.getFullYear()
+
+            let convertedDateTime = year+"-"+month+1+"-"+date+"T"+hour+":"+minute+":"+second
+            console.log(convertedDateTime);
+            return convertedDateTime
+        }
+        $(document).ready(function(){
+            $('#timezone').val(getTimeZone())
+            let startDate = $('#id_start_date').val();
+            let deadline = $('#id_deadline').val();
+            $('#id_start_date').val(UTCToLocalTime(startDate))
+            $('#id_deadline').val(UTCToLocalTime(deadline))
         })
     </script>
 {% endblock %}
