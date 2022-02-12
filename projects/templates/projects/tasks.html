@@ -24,6 +24,7 @@
                     <th class="text-center" onclick="order_by_selected('employee')">Employee</th>
                     <th class="text-center" onclick="order_by_selected('task_name')">Task Name</th>
                     <th class="text-center" onclick="order_by_selected('status')">Status</th>
+                    <th class="text-center" onclick="order_by_selected('month')">Month</th>
                     <th class="text-center" onclick="order_by_selected('start_date')">Start Date</th>
                     <th class="text-center" onclick="order_by_selected('deadline')">Deadline</th>
                     <th class="text-center" onclick="order_by_selected('hours')">Hours</th>
@@ -33,7 +34,7 @@
             </thead>
                     <tbody>
                         {% for task in page_obj %}
-                            <tr onclick="task_row_click(event, {{ task.id }})">
+                            <tr>
                                 <td class="text-center">
                                     {{ task.project | default_if_none:'-' }}
                                 </td>
@@ -45,6 +46,9 @@
                                 </td>
                                 <td class="text-center">
                                     {{ task.get_status_display | default_if_none:'-' }}
+                                </td>
+                                <td class="text-center">
+                                    {{ task.start_date.month | default_if_none:'-' }}
                                 </td>
                                 <td class="text-center">
                                     {{ task.start_date | default_if_none:'-' }}
@@ -61,6 +65,8 @@
                                 <td class="text-center">
                                     <a class="text-primary" href="#" onclick="edit_task(event, {{ task.id }});"><i class="fa fa-edit"></i></a>
                                     <a class="text-danger" href="#" onclick="delete_task(event, {{ task.id }});"><i class="fa fa-trash"></i></a>
+                                    <a class="text-success" href="#" onclick="task_row_click(event, {{ task.id }})"><i class="fa fa-sitemap"
+                                            aria-hidden="true"></i></a>
                                 </td>
                             </tr>
                         {% endfor %}

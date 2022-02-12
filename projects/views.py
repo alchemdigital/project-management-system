@@ -159,6 +159,8 @@ def tasks(request, project_id = None):
         direction = 'desc'
     if direction == 'desc':
         ordering = '-{}'.format(order_by)
+    if order_by == 'month':
+        ordering = 'start_date'
     else:
         ordering = order_by
     search_term = request.GET.get('search')
@@ -173,7 +175,7 @@ def tasks(request, project_id = None):
                 Q(start_date__icontains=search_term) |
                 Q(hours__icontains=search_term) |
                 Q(description__icontains=search_term)
-            ).filter(project_id=project_id).order_by(ordering)
+            ).filter(start_date__month = search_term).filter(project_id=project_id).order_by(ordering)
         else:
             tasks = Task.objects.filter(admin=this_user.admin).filter(
                 Q(project__name__icontains=search_term) |
@@ -481,7 +483,7 @@ class EmployeeAutoComplete(autocomplete.Select2QuerySetView):
         if not is_logged_in(this_user):
             return User.objects.none()
         if self.q:
-            qs = User.objects.filter(admin=this_user.admin, groups__in=(1, 2, 3)).filter(Q(email__icontains=self.q) | Q(first_name__icontains=self.q))
+            qs = User.objects.filter(admin=this_user.admin, groups__in=(1, 2, 3)).filter(Q(email__icontains=self.q) | Q(first_name__icontains=self.q)).distinct()
         else:
             qs = User.objects.none()
         return qs
