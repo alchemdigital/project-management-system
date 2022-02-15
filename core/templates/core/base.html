@@ -53,7 +53,7 @@
                 <button class="navbar-toggler mobile-sidebar-toggler d-lg-none mr-auto" type="button">
                 <span class="navbar-toggler-icon"></span>
                 </button>
-                <img src="{% static 'core/img/logos/gui-horizontal.png' %}" alt="" class="brand-gui ml-2 d-none d-sm-block p-2">
+                <!-- <img src="{% static 'core/img/logos/gui-horizontal.png' %}" alt="" class="brand-gui ml-2 d-none d-sm-block p-2"> -->
                 <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">
                 <span class="navbar-toggler-icon"></span>
                 </button>
@@ -72,11 +72,20 @@
                     <li class="nav-item d-md-down-none">
                         <a class="nav-link" href="#"><i class="fa fa-map-marker"></i></a>
                     </li>
+                    <li class="nav-item d-md-down-none">
+                        <a href="https://github.com/alchemdigital/project-management-system" target="_blank"><i class="fab fa-github" aria-hidden="true"></i></a>
+                    </li>
                     {% if user.is_authenticated %}
-                        <li class="text-muted">Hello, {{ user.first_name }}</li>
-                        <li class="text-muted">
-                            <a href="{% url 'core:logout' %}"> Logout</a>
-                        </li>
+                        <div class="btn-group float-right">
+                            <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                <i class="fa fa-user-circle" aria-hidden="true"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="#">Hello, {{ user.first_name }}</a>
+                                <a class="dropdown-item" href="{% url 'core:logout' %}"> Logout</a>
+                            </div>
+                        </div>
                     {% else %}
                         <li class="text-muted">
                             <a href="{% url 'core:login' %}"> Login </a>
@@ -104,9 +113,6 @@
                         </div>
                     </li>
                 </ul>
-                <button class="navbar-toggler aside-menu-toggler" type="button">
-                <span class="navbar-toggler-icon"></span>
-                </button>
             </header>
             <div class="app-body">
                 <div class="sidebar">
@@ -131,7 +137,7 @@
                                 </li> -->
                             {% if user|has_group:'admin' or user|has_group:'project_manager' or user|has_group:'employee' %}
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'register:attendance' %}"><i class="fa fa-tachometer-alt"></i> Attendance</a>
+                                    <a class="nav-link" href="{% url 'register:attendance' %}"><i class="fa fa-calendar" aria-hidden="true"></i> Attendance</a>
                                 </li>
                             {% endif %}
                             {% if user|has_group:'admin' or user|has_group:'project_manager' %}
@@ -141,7 +147,7 @@
                             {% endif %}
                             {% if user|has_group:'admin' %}
                                 <li class="nav-item nav-dropdown">
-                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-industry"></i> Company</a>
+                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-building" aria-hidden="true"></i> Company</a>
                                     <ul class="nav-dropdown-items">
                                         <li class="nav-item">
                                             <a class="nav-link" href="{% url 'register:new-company'%}"><i class="fa fa-plus ml-2"></i> New Company</a>
@@ -154,7 +160,7 @@
                             {% endif %}
                             {% if user|has_group:'admin' or user|has_group:'project_manager' %}
                                 <li class="nav-item nav-dropdown">
-                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> Project</a>
+                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-cubes" aria-hidden="true"></i> Project</a>
                                     <ul class="nav-dropdown-items">
                                         <li class="nav-item">
                                             <a class="nav-link" href="{% url 'projects:new-project'%}"><i class="fa fa-plus ml-2"></i> New Project</a>
@@ -167,7 +173,7 @@
                             {% endif %}
                             {% if user|has_group:'admin' or user|has_group:'project_manager' or user|has_group:'employee' %}
                                 <li class="nav-item nav-dropdown">
-                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> Task</a>
+                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-tasks" aria-hidden="true"></i> Task</a>
                                     <ul class="nav-dropdown-items">
                                         <li class="nav-item">
                                             <a class="nav-link" href="{% url 'projects:new-task'%}"><i class="fa fa-plus ml-2"></i> New Task</a>
@@ -180,7 +186,7 @@
                             {% endif %}
                             {% if user|has_group:'admin' or user|has_group:'project_manager' or user|has_group:'employee' %}
                                 <li class="nav-item nav-dropdown">
-                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> Checklist</a>
+                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-list" aria-hidden="true"></i> Checklist</a>
                                     <ul class="nav-dropdown-items">
                                         <li class="nav-item">
                                             <a class="nav-link" href="{% url 'projects:new-checklist'%}"><i class="fa fa-plus ml-2"></i> New Checklist</a>
@@ -193,7 +199,7 @@
                             {% endif %}
                             {% if user|has_group:'admin' %}
                                 <li class="nav-item nav-dropdown">
-                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> User</a>
+                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-user" aria-hidden="true"></i> User</a>
                                     <ul class="nav-dropdown-items">
                                         <li class="nav-item">
                                             <a class="nav-link" href="{% url 'register:new-user' %}"><i class="fa fa-plus ml-2"></i> New User</a>
@@ -206,7 +212,7 @@
                             {% endif %}
                             {% if user|has_group:'admin' %}
                                 <li class="nav-item nav-dropdown">
-                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> Import</a>
+                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-download" aria-hidden="true"></i> Import</a>
                                     <ul class="nav-dropdown-items">
                                         <li class="nav-item">
                                             <a class="nav-link" href="{% url 'projects:download_import_sample' %}"><i class="fa fa-plus ml-2"></i> Download sample file</a>
@@ -220,7 +226,7 @@
                             {% endif %}
                             {% if user|has_group:'admin' %}
                                 <li class="nav-item nav-dropdown">
-                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-puzzle-piece"></i> Export</a>
+                                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-upload" aria-hidden="true"></i> Export</a>
                                     <ul class="nav-dropdown-items">
                                         <li class="nav-item">
                                             <a class="nav-link" href="{% url 'projects:export_tasks' %}"><i class="fa fa-plus ml-2"></i> Export Tasks</a>
@@ -242,129 +248,13 @@
                             <li class="breadcrumb-item">Dashboard</li>
                         {% endblock breadcrumb%}
                         <!-- Breadcrumb Menu-->
-                        <li class="breadcrumb-menu d-md-down-none">
-                            <div class="btn-group" role="group" aria-label="Button group">
-                                <a class="btn" href="#"><i class="fa fa-comments"></i></a>
-                                <a class="btn" href="./"><i class="fa fa-tachometer-alt"></i> &nbsp;Dashboard</a>
-                                <a class="btn" href="#"><i class="fa fa-cog"></i> &nbsp;Settings</a>
-                            </div>
-                        </li>
                     </ol>
                     {% block content %}
                     {% endblock %}
                 </main>
-                <aside class="aside-menu">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#timeline" role="tab"><i class="fa fa-list"></i></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#messages" role="tab"><i class="fa fa-comments"></i></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#settings" role="tab"><i class="fa fa-cog"></i></a>
-                        </li>
-                    </ul>
-                    <div class="tab-pane p-3" id="messages" role="tabpanel">
-                        <div class="message">
-                            <div class="py-3 pb-5 mr-3 float-left">
-                                <div class="avatar">
-                                    <img src="{{ user.img.url }}" class="img-avatar" alt="person_name">
-                                    <span class="avatar-status badge-success"></span>
-                                </div>
-                            </div>
-                            <div>
-                                <small class="text-muted">Person Name</small>
-                                <small class="text-muted float-right mt-1">1:52 PM</small>
-                            </div>
-                            <div class="text-truncate font-weight-bold">Lorem ipsum dolor sit amet</div>
-                            <small class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt...</small>
-                        </div>
-                    </div>
-                    <div class="tab-pane p-3" id="settings" role="tabpanel">
-                        <h6>Settings</h6>
-                        <div class="aside-options">
-                            <div class="clearfix mt-4">
-                                <small><b>Option 1</b></small>
-                                <label class="switch switch-text switch-pill switch-success switch-sm float-right">
-                                <input type="checkbox" class="switch-input" checked="">
-                                <span class="switch-label" data-on="On" data-off="Off"></span>
-                                <span class="switch-handle"></span>
-                                </label>
-                            </div>
-                            <div>
-                                <small class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</small>
-                            </div>
-                        </div>
-                        <div class="aside-options">
-                            <div class="clearfix mt-3">
-                                <small><b>Option 2</b></small>
-                                <label class="switch switch-text switch-pill switch-success switch-sm float-right">
-                                <input type="checkbox" class="switch-input">
-                                <span class="switch-label" data-on="On" data-off="Off"></span>
-                                <span class="switch-handle"></span>
-                                </label>
-                            </div>
-                            <div>
-                                <small class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</small>
-                            </div>
-                        </div>
-                        <div class="aside-options">
-                            <div class="clearfix mt-3">
-                                <small><b>Option 3</b></small>
-                                <label class="switch switch-text switch-pill switch-success switch-sm float-right">
-                                <input type="checkbox" class="switch-input">
-                                <span class="switch-label" data-on="On" data-off="Off"></span>
-                                <span class="switch-handle"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="aside-options">
-                            <div class="clearfix mt-3">
-                                <small><b>Option 4</b></small>
-                                <label class="switch switch-text switch-pill switch-success switch-sm float-right">
-                                <input type="checkbox" class="switch-input" checked="">
-                                <span class="switch-label" data-on="On" data-off="Off"></span>
-                                <span class="switch-handle"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <hr>
-                        <h6>System Utilization</h6>
-                        <div class="text-uppercase mb-1 mt-4">
-                            <small><b>CPU Usage</b></small>
-                        </div>
-                        <div class="progress progress-xs">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <small class="text-muted">348 Processes. 1/4 Cores.</small>
-                        <div class="text-uppercase mb-1 mt-2">
-                            <small><b>Memory Usage</b></small>
-                        </div>
-                        <div class="progress progress-xs">
-                            <div class="progress-bar bg-warning" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <small class="text-muted">11444GB/16384MB</small>
-                        <div class="text-uppercase mb-1 mt-2">
-                            <small><b>SSD 1 Usage</b></small>
-                        </div>
-                        <div class="progress progress-xs">
-                            <div class="progress-bar bg-danger" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <small class="text-muted">243GB/256GB</small>
-                        <div class="text-uppercase mb-1 mt-2">
-                            <small><b>SSD 2 Usage</b></small>
-                        </div>
-                        <div class="progress progress-xs">
-                            <div class="progress-bar bg-success" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <small class="text-muted">25GB/256GB</small>
-                    </div>
-            </div>
-            </aside>
             </div>
             <footer class="app-footer">
-                <span><a href="https://www.alchemdigital.com">Copyright</a> © 2021 | Alchem Digital LLP</span>
+                <span>Developed by | <a href="https://www.alchemdigital.com" target="_blank">Alchem Digital </a>LLP</span>
             </footer>
             <!-- Bootstrap and necessary plugins -->
             <script src="{% static 'core/vendors/js/popper.min.js'%}"></script>

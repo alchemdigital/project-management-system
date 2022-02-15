@@ -31,7 +31,7 @@
                     </thead>
                     <tbody>
                         {% for company in page_obj %}
-                            <tr onclick="company_row_click(event, {{ company.id }})">
+                            <tr>
                                 <td class="text-center">
                                     {{ company.social_name | default_if_none:'-' }}
                                 </td>
@@ -50,6 +50,7 @@
                                 <td class="text-center">
                                     <a class="text-primary" href="#" onclick="edit_company(event, {{ company.id }});"><i class="fa fa-edit"></i></a>
                                     <a class="text-danger" href="#" onclick="delete_company(event, {{ company.id }});"><i class="fa fa-trash"></i></a>
+                                    <a class="text-success" href="#" onclick="company_row_click(event, {{ company.id }})"><i class="fa fa-sitemap" aria-hidden="true"></i></a>
                                 </td>
                             </tr>
                         {% endfor %}

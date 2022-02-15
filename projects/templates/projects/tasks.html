@@ -13,6 +13,7 @@
         <div class="row">
             <div class="pull-right"> 
                 <input type="text" name="search_term" id="search-term" />
+                <input type="text" name="date_range" id="date-range">
                 <i class="fa fa-search" onclick="search()"></i>
                 <span id="filter-info"></span>
                 <a class="text-primary" onclick="window.location.href = window.location.pathname">Clear Filter</a>
@@ -33,7 +34,7 @@
             </thead>
                     <tbody>
                         {% for task in page_obj %}
-                            <tr onclick="task_row_click(event, {{ task.id }})">
+                            <tr>
                                 <td class="text-center">
                                     {{ task.project | default_if_none:'-' }}
                                 </td>
@@ -61,6 +62,8 @@
                                 <td class="text-center">
                                     <a class="text-primary" href="#" onclick="edit_task(event, {{ task.id }});"><i class="fa fa-edit"></i></a>
                                     <a class="text-danger" href="#" onclick="delete_task(event, {{ task.id }});"><i class="fa fa-trash"></i></a>
+                                    <a class="text-success" href="#" onclick="task_row_click(event, {{ task.id }})"><i class="fa fa-sitemap"
+                                            aria-hidden="true"></i></a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -87,6 +90,9 @@
         </div>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+    integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script type="text/javascript">
     function edit_task(e, task_id) {
         e.stopPropagation()
@@ -111,14 +117,22 @@
     }
     function search() {
         let search_term = $('#search-term').val()
+        let date_range = $('#date-range').val()
         let joiner = '&'
-        if (window.location.search == '')
+        
+        // if (window.location.search == '')
+        //     joiner = ''
+        if(search_term == '')
             joiner = ''
+        
         let url_params = new URLSearchParams(window.location.search)
         url_params.delete('search')
+        url_params.delete('date_range')
         to_url = '?' + url_params.toString()
         if ($('#search-term').val() != '')
-            to_url +=  joiner + 'search=' + search_term
+            to_url += 'search=' + search_term
+        if(date_range != '')
+            to_url += joiner + 'date_range=' + date_range
         window.location.href = to_url
     }
     $(function(){
@@ -135,5 +149,19 @@
     function task_row_click(e, task_id){
         window.location.href = '/projects/checklists/' + task_id
     }
+
+    function today(){
+        var date = new Date()
+        var dd = String(date.getDate()).padStart(2, '0');
+        var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = date.getFullYear();
+
+        return mm + '/' + dd + '/' + yyyy;
+    }
+    // console.log(today())
+    $('input[name="date_range"]').daterangepicker({
+        startDate: moment().subtract(29, 'days'),
+        endDate: moment()
+    });
 </script>
 {% endblock %}

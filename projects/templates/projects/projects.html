@@ -28,7 +28,7 @@
             </thead>
                     <tbody>
                         {% for project in page_obj %}
-                            <tr onclick="project_row_click(event, {{ project.id }})">
+                            <tr>
                                 <td class="text-center">
                                     {{ project.name | default_if_none:'-' }}
                                 </td>
@@ -41,6 +41,8 @@
                                 <td class="text-center">
                                     <a class="text-primary" href="#" onclick="edit_project(event, {{ project.id }});"><i class="fa fa-edit"></i></a>
                                     <a class="text-danger" href="#" onclick="delete_project(event, {{ project.id }});"><i class="fa fa-trash"></i></a>
+                                    <a class="text-success" href="#" onclick="project_row_click(event, {{ project.id }})"><i class="fa fa-sitemap"
+                                            aria-hidden="true"></i></a>
                                 </td>
                             </tr>
                         {% endfor %}
