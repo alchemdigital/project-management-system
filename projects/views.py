@@ -1,8 +1,5 @@
 # from asyncore import file_dispatcher
-from time import time
-from tracemalloc import start
 from django.shortcuts import render
-from django.db.models import Avg
 from projects.models import Project, Task, Checklist, status
 from projects.forms import ProjectRegistrationForm, TaskRegistrationForm, ChecklistRegistrationForm
 from django.contrib.auth.decorators import user_passes_test
@@ -12,12 +9,13 @@ from django.shortcuts import redirect
 import csv
 import codecs
 from django.http import HttpResponse
-from core.views import is_admin, is_project_manager, is_pm_or_admin, is_logged_in
+from core.views import is_admin, is_pm_or_admin, is_logged_in
 from django.contrib.auth import get_user_model
 User = get_user_model()
 from dal import autocomplete
 from register.models import Company
 import datetime
+from django.urls import reverse
 
 # Create your views here.
 @user_passes_test(is_pm_or_admin)
@@ -226,14 +224,14 @@ def update_task(request):
     this_user = request.user
     id = request.POST.get('id')
     timezone = request.POST.get('timezone')
-    startDate = request.POST.get('start_date')
-    deadLine = request.POST.get('deadline')
+    start_date = request.POST.get('start_date')
+    dead_line = request.POST.get('deadline')
     changed_request = request.POST.copy()
     if timezone != '':
-        if startDate != '':
-            changed_request.setlist('start_date', [startDate+timezone])
-        if deadLine != '':
-            changed_request.setlist('deadline', [deadLine+timezone])
+        if start_date != '':
+            changed_request.setlist('start_date', [start_date+timezone])
+        if dead_line != '':
+            changed_request.setlist('deadline', [dead_line+timezone])
         request.POST = changed_request
     
     instance = Task.objects.filter(admin=this_user.admin).get(id = id)
@@ -242,7 +240,7 @@ def update_task(request):
     if form.is_valid():
         form.save()
         context['updated'] = True
-    return render(request, 'projects/task_form.html', context)
+    return redirect(reverse('projects:edit_task', kwargs = {'task_id': id})+"?updated=true")
 
 @user_passes_test(is_pm_or_admin)
 def delete_task(request, task_id):

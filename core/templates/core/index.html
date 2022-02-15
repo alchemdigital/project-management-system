@@ -11,6 +11,8 @@
 	<link rel="stylesheet" href="{% static 'core/css/responsive.css' %}">
 	<link rel="stylesheet" href="{% static 'core/css/bootstrap.css' %}">
   <link rel="stylesheet" href="{% static 'core/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css"
+	integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
 </head>
 <body>
 	<!-- <header class="header">
@@ -44,6 +46,7 @@
 			<button class=" btn menu-btn"><i class="fa fa-bars" aria-hidden="true"></i></button>
             <div class="top-nav" id="top-nav">
 				<ul class="topnav-ul top-nav-dropdown">
+					<li><a href="{% url 'core:login' %}"><button class="btn log-in"><i class="fab fa-github mr-2" aria-hidden="true"></i> Open Source</button></a></li>
 					<li><a href="{% url 'core:login' %}"><button class="btn log-in">Login</button></a></li>
 			        <li><a href="{% url 'register:admin_register' %}"><button class="btn sign-up">Register
 						as Admin</button></a></li>
