@@ -1,3 +1,4 @@
+# from asyncore import file_dispatcher
 from time import time
 from tracemalloc import start
 from django.shortcuts import render
@@ -159,12 +160,19 @@ def tasks(request, project_id = None):
         direction = 'desc'
     if direction == 'desc':
         ordering = '-{}'.format(order_by)
-    if order_by == 'month':
-        ordering = 'start_date'
     else:
         ordering = order_by
     search_term = request.GET.get('search')
     this_user = request.user
+    date_range = request.GET.get('date_range')
+    if date_range is not None:
+        from_date, to_date = date_range.split(' - ')
+        from_date = datetime.datetime.strptime(from_date, '%m/%d/%Y').strftime('%Y-%m-%d')
+        to_date = datetime.datetime.strptime(to_date, '%m/%d/%Y').strftime('%Y-%m-%d')
+        to_date = datetime.datetime.combine(datetime.datetime.fromisoformat(to_date), datetime.time(23, 59, 59, 999999))
+        filters = Q(admin=this_user.admin, start_date__range=(from_date, to_date))
+    else:
+        filters = None
     if search_term is not None:
         if project_id is not None:
             tasks = Task.objects.filter(admin=this_user.admin).filter(
@@ -174,8 +182,9 @@ def tasks(request, project_id = None):
                 Q(deadline__icontains=search_term) |
                 Q(start_date__icontains=search_term) |
                 Q(hours__icontains=search_term) |
-                Q(description__icontains=search_term)
-            ).filter(start_date__month = search_term).filter(project_id=project_id).order_by(ordering)
+                Q(description__icontains=search_term) |
+                filters
+            ).filter(project_id=project_id).order_by(ordering)
         else:
             tasks = Task.objects.filter(admin=this_user.admin).filter(
                 Q(project__name__icontains=search_term) |
@@ -184,11 +193,14 @@ def tasks(request, project_id = None):
                 Q(deadline__icontains=search_term) |
                 Q(start_date__icontains=search_term) |
                 Q(hours__icontains=search_term) |
-                Q(description__icontains=search_term)
+                Q(description__icontains=search_term) |
+                filters
             ).order_by(ordering)
     else:
         if project_id is not None:
             tasks = Task.objects.filter(admin=this_user.admin).filter(project_id=project_id)
+        elif date_range is not None:
+            tasks = Task.objects.filter(admin=this_user.admin).filter(filters)
         else:
             tasks = Task.objects.filter(admin=this_user.admin)
     paginated_tasks = Paginator(tasks, 10)
