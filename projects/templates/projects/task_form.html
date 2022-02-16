@@ -242,10 +242,12 @@
         }
         $(document).ready(function(){
             $('#timezone').val(getTimeZone())
-            let startDate = $('#id_start_date').val();
-            let deadline = $('#id_deadline').val();
-            $('#id_start_date').val(UTCToLocalTime(startDate))
-            $('#id_deadline').val(UTCToLocalTime(deadline))
+            let startDate = $('#id_start_date').val()
+            let deadline = $('#id_deadline').val()
+            {%if not edit %}
+                $('#id_start_date').val(UTCToLocalTime(startDate))
+                $('#id_deadline').val(UTCToLocalTime(deadline))
+            {% endif %}
         })
     </script>
 {% endblock %}
