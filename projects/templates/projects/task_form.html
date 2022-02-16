@@ -235,19 +235,18 @@
             minute = dateTime.getMinutes() < 10 ? "0"+ dateTime.getMinutes() : dateTime.getMinutes()
             second = dateTime.getSeconds() < 10 ? "0" + dateTime.getSeconds() : dateTime.getSeconds()
             date = dateTime.getDate() < 10 ? "0" + dateTime.getDate() : dateTime.getDate()
-            month = dateTime.getMonth() 
+            month = parseInt(dateTime.getMonth() + 1)
+            month = month < 10 ? "0" + month : month
             year = dateTime.getFullYear()
-            let convertedDateTime = year+"-"+month+1+"-"+date+"T"+hour+":"+minute
+            let convertedDateTime = year+"-"+month+"-"+date+"T"+hour+":"+minute
             return convertedDateTime
         }
         $(document).ready(function(){
             $('#timezone').val(getTimeZone())
             let startDate = $('#id_start_date').val()
             let deadline = $('#id_deadline').val()
-            {%if not edit %}
-                $('#id_start_date').val(UTCToLocalTime(startDate))
-                $('#id_deadline').val(UTCToLocalTime(deadline))
-            {% endif %}
+            $('#id_start_date').val(UTCToLocalTime(startDate))
+            $('#id_deadline').val(UTCToLocalTime(deadline))
         })
     </script>
 {% endblock %}
