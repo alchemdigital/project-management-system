@@ -210,21 +210,6 @@
             return (offset < 0 ? "+" : "-") + ("00" + Math.floor(o / 60)).slice(-2) + ":" + ("00" + (o % 60)).slice(-2);
         }
 
-        // function localTime(timestamp, response = 'datetime'){
-        //     if (!timestamp)
-        //         return null
-        //     let convertedDateTime = new Date(new Date(timestamp).toLocaleDateString('en-US') + ' ' + new Date(timestamp).toLocaleTimeString('en-US'))
-        //     switch (response) {
-        //         case 'date':
-        //             // return convertedDateTime.toLocaleDateString('en-US')
-        //             return convertedDateTime.getFullYear() + '-' + (convertedDateTime.getMonth() + 1) + '-' + convertedDateTime.getDate()
-        //         case 'time':
-        //             return convertedDateTime.toLocaleTimeString('en-US', { timeStyle: 'short' })
-        //         default:
-        //             return convertedDateTime
-        //     }
-        // }
-
         function UTCToLocalTime(timestamp){
             if (!timestamp)
                 return null
