@@ -23,6 +23,7 @@ urlpatterns = [
     path('alchem-admin/', admin.site.urls),
     path('register/', include('register.urls', namespace='register')),
     path('projects/', include('projects.urls', namespace='projects')),
+    path('standup/', include('standup.urls', namespace='standup')),
     path('', include('core.urls', namespace='core')),
     path('password-reset', register_views.password_reset_request, name="password_reset"),
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='register/password_reset_done.html'), name='password_reset_done'),

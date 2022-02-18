@@ -197,6 +197,20 @@
                                     </ul>
                                 </li>
                             {% endif %}
+                            {% if user|has_group:'admin' or user|has_group:'project_manager' or user|has_group:'employee' %}
+                            <li class="nav-item nav-dropdown">
+                                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-list" aria-hidden="true"></i> Standup</a>
+                                <ul class="nav-dropdown-items">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'standup:new-standup'%}"><i class="fa fa-plus ml-2"></i> New
+                                            standup</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'standup:standup'%}"><i class="fa fa-plus ml-2"></i> All Standup</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            {% endif %}
                             {% if user|has_group:'admin' %}
                                 <li class="nav-item nav-dropdown">
                                     <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-user" aria-hidden="true"></i> User</a>
