@@ -1,11 +1,17 @@
 # PROJECT MANAGEMENT SYSTEM
 
-**An AD's free project management system**
+**Alchem Digital's project management system**
+
+## Web version
+
+* Visit https://pms.alchemdigital.com and choose **Register as admin** to use it
 
 ## Requirements
 
 * python3
 * pip
+* mysql or any other database
+* virtualenv (Recommended)
 
 ## Setup Instruction
 
@@ -15,7 +21,6 @@
 * Put **settings.py** inside **manager/** directory
 * Create a database with the name in the **settings.py** file
 * run **python manage.py makemigrations**
-* run **python manage.py migrate**
 * run **python manage.py migrate**
 * run **python manage.py runserver**
 * Now open **http://127.0.0.1:8000** in the browser to see the app up and running
