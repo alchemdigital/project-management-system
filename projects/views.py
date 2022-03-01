@@ -158,7 +158,8 @@ def new_task(request):
         return render(request,'projects/task_form.html', context)
 
 # @user_passes_test(is_pm_or_admin)
-def tasks(request, project_id = None):
+def tasks(request):
+    # Ordering - start
     order_by = request.GET.get('order_by')
     if order_by == None:
         order_by = 'id'
@@ -169,51 +170,40 @@ def tasks(request, project_id = None):
         ordering = '-{}'.format(order_by)
     else:
         ordering = order_by
+    # Ordering - end
+
+    #Filter - start
     search_term = request.GET.get('search')
     this_user = request.user
     date_range = request.GET.get('date_range')
+    status_filter = request.GET.get('status_filter')
+    tasks = Task.objects
     if date_range is not None:
         from_date, to_date = date_range.split(' - ')
         from_date = datetime.datetime.strptime(from_date, '%m/%d/%Y').strftime('%Y-%m-%d')
         to_date = datetime.datetime.strptime(to_date, '%m/%d/%Y').strftime('%Y-%m-%d')
         to_date = datetime.datetime.combine(datetime.datetime.fromisoformat(to_date), datetime.time(23, 59, 59, 999999))
-        filters = Q(admin=this_user.admin, start_date__range=(from_date, to_date))
-    else:
-        filters = None
+        date_range_query = Q(start_date__range=(from_date, to_date))
+        tasks = tasks.filter(date_range_query)
+    if status_filter is not None:
+        status_filter = tuple(map(int, status_filter.split(',')))
+        status_filter_query = Q(status__in=status_filter)
+        tasks = tasks.filter(status_filter_query)
     if search_term is not None:
-        if project_id is not None:
-            tasks = Task.objects.filter(admin=this_user.admin).filter(
-                Q(project__name__icontains=search_term) |
-                Q(task_name__icontains=search_term) |
-                Q(status__icontains=search_term) |
-                Q(deadline__icontains=search_term) |
-                Q(start_date__icontains=search_term) |
-                Q(hours__icontains=search_term) |
-                Q(description__icontains=search_term) |
-                filters
-            ).filter(project_id=project_id).order_by(ordering)
-        else:
-            tasks = Task.objects.filter(admin=this_user.admin).filter(
-                Q(project__name__icontains=search_term) |
-                Q(task_name__icontains=search_term) |
-                Q(status__icontains=search_term) |
-                Q(deadline__icontains=search_term) |
-                Q(start_date__icontains=search_term) |
-                Q(hours__icontains=search_term) |
-                Q(description__icontains=search_term) |
-                filters
-            ).order_by(ordering)
-    else:
-        if project_id is not None:
-            tasks = Task.objects.filter(admin=this_user.admin).filter(project_id=project_id)
-        elif date_range is not None:
-            tasks = Task.objects.filter(admin=this_user.admin).filter(filters)
-        else:
-            tasks = Task.objects.filter(admin=this_user.admin)
+        search_term_query = (Q(project__name__icontains=search_term) |
+            Q(task_name__icontains=search_term) |
+            Q(status__icontains=search_term) |
+            Q(deadline__icontains=search_term) |
+            Q(start_date__icontains=search_term) |
+            Q(hours__icontains=search_term) |
+            Q(description__icontains=search_term)
+        )
+    tasks = tasks.filter(admin=this_user.admin).filter(search_term_query)
+    #Filter - end
     paginated_tasks = Paginator(tasks, 10)
     page_number = request.GET.get('page')
     page_obj = paginated_tasks.get_page(page_number)
-    context = { 'page_obj': page_obj }
+    context = { 'page_obj': page_obj, 'status': status }
     return render(request, 'projects/tasks.html', context)
 
 # @user_passes_test(is_pm_or_admin)

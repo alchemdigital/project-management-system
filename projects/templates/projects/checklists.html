@@ -28,7 +28,7 @@
             </thead>
                     <tbody>
                         {% for checklist in page_obj %}
-                            <tr>
+                            <tr class="{%if checklist.status == '1' %} bg-danger {% elif checklist.status == '4' %} bg-success {% elif checklist.status == '3' %} bg-primary {% endif %}">
                                 <td class="text-center">
                                     {{ checklist.task | default_if_none:'-' }}
                                 </td>
