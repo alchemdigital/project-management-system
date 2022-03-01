@@ -1,3 +1,4 @@
+from django.urls import reverse
 from django.shortcuts import render
 from django.contrib.auth import login
 from django.shortcuts import redirect
@@ -159,7 +160,7 @@ def update_user(request):
         for this_role in this_roles:
             this_role.user_set.add(instance)
         context['updated'] = True
-    return render(request, 'register/reg_form.html', context)
+    return redirect(reverse('register:edit_user', kwargs={'user_id': id}))
 
 @user_passes_test(is_admin)
 def delete_user(request, user_id):

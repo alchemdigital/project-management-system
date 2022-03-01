@@ -16,6 +16,7 @@ from dal import autocomplete
 from register.models import Company
 import datetime
 from django.urls import reverse
+from django.core.mail import send_mail
 
 # Create your views here.
 @user_passes_test(is_pm_or_admin)
@@ -119,6 +120,7 @@ def new_task(request):
         timezone = request.POST.get('timezone')
         startDate = request.POST.get('start_date')
         deadLine = request.POST.get('deadline')
+        employee = request.POST.get('employee')
         changed_request = request.POST.copy()
         if request.POST.get('hours') == '':
             changed_request.update({'hours': 0})
@@ -132,7 +134,14 @@ def new_task(request):
         form = TaskRegistrationForm(changed_request, user=request.user, use_required_attribute=False)
         context = {'form': form}
         if form.is_valid():
-            form.save()
+            task = form.save()
+            # Email functionality start
+            if request.user.id != employee:
+                employee_email = User.objects.get(pk=employee)
+                url = request.get_host()+'/projects/tasks/'
+                message = request.user.first_name+" " +request.user.last_name+" has assinged you a task \n"+url
+                send_mail('Task Assigned', message, '', [employee_email], fail_silently=True)
+            # Email -End
             created = True
             context = {
                 'created': created,
@@ -142,7 +151,7 @@ def new_task(request):
         else:
             return render(request, 'projects/task_form.html', context)
     else:
-        form = TaskRegistrationForm(user=request.user,use_required_attribute=False)
+        form = TaskRegistrationForm(user=request.user, use_required_attribute=False)
         context = {
             'form': form,
         }
@@ -240,7 +249,7 @@ def update_task(request):
     if form.is_valid():
         form.save()
         context['updated'] = True
-    return redirect(reverse('projects:edit_task', kwargs = {'task_id': id})+"?updated=true")
+    return redirect(reverse('projects:edit_task', kwargs = {'task_id': id}))
 
 @user_passes_test(is_pm_or_admin)
 def delete_task(request, task_id):
