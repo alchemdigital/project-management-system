@@ -63,6 +63,7 @@ class RegistrationForm(UserCreationForm):
         self.fields['last_name'].widget.attrs['placeholder'] = 'Last name'
         self.fields['email'].widget.attrs['class'] = 'form-control'
         self.fields['email'].widget.attrs['placeholder'] = 'E-mail'
+        self.fields['email'].widget.attrs['readonly'] = 'readonly'
         if kwargs.get('instance') is not None:
             self.admin_id = kwargs.get('instance').admin_id
         elif 0 in args and 'admin_id' in args[0]:

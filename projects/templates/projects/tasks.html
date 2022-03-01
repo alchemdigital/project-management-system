@@ -160,8 +160,8 @@
     }
     // console.log(today())
     $('input[name="date_range"]').daterangepicker({
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment()
+        startDate: moment().startOf('month'),
+        endDate: moment().endOf('month')
     });
 </script>
 {% endblock %}

@@ -7,5 +7,6 @@ urlpatterns = [
     path('', views.index, name="standup"),
     path('new-standup', views.new_standup, name="new-standup"),
     path('standup', views.standup, name="standup"),
-    path('get-pending', views.pending, name='pending-task')
+    path('get-pending', views.pending, name='pending-task'),
+    # path('get-project-field', views.project_field, name='project-field')
 ]

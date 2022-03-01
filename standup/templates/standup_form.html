@@ -57,14 +57,38 @@
                         {% endif %}
 
                         {% csrf_token %}
-                        <h1>Tasks</h1>
-                        <p class="text-muted">Create your tasks here</p>
+                        <h1>Standup</h1>
+                        <p class="text-muted">Create your standup here</p>
                         <form action="" method="post">
                             {% csrf_token %}
                             {%if edit %}
                             <input type="hidden" name="id" value="{{id}}" />
                             {% endif %}
                             <div class="form-group">
+                                <label class="col-form-label">Employee</label>
+                                <div class="input-group">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                    </div>
+                                    {{ form.employee }}
+                                    {% if form.employee.errors %}
+                                    <ol>
+                                        {% for error in form.employee.errors %}
+                                        <li><strong>{{ error|escape }}</strong></li>
+                                        {% endfor %}
+                                    </ol>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">Pending Task</label>
+                                <div class="input-group">
+                                    <ul id="pending-task">
+                                        None
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="form-group" id="project">
                                 <label class="col-form-label">Project</label>
                                 <div class="input-group">
                                     <div class="input-group-append">
@@ -81,46 +105,7 @@
                                 </div>
                                 <a href="{% url 'projects:new-project' %}">Create a Project</a>
                             </div>
-                            <div class="form-group">
-                                <label class="col-form-label">Assign</label>
-                                <div class="input-group">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text"><i class="fa fa-user"></i></span>
-                                    </div>
-                                    {{ form.employee }}
-                                    {% if form.employee.errors %}
-                                    <ol>
-                                        {% for error in form.employee.errors %}
-                                        <li><strong>{{ error|escape }}</strong></li>
-                                        {% endfor %}
-                                    </ol>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <!-- <div class="form-group">
-                                <label class="col-form-label">Pending Task</label>
-                                <div class="input-group">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text"><i class="fa fa-align-center"></i></span>
-                                    </div>
-                                    {{ form.pending_task }}
-                                    {% if form.pending_task.errors %}
-                                    <ol>
-                                        {% for error in form.pending_task.errors %}
-                                        <li><strong>{{ error|escape }}</strong></li>
-                                        {% endfor %}
-                                    </ol>
-                                    {% endif %}
-                                </div>
-                            </div> -->
-                            <div class="form-group">
-                                <label class="col-form-label">Pending Task</label>
-                                <div class="input-group">
-                                    <ul id="pending-task">
-                                        None
-                                    </ul>
-                                </div>
-                            </div>
+                            
                             <div class="form-group">
                                 <label class="col-form-label">New Task</label>
                                 <div class="row">
@@ -136,7 +121,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-form-label">any issue </label>
+                                <label class="col-form-label">Anything blocking your progress? </label>
                                 <div class="input-group">
                                     <div class="input-group-append">
                                         <span class="input-group-text"><i class="fa fa-align-center"></i></span>
@@ -214,5 +199,20 @@
     $(document).on('click', '.remove-task', function(){
         $('.row_'+$(this).attr('data-id')).remove()
     })
+
+    // $(document).on('click', '#new-standup', function(){
+    //     $.ajax({
+    //         url: 'get-project-field',
+    //         method: 'GET',
+    //         headers: {
+    //             'X-CSRFToken': '{{ csrf_token }}',
+    //         },
+    //         success: function (res) {
+    //             console.log(res)                
+    //         }
+    //     })
+    //     // let project = $('#project').html();
+    //     // $('#test').html(project)
+    // })
 </script>
 {% endblock %}

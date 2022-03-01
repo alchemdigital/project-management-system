@@ -1,3 +1,4 @@
+from django.conf import settings
 from email import message
 from django.shortcuts import render
 from django.contrib import messages
@@ -7,6 +8,9 @@ from projects.forms import TaskRegistrationForm
 from projects.models import Task
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.core.mail import send_mail
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 # Create your views here.
 def index(request):
@@ -15,7 +19,8 @@ def index(request):
 
 def new_standup(request):
     if request.method == 'POST':
-        form = StandupRegistrationForm(request.POST, user=request.user)
+        form = StandupRegistrationForm(
+            request.POST, user=request.user, use_required_attribute=False)
         if form.is_valid():
             standup = form.save()
             tasks = request.POST.getlist('task[]')
@@ -26,6 +31,7 @@ def new_standup(request):
                 changed_request.update({'estimate_hours': 0})
             if request.POST.get('status') is None:
                 changed_request.update({'status': 1})
+            employee = request.POST.get('employee')
             for task in tasks:
                 changed_request.update({'task_name': task})
                 task_form = TaskRegistrationForm(
@@ -40,11 +46,18 @@ def new_standup(request):
                         changed_request, user=request.user, use_required_attribute=False)
                     if standup_task.is_valid():
                         standup_task.save()
-                        messages.success(request, "Success")
                     else:
-                        messages.error(request, 'Error in creating Task')
+                        messages.error(request, 'Failed to create Task')
                 else:
-                    messages.error(request, 'Error in creating Task')
+                    messages.error(request, 'Failed to create Task')
+            messages.success(request, "Success")
+            # Email functionality start
+            if request.user.id != employee:
+                employee_email = User.objects.get(pk=employee)
+                url = request.get_host()+'/projects/tasks'
+                message = request.user.first_name+" " +request.user.last_name+" has assinged you a task \n"+url
+                send_mail('Task Assigned', message, '', [employee_email], fail_silently=True)
+            # Email -End
             created = True
             context = {
                 'created': created,
@@ -52,13 +65,14 @@ def new_standup(request):
             }
             return redirect(reverse('standup:new-standup'))
         else:
-            messages.error(request, 'Error in creating Standup')
+            messages.error(request, 'Failed to create standup')
             context = {
                 'form': form
             }
             return render(request, 'standup_form.html', context)
     else:
-        form = StandupRegistrationForm(user=request.user)
+        form = StandupRegistrationForm(
+            user=request.user, use_required_attribute=False)
         context = {
             'form': form
         }
