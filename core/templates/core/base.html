@@ -193,7 +193,7 @@
                                             <a class="nav-link" href="{% url 'projects:new-task'%}"><i class="fa fa-plus ml-2"></i> New Task</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="{% url 'projects:tasks'%}"><i class="fa fa-plus ml-2"></i> All Tasks</a>
+                                            <a id="all-tasks-link" class="nav-link" href="{% url 'projects:tasks'%}"><i class="fa fa-plus ml-2"></i> All Tasks</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -282,6 +282,14 @@
             <script src="{% static 'core/js/main.js'%}"></script>
             {% block scripts %}
             {% endblock %}
+            <script>
+                $(function(){
+                    let startDate = moment().startOf('month').format('MM/DD/YYYY')
+                    let endDate = moment().endOf('month').format('MM/DD/YYYY')
+                    let allTasksLink = `{% url 'projects:tasks'%}?date_range=${startDate}%20-%20${endDate}&status_filter=1,2`
+                    $('#all-tasks-link').attr('href', allTasksLink)
+                })
+            </script>
         </body>
     {% endblock body %}
 </html>

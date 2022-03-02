@@ -16,6 +16,12 @@
                 <input type="text" name="date_range" id="date-range">
                 <i class="fa fa-search" onclick="search()"></i>
                 <span id="filter-info"></span>
+                <select class="form-control" name="status_filter" id="status-filter" multiple>
+                    <option disabled selected value="">-Select status-</option>
+                    {% for each_status in status %}
+                    <option value="{{ each_status.0 }}">{{ each_status.1 }}</option>
+                    {% endfor %} 
+                </select>
                 <a class="text-primary" onclick="window.location.href = window.location.pathname">Clear Filter</a>
             </div>
             <table class="table table-responsive-sm table-hover table-outline mb-5 ">
@@ -34,7 +40,7 @@
             </thead>
                     <tbody>
                         {% for task in page_obj %}
-                            <tr>
+                            <tr class="{%if task.status == '1' %} bg-danger {% elif task.status == '4' %} bg-success {% elif task.status == '3' %} bg-primary {% endif %}">
                                 <td class="text-center">
                                     {{ task.project | default_if_none:'-' }}
                                 </td>
@@ -98,11 +104,13 @@
         e.stopPropagation()
         window.location.href = '/projects/edit-task/' + task_id
     }
+    
     function delete_task(e, task_id){
         e.stopPropagation()
         if (confirm('Are you sure?'))
             window.location.href = '/projects/delete-task/' + task_id
     }
+
     function order_by_selected(field_name) {
         let urlParams = new URLSearchParams(window.location.search)
         let to_url = '?'
@@ -115,26 +123,29 @@
             to_url +=  '&search=' + $('#search-term').val()
         window.location.href = to_url
     }
+
     function search() {
         let search_term = $('#search-term').val()
         let date_range = $('#date-range').val()
+        let status_filter = $('#status-filter').val()
         let joiner = '&'
-        
-        // if (window.location.search == '')
-        //     joiner = ''
-        if(search_term == '')
+        if(search_term == '' && status_filter.length == 0)
             joiner = ''
-        
+
         let url_params = new URLSearchParams(window.location.search)
         url_params.delete('search')
         url_params.delete('date_range')
+        url_params.delete('status_filter')
         to_url = '?' + url_params.toString()
         if ($('#search-term').val() != '')
             to_url += 'search=' + search_term
         if(date_range != '')
             to_url += joiner + 'date_range=' + date_range
+        if (status_filter != '')
+            to_url += joiner + 'status_filter=' + status_filter.join(',')
         window.location.href = to_url
     }
+
     $(function(){
         let url_params = new URLSearchParams(window.location.search)
         if (url_params.get('search') != null)
@@ -145,23 +156,27 @@
                 filter_info += '(' + url_params.get('direction') + ')'
             $('#filter-info').html(filter_info)
         }
+        if (url_params.get('status_filter') != null)
+            $('#status-filter').val(url_params.get('status_filter').split(','))
+        if (url_params.get('date_range') != null) {
+            date_range_param = url_params.get('date_range').split(' - ')
+            $('input[name="date_range"]').daterangepicker({
+                startDate: date_range_param[0],
+                endDate: date_range_param[1]
+            })
+        }
     })
+
     function task_row_click(e, task_id){
         window.location.href = '/projects/checklists/' + task_id
     }
 
     function today(){
         var date = new Date()
-        var dd = String(date.getDate()).padStart(2, '0');
-        var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = date.getFullYear();
-
+        var dd = String(date.getDate()).padStart(2, '0')
+        var mm = String(date.getMonth() + 1).padStart(2, '0') //January is 0!
+        var yyyy = date.getFullYear()
         return mm + '/' + dd + '/' + yyyy;
     }
-    // console.log(today())
-    $('input[name="date_range"]').daterangepicker({
-        startDate: moment().startOf('month'),
-        endDate: moment().endOf('month')
-    });
 </script>
 {% endblock %}

@@ -32,6 +32,10 @@ class Project(SafeDeleteModel):
     def __str__(self):
         return (self.name)
 
+class TaskModelManager(models.Manager):
+    def get_queryset(self):
+        return super(TaskModelManager, self).get_queryset()#.filter(admin_id=1)
+
 class Task(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
@@ -53,7 +57,9 @@ class Task(SafeDeleteModel):
     imported = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['project', 'task_name']
+        ordering = ['-id']
+
+    objects = TaskModelManager()
 
     def __str__(self):
         return(self.task_name)
