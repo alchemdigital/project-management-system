@@ -66,8 +66,10 @@ class RegistrationForm(UserCreationForm):
         if kwargs.get('instance') is not None:
             self.admin_id = kwargs.get('instance').admin_id
             self.fields['email'].widget.attrs['readonly'] = 'readonly'
-        elif 0 in args and 'admin_id' in args[0]:
-            self.admin_id = args[0]['admin_id']
+        elif len(args):
+            if 'admin_id' in args[0]:
+                print('Inside if')
+                self.admin_id = args[0]['admin_id']
         else:
             self.admin_id = None
 
