@@ -103,8 +103,7 @@ def register(request):
             return render(request, 'register/reg_form.html', context)
     else:
         admin_id = request.user.admin_id
-        changed_request = ({'admin_id': admin_id})
-        form = RegistrationForm(changed_request)
+        form = RegistrationForm()
         roles = Group.objects.all().exclude(name='admin').order_by('id')
         selected_role = request.GET.get('role', None)
         context = {
