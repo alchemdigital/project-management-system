@@ -77,6 +77,7 @@ def register(request):
             'roles': roles,
             'errors': errors
         }
+        created = False
         if selected_roles == None or not len(selected_roles):
             return render(request, 'register/reg_form.html', context)
         if form.is_valid():
