@@ -198,7 +198,8 @@ def tasks(request):
             Q(hours__icontains=search_term) |
             Q(description__icontains=search_term)
         )
-    tasks = tasks.filter(admin=this_user.admin).filter(search_term_query)
+        tasks = tasks.filter(search_term_query)
+    tasks = tasks.filter(admin=this_user.admin)
     #Filter - end
     paginated_tasks = Paginator(tasks, 10)
     page_number = request.GET.get('page')
