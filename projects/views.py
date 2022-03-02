@@ -138,8 +138,8 @@ def new_task(request):
             # Email functionality start
             if request.user.id != employee:
                 employee_email = User.objects.get(pk=employee)
-                url = request.get_host()+'/projects/tasks/'
-                message = request.user.first_name+" " +request.user.last_name+" has assinged you a task \n"+url
+                url = request.get_host() + '/projects/tasks/'
+                message = (request.user.first_name if request.user.first_name is not None else '') + ' ' + (request.user.last_name if request.user.last_name is not None else '') + ' has assinged you a task \n' + url
                 send_mail('Task Assigned', message, '', [employee_email], fail_silently=True)
             # Email -End
             created = True
