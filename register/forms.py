@@ -56,16 +56,16 @@ class RegistrationForm(UserCreationForm):
         return user
 
     def __init__(self, *args, **kwargs):
-        super(RegistrationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['first_name'].widget.attrs['class'] = 'form-control'
         self.fields['first_name'].widget.attrs['placeholder'] = 'First name'
         self.fields['last_name'].widget.attrs['class'] = 'form-control'
         self.fields['last_name'].widget.attrs['placeholder'] = 'Last name'
         self.fields['email'].widget.attrs['class'] = 'form-control'
         self.fields['email'].widget.attrs['placeholder'] = 'E-mail'
-        self.fields['email'].widget.attrs['readonly'] = 'readonly'
         if kwargs.get('instance') is not None:
             self.admin_id = kwargs.get('instance').admin_id
+            self.fields['email'].widget.attrs['readonly'] = 'readonly'
         elif 0 in args and 'admin_id' in args[0]:
             self.admin_id = args[0]['admin_id']
         else:
