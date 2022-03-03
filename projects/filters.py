@@ -13,7 +13,7 @@ def filter_projects_by_admin(request):
 	return Project.objects.filter(admin=request.user.admin)
 
 class TaskFilter(django_filters.FilterSet):
-	employee = django_filters.ModelChoiceFilter(queryset=filter_users_by_admin)
+	employee = django_filters.ModelChoiceFilter(queryset=filter_users_by_admin, label='Assigned To')
 	project = django_filters.ModelChoiceFilter(queryset=filter_projects_by_admin)
 	start_date = django_filters.DateFromToRangeFilter(
 		widget=django_filters.widgets.RangeWidget(attrs={'placeholder': 'YYYY/MM/DD', 'type': 'date'}))
@@ -27,5 +27,10 @@ class TaskFilter(django_filters.FilterSet):
 		fields = ('search_all', 'project', 'employee', 'status', 'deadline',
 		          'start_date', 'created')
 
+	def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
+		super().__init__(data=data, queryset=queryset, request=request, prefix=prefix)
+		self.filters['search_all'].field.widget.attrs.update(
+			{'class': 'form-control'})
+
 	def task_search(self, queryset, name, value):
-		return queryset.filter(Q(task_name__contains=value) | Q(description__contains=value))
+		return queryset.filter(Q(task_name__icontains=value) | Q(description__icontains=value))
