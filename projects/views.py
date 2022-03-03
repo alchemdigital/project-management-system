@@ -17,6 +17,7 @@ from register.models import Company
 import datetime
 from django.urls import reverse
 from django.core.mail import send_mail
+from .filters import TaskFilter
 
 # Create your views here.
 @user_passes_test(is_pm_or_admin)
@@ -159,7 +160,7 @@ def new_task(request):
 
 # @user_passes_test(is_pm_or_admin)
 def tasks(request):
-    # Ordering - start
+    """ # Ordering - start
     order_by = request.GET.get('order_by')
     if order_by == None:
         order_by = 'id'
@@ -177,6 +178,8 @@ def tasks(request):
     this_user = request.user
     date_range = request.GET.get('date_range')
     status_filter = request.GET.get('status_filter')
+    by_me = request.GET.get('by_me')
+    to_me = request.GET.get('to_me')
     tasks = Task.objects
     if date_range is not None:
         from_date, to_date = date_range.split(' - ')
@@ -199,12 +202,20 @@ def tasks(request):
             Q(description__icontains=search_term)
         )
         tasks = tasks.filter(search_term_query)
-    tasks = tasks.filter(admin=this_user.admin)
+    if by_me is not None:
+        tasks = tasks.filter(created=this_user)
+    if to_me is not None:
+        tasks = tasks.filter(employee=this_user)
+    tasks = tasks.filter(admin=this_user.admin) """
+    tasks = Task.objects.by_admin(request.user)
+    filters = TaskFilter(request.GET, request=request, queryset=tasks)
+    tasks = filters.qs
     #Filter - end
     paginated_tasks = Paginator(tasks, 10)
     page_number = request.GET.get('page')
     page_obj = paginated_tasks.get_page(page_number)
-    context = { 'page_obj': page_obj, 'status': status }
+    context = {'page_obj': page_obj,
+               'status': status, 'filters': filters}
     return render(request, 'projects/tasks.html', context)
 
 # @user_passes_test(is_pm_or_admin)

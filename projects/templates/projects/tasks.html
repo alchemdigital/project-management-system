@@ -11,19 +11,27 @@
 <div class="container-fluid">
     <div class="animated fade-in">
         <div class="row">
-            <div class="pull-right"> 
-                <input type="text" name="search_term" id="search-term" />
-                <input type="text" name="date_range" id="date-range">
-                <i class="fa fa-search" onclick="search()"></i>
-                <span id="filter-info"></span>
-                <select class="form-control" name="status_filter" id="status-filter" multiple>
-                    <option disabled selected value="">-Select status-</option>
-                    {% for each_status in status %}
-                    <option value="{{ each_status.0 }}">{{ each_status.1 }}</option>
-                    {% endfor %} 
-                </select>
-                <a class="text-primary" onclick="window.location.href = window.location.pathname">Clear Filter</a>
-            </div>
+                {% comment %} <div class="d-flex align-items-center justify-space-between w-100">
+                    <input type="checkbox" id="by_me" name="by_me" class="form-control" />
+                    <label for="by_me">Assigned by me</label>
+                    <input type="checkbox" id="to_me" name="to_me" class="form-control" />
+                    <label for="to_me">Assigned to me</label>
+                    <input type="text" name="search_term" id="search-term" class="form-control" placeholder="Search"/>
+                    <input type="text" name="date_range" class="form-control" id="date-range">
+                    <span id="filter-info"></span>
+                    <select class="form-control" name="status_filter" id="status-filter" multiple>
+                        <option disabled selected value="">-Select status-</option>
+                        {% for each_status in status %}
+                        <option value="{{ each_status.0 }}">{{ each_status.1 }}</option>
+                        {% endfor %} 
+                    </select>
+                    <i class="fa fa-search" onclick="search()"></i>
+                    <a class="text-primary" onclick="window.location.href = window.location.pathname">Clear Filter</a>
+                </div> {% endcomment %}
+                <form method="GET">
+                    {{ filters.form }}
+                    <input type="submit" class="btn btn-primary" value="Search" />
+                </form>
             <table class="table table-responsive-sm table-hover table-outline mb-5 ">
                 <thead class="thead-light">
                 <tr>
@@ -128,14 +136,18 @@
         let search_term = $('#search-term').val()
         let date_range = $('#date-range').val()
         let status_filter = $('#status-filter').val()
+        let by_me = $('#by_me').prop('checked')
+        let to_me = $('#to_me').prop('checked')
         let joiner = '&'
-        if(search_term == '' && status_filter.length == 0)
+        if(search_term == '' && status_filter.length == 0 && !by_me && !to_me)
             joiner = ''
 
         let url_params = new URLSearchParams(window.location.search)
         url_params.delete('search')
         url_params.delete('date_range')
         url_params.delete('status_filter')
+        url_params.delete('by_me')
+        url_params.delete('to_me')
         to_url = '?' + url_params.toString()
         if ($('#search-term').val() != '')
             to_url += 'search=' + search_term
@@ -143,6 +155,10 @@
             to_url += joiner + 'date_range=' + date_range
         if (status_filter != '')
             to_url += joiner + 'status_filter=' + status_filter.join(',')
+        if (by_me)
+            to_url += joiner + 'by_me=' + by_me
+        if (to_me)
+            to_url += joiner + 'by_me=' + to_me
         window.location.href = to_url
     }
 
@@ -165,18 +181,14 @@
                 endDate: date_range_param[1]
             })
         }
+        if (url_params.get('by_me') != null)
+            $('#by_me').attr('checked', true)
+        if (url_params.get('to_me') != null)
+            $('#to_me').attr('checked', true)
     })
 
     function task_row_click(e, task_id){
         window.location.href = '/projects/checklists/' + task_id
-    }
-
-    function today(){
-        var date = new Date()
-        var dd = String(date.getDate()).padStart(2, '0')
-        var mm = String(date.getMonth() + 1).padStart(2, '0') //January is 0!
-        var yyyy = date.getFullYear()
-        return mm + '/' + dd + '/' + yyyy;
     }
 </script>
 {% endblock %}

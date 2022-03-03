@@ -1,3 +1,4 @@
+from django.contrib.sessions.models import Session
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from safedelete.models import SafeDeleteModel
@@ -33,8 +34,12 @@ class Project(SafeDeleteModel):
         return (self.name)
 
 class TaskModelManager(models.Manager):
+
     def get_queryset(self):
-        return super(TaskModelManager, self).get_queryset()#.filter(admin_id=1)
+        return super(TaskModelManager, self).get_queryset()
+
+    def by_admin(self, user):
+        return self.get_queryset().filter(admin=user.admin)
 
 class Task(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE

@@ -284,9 +284,9 @@
             {% endblock %}
             <script>
                 $(function(){
-                    let startDate = moment().startOf('month').format('MM/DD/YYYY')
-                    let endDate = moment().endOf('month').format('MM/DD/YYYY')
-                    let allTasksLink = `{% url 'projects:tasks'%}?date_range=${startDate}%20-%20${endDate}&status_filter=1,2`
+                    let startDate = moment().startOf('month').format('YYYY-MM-DD')
+                    let endDate = moment().endOf('month').format('YYYY-MM-DD')
+                    let allTasksLink = `{% url 'projects:tasks'%}?start_date_min=${startDate}&start_date_max=${endDate}&employee={{ user.id }}&status=1&status=2`
                     $('#all-tasks-link').attr('href', allTasksLink)
                 })
             </script>
