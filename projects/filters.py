@@ -29,8 +29,12 @@ class TaskFilter(django_filters.FilterSet):
 
 	def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
 		super().__init__(data=data, queryset=queryset, request=request, prefix=prefix)
-		self.filters['search_all'].field.widget.attrs.update(
-			{'class': 'form-control'})
+		self.filters['search_all'].field.widget.attrs.update({'class': 'form-control'})
+		self.filters['created'].field.widget.attrs.update({'class': 'form-control'})
+		self.filters['status'].field.widget.attrs.update({'class': 'form-control'})
+		self.filters['start_date'].field.widget.attrs.update({'class': 'form-control'})
+		self.filters['project'].field.widget.attrs.update({'class': 'form-control'})
+		self.filters['employee'].field.widget.attrs.update({'class': 'form-control'})
 
 	def task_search(self, queryset, name, value):
 		return queryset.filter(Q(task_name__icontains=value) | Q(description__icontains=value))
