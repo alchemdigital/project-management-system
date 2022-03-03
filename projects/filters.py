@@ -1,10 +1,11 @@
 import django_filters
 from .models import *
+from django.db.models import Q
 
 def filter_users_by_admin(request):
 	if request is None:
 		return User.objects.none()
-	return User.objects.filter(admin=request.user.admin)
+	return User.objects.filter(admin=request.user.admin).filter(groups__name__in=['admin', 'project_manager', 'employee'])
 
 def filter_projects_by_admin(request):
 	if request is None:
@@ -17,9 +18,14 @@ class TaskFilter(django_filters.FilterSet):
 	start_date = django_filters.DateFromToRangeFilter(
 		widget=django_filters.widgets.RangeWidget(attrs={'placeholder': 'YYYY/MM/DD', 'type': 'date'}))
 	status = django_filters.MultipleChoiceFilter(choices=status)
-	created = django_filters.ModelChoiceFilter(queryset=filter_users_by_admin)
+	created = django_filters.ModelChoiceFilter(
+		queryset=filter_users_by_admin, label='Assigned By')
+	search_all = django_filters.CharFilter(method='task_search', label='Search')
 
 	class Meta:
 		model = Task
-		fields = ('project', 'employee', 'task_name', 'status', 'deadline',
-		          'start_date', 'estimate_hours', 'hours', 'description', 'created')
+		fields = ('search_all', 'project', 'employee', 'status', 'deadline',
+		          'start_date', 'created')
+
+	def task_search(self, queryset, name, value):
+		return queryset.filter(Q(task_name__contains=value) | Q(description__contains=value))
