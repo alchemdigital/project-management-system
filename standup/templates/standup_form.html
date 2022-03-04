@@ -67,73 +67,73 @@
                                 <label>{{ employee.0.first_name }} {{ employee.0.last_name }}</label>
                                 <div class="form-group">
                                     <label class="col-form-label">Pending Task(s)</label>
+                                    <ul id="pending-task">
+                                        {% for pending_task in pending_tasks %}
+                                            <li>
+                                                <span>{{ pending_task.task_name }}</span>
+                                                <a class="btn btn-primary text-white btn-sm pull-task" data-task-id="{{ pending_task.id }}">Pull</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div class="form-group" id="project">
+                                    <label class="col-form-label">Project</label>
                                     <div class="input-group">
-                                        <ul id="pending-task">
-                                            {% for pending_task in pending_tasks %}
-                                                <div class="row">
-                                                    <li>{{ pending_task.task_name }}</li>
-                                                    <a class="btn btn-primary pull-task"
-                                                       data-task-id="{{ pending_task.id }}">Pull</a>
-                                                </div>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-puzzle-piece"></i></span>
+                                        </div>
+                                        {{ form.project }}
+                                        {% if form.project.errors %}
+                                        <ol>
+                                            {% for error in form.project.errors %}
+                                            <li>
+                                                <strong>{{ error|escape }}</strong>
+                                            </li>
                                             {% endfor %}
-                                        </ul>
-                                        <div class="form-group" id="project">
-                                            <label class="col-form-label">Project</label>
-                                            <div class="input-group">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text"><i class="fa fa-puzzle-piece"></i></span>
-                                                </div>
-                                                {{ form.project }}
-                                                {% if form.project.errors %}
-                                                    <ol>
-                                                        {% for error in form.project.errors %}
-                                                            <li>
-                                                                <strong>{{ error|escape }}</strong>
-                                                            </li>
-                                                        {% endfor %}
-                                                    </ol>
-                                                {% endif %}
-                                            </div>
-                                            <a href="{% url 'projects:new-project' %}">Create a Project</a>
+                                        </ol>
+                                        {% endif %}
+                                    </div>
+                                    <a href="{% url 'projects:new-project' %}">Create a Project</a>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">New Task</label>
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control" id="task-name">
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-form-label">New Task</label>
-                                            <div class="row">
-                                                <div class="col-md-10">
-                                                    <input type="text" class="form-control" id="task-name">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <button type="button" class="btn btn-primary" id="add-task">Add</button>
-                                                </div>
-                                            </div>
-                                            <div id="task-container"></div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-form-label">Anything blocking {{ employee.0.first_name }}'s progress?</label>
-                                            <div class="input-group">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text"><i class="fa fa-align-center"></i></span>
-                                                </div>
-                                                {{ form.is_any_issue }}
-                                                {% if form.pending_task.errors %}
-                                                    <ol>
-                                                        {% for error in form.is_any_issue.errors %}
-                                                            <li>
-                                                                <strong>{{ error|escape }}</strong>
-                                                            </li>
-                                                        {% endfor %}
-                                                    </ol>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="timezone" id="timezone" />
-                                        <div>
-                                            <button type="submit" class="btn btn-sm btn-success">
-                                                <i class="fa fa-dot-circle-o"></i>
-                                                Create
-                                            </button>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-primary" id="add-task">Add</button>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Added task(s)</label>
+                                    <ul id="task-container"></ul>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">Anything blocking {{ employee.0.first_name }}'s progress?</label>
+                                    <div class="input-group">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-align-center"></i></span>
+                                        </div>
+                                        {{ form.is_any_issue }}
+                                        {% if form.pending_task.errors %}
+                                        <ol>
+                                            {% for error in form.is_any_issue.errors %}
+                                            <li>
+                                                <strong>{{ error|escape }}</strong>
+                                            </li>
+                                            {% endfor %}
+                                        </ol>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <input type="hidden" name="timezone" id="timezone" />
+                                <div>
+                                    <button type="submit" class="btn btn-sm btn-success">
+                                        <i class="fa fa-dot-circle-o"></i>
+                                        Create
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -153,11 +153,11 @@
                 return
             count = parseInt($('.task-row').length)+1
             item = '<div class="row my-2 task-row row_'+count+'">'+
-                '<div class="col-md-10">'+
+                '<div class="col-md-9">'+
                     '<input type="text" class="form-control" name="task[]" id="task-name" value="'+task_name+'">'+
                 '</div>'+
                 '<div class="col-md-2">'+
-                    '<button type="button" class="btn btn-danger remove-task" data-id="'+count+'" id="remove-task">Remove</button>'+
+                    '<button type="button" class="btn btn-danger btn-sm remove-task" data-id="'+count+'" id="remove-task">Remove</button>'+
                 '</div>'+
             '</div >'
             $('#task-container').append(item)
@@ -169,11 +169,11 @@
             task_id = $(this).data('task-id')
             task_name = $(this).prev().html()
             item = `<div class="row my-2 task-row row_${count}">
-                <div class="col-md-10">
+                <div class="col-md-9">
                     <span>${task_name}</span>
                 </div>
                 <div class="col-md-2">
-                    <button type="button" class="btn btn-danger remove-task" data-task-name="${task_name}" data-task-id="${task_id}" data-id="${count}" id="remove-task">Remove</button>
+                    <button type="button" class="btn btn-danger btn-sm remove-task" data-task-name="${task_name}" data-task-id="${task_id}" data-id="${count}" id="remove-task">Remove</button>
                 </div>
             </div >`
             $('#task-container').append(item)
@@ -186,10 +186,10 @@
             if ($(this).data('task-id')) {
                 previous_task_ids = previous_task_ids.filter(element => element != $(this).data('task-id'))
                 task_name = $(this).data('task-name')
-                let pending_task = `<div class="row">
-                    <li>${task_name}</li>
+                let pending_task = `<li>
+                    <span>${task_name}</span>
                     <a class="btn btn-primary pull-task" data-task-id="${$(this).data('task-id')}">Pull</a>
-                <div>`
+                </li>`
                 $('#pending-task').append(pending_task)
             }
         })
