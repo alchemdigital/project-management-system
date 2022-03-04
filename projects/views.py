@@ -137,7 +137,7 @@ def new_task(request):
         if form.is_valid():
             task = form.save()
             # Email functionality start
-            if request.user.id != employee:
+            if request.user.id != int(employee):
                 employee_email = User.objects.get(pk=employee)
                 url = request.get_host() + '/projects/tasks/'
                 message = (request.user.first_name if request.user.first_name is not None else '') + ' ' + (request.user.last_name if request.user.last_name is not None else '') + ' has assinged you a task \n' + url
@@ -160,53 +160,6 @@ def new_task(request):
 
 # @user_passes_test(is_pm_or_admin)
 def tasks(request):
-    """ # Ordering - start
-    order_by = request.GET.get('order_by')
-    if order_by == None:
-        order_by = 'id'
-    direction = request.GET.get('direction')
-    if direction == None:
-        direction = 'desc'
-    if direction == 'desc':
-        ordering = '-{}'.format(order_by)
-    else:
-        ordering = order_by
-    # Ordering - end
-
-    #Filter - start
-    search_term = request.GET.get('search')
-    this_user = request.user
-    date_range = request.GET.get('date_range')
-    status_filter = request.GET.get('status_filter')
-    by_me = request.GET.get('by_me')
-    to_me = request.GET.get('to_me')
-    tasks = Task.objects
-    if date_range is not None:
-        from_date, to_date = date_range.split(' - ')
-        from_date = datetime.datetime.strptime(from_date, '%m/%d/%Y').strftime('%Y-%m-%d')
-        to_date = datetime.datetime.strptime(to_date, '%m/%d/%Y').strftime('%Y-%m-%d')
-        to_date = datetime.datetime.combine(datetime.datetime.fromisoformat(to_date), datetime.time(23, 59, 59, 999999))
-        date_range_query = Q(start_date__range=(from_date, to_date))
-        tasks = tasks.filter(date_range_query)
-    if status_filter is not None:
-        status_filter = tuple(map(int, status_filter.split(',')))
-        status_filter_query = Q(status__in=status_filter)
-        tasks = tasks.filter(status_filter_query)
-    if search_term is not None:
-        search_term_query = (Q(project__name__icontains=search_term) |
-            Q(task_name__icontains=search_term) |
-            Q(status__icontains=search_term) |
-            Q(deadline__icontains=search_term) |
-            Q(start_date__icontains=search_term) |
-            Q(hours__icontains=search_term) |
-            Q(description__icontains=search_term)
-        )
-        tasks = tasks.filter(search_term_query)
-    if by_me is not None:
-        tasks = tasks.filter(created=this_user)
-    if to_me is not None:
-        tasks = tasks.filter(employee=this_user)
-    tasks = tasks.filter(admin=this_user.admin) """
     tasks = Task.objects.by_admin(request.user)
     filters = TaskFilter(request.GET, request=request, queryset=tasks)
     tasks = filters.qs

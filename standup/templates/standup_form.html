@@ -1,218 +1,203 @@
 {% extends 'core/base.html' %}
 {% load static %}
 {% block breadcrumb %}
-<li class="breadcrumb-item">Home</li>
-<li class="breadcrumb-item">Projects</li>
-<li class="breadcrumb-item active">Task Form</li>
-{% endblock breadcrumb%}
+    <li class="breadcrumb-item">Home</li>
+    <li class="breadcrumb-item">Projects</li>
+    <li class="breadcrumb-item active">Task Form</li>
+{% endblock breadcrumb %}
 {% block content %}
-<div class="container animated fadeIn">
-    <div class="row justify-content-center">
-        <div class="col-7">
-            <div class="card-group">
-                <div class="card p-4 mb-5">
-                    <div class="card-body">
-                        {% if created %}
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            Task has been created successfully
-                        </div>
-                        {% elif updated %}
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            Task has been updated successfully
-                        </div>
-                        {% elif request.GET.updated%}
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            Task has been updated successfully
-                        </div>
-                        {% endif %}
-
-                        {% if messages %}
-                            {% for message in messages %}
-                                {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        {{ message }}
-                                    </div>
-                                {% endif %}
-                                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="container animated fadeIn">
+        <div class="row justify-content-center">
+            <div class="col-7">
+                <div class="card-group">
+                    <div class="card p-4 mb-5">
+                        <div class="card-body">
+                            {% if created %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
-                                    {{ message }}
+                                    Task has been created successfully
                                 </div>
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-
-                        {% csrf_token %}
-                        <h1>Standup</h1>
-                        <p class="text-muted">Create your standup here</p>
-                        <form action="" method="post">
-                            {% csrf_token %}
-                            {%if edit %}
-                            <input type="hidden" name="id" value="{{id}}" />
+                            {% elif updated %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    Task has been updated successfully
+                                </div>
+                            {% elif request.GET.updated %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    Task has been updated successfully
+                                </div>
                             {% endif %}
-                            <div class="form-group">
-                                <label class="col-form-label">Employee</label>
-                                <div class="input-group">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text"><i class="fa fa-user"></i></span>
-                                    </div>
-                                    {{ form.employee }}
-                                    {% if form.employee.errors %}
-                                    <ol>
-                                        {% for error in form.employee.errors %}
-                                        <li><strong>{{ error|escape }}</strong></li>
-                                        {% endfor %}
-                                    </ol>
+                            {% if messages %}
+                                {% for message in messages %}
+                                    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            {{ message }}
+                                        </div>
                                     {% endif %}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-form-label">Pending Task</label>
-                                <div class="input-group">
-                                    <ul id="pending-task">
-                                        None
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="form-group" id="project">
-                                <label class="col-form-label">Project</label>
-                                <div class="input-group">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text"><i class="fa fa-puzzle-piece"></i></span>
-                                    </div>
-                                    {{ form.project }}
-                                    {% if form.project.errors %}
-                                    <ol>
-                                        {% for error in form.project.errors %}
-                                        <li><strong>{{ error|escape }}</strong></li>
-                                        {% endfor %}
-                                    </ol>
+                                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            {{ message }}
+                                        </div>
                                     {% endif %}
-                                </div>
-                                <a href="{% url 'projects:new-project' %}">Create a Project</a>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="col-form-label">New Task</label>
-                                <div class="row">
-                                    <div class="col-md-10">
-                                        <input type="text" class="form-control" id="task-name">
+                                {% endfor %}
+                            {% endif %}
+                            {% csrf_token %}
+                            <h1>Standup</h1>
+                            <p class="text-muted">
+                                Create your standup here
+                            </p>
+                            <form action="" method="post" id="standup-form">
+                                {% csrf_token %}
+                                {% if edit %}<input type="hidden" name="id" value="{{ id }}" />{% endif %}
+                                <input type="hidden" name="employee" value="{{ employee.0.id }}" />
+                                <input type="hidden" id="pending-task-ids" name="pending_task_ids[]" />
+                                <label>{{ employee.0.first_name }} {{ employee.0.last_name }}</label>
+                                <div class="form-group">
+                                    <label class="col-form-label">Pending Task(s)</label>
+                                    <div class="input-group">
+                                        <ul id="pending-task">
+                                            {% for pending_task in pending_tasks %}
+                                                <div class="row">
+                                                    <li>{{ pending_task.task_name }}</li>
+                                                    <a class="btn btn-primary pull-task"
+                                                       data-task-id="{{ pending_task.id }}">Pull</a>
+                                                </div>
+                                            {% endfor %}
+                                        </ul>
+                                        <div class="form-group" id="project">
+                                            <label class="col-form-label">Project</label>
+                                            <div class="input-group">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text"><i class="fa fa-puzzle-piece"></i></span>
+                                                </div>
+                                                {{ form.project }}
+                                                {% if form.project.errors %}
+                                                    <ol>
+                                                        {% for error in form.project.errors %}
+                                                            <li>
+                                                                <strong>{{ error|escape }}</strong>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ol>
+                                                {% endif %}
+                                            </div>
+                                            <a href="{% url 'projects:new-project' %}">Create a Project</a>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label">New Task</label>
+                                            <div class="row">
+                                                <div class="col-md-10">
+                                                    <input type="text" class="form-control" id="task-name">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button type="button" class="btn btn-primary" id="add-task">Add</button>
+                                                </div>
+                                            </div>
+                                            <div id="task-container"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label">Anything blocking {{ employee.0.first_name }}'s progress?</label>
+                                            <div class="input-group">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text"><i class="fa fa-align-center"></i></span>
+                                                </div>
+                                                {{ form.is_any_issue }}
+                                                {% if form.pending_task.errors %}
+                                                    <ol>
+                                                        {% for error in form.is_any_issue.errors %}
+                                                            <li>
+                                                                <strong>{{ error|escape }}</strong>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ol>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="timezone" id="timezone" />
+                                        <div>
+                                            <button type="submit" class="btn btn-sm btn-success">
+                                                <i class="fa fa-dot-circle-o"></i>
+                                                Create
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="col-md-2">
-                                        <button type="button" class="btn btn-primary" id="add-task">Add</button>
-                                    </div>
                                 </div>
-                                <div id="task-container">
-
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-form-label">Anything blocking your progress? </label>
-                                <div class="input-group">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text"><i class="fa fa-align-center"></i></span>
-                                    </div>
-                                    {{ form.is_any_issue }}
-                                    {% if form.pending_task.errors %}
-                                    <ol>
-                                        {% for error in form.is_any_issue.errors %}
-                                        <li><strong>{{ error|escape }}</strong></li>
-                                        {% endfor %}
-                                    </ol>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <input type="hidden" name="timezone" id="timezone">
-                            <div class="">
-                                <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>
-                                    Submit</button>
-                                <button type="reset" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i>
-                                    Reset</button>
-                            </div>
-                        </form>
-                        <!-- {{ form.timezone }} -->
-
-                        <!-- {{ form.errors }} -->
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#id_employee').on('change', function(){
-            let employee_id = $(this).val()
-            $.ajax({
-                url: 'get-pending',
-                method: 'GET',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                },
-                data: {employee_id:employee_id},
-                success: function(res){
-                    // if(employee_id != parseInt(res.employee_id))
-                    //     $('#pending-task').empty()
-                    if(employee_id == parseInt(res.employee_id)){
-                        $('#pending-task').empty()
-                        res.task.map((task) => {
-                            $('#pending-task').append('<li>'+ task.task_name +'</li>')
-                        })
-                    }
-                }
-            })
+    <script type="text/javascript">
+        let count = 0
+        let item = ''
+        let task_name = ''
+        let previous_task_ids = []
+        $('#add-task').click(function(){
+            task_name = $('#task-name').val()
+            if(task_name == '')
+                return
+            count = parseInt($('.task-row').length)+1
+            item = '<div class="row my-2 task-row row_'+count+'">'+
+                '<div class="col-md-10">'+
+                    '<input type="text" class="form-control" name="task[]" id="task-name" value="'+task_name+'">'+
+                '</div>'+
+                '<div class="col-md-2">'+
+                    '<button type="button" class="btn btn-danger remove-task" data-id="'+count+'" id="remove-task">Remove</button>'+
+                '</div>'+
+            '</div >'
+            $('#task-container').append(item)
+            $('#task-name').val('')
         })
-    })
-
-    $('#add-task').click(function(){
-        let task_name = $('#task-name').val()
-        if(task_name == '')
-            return
-        let count = parseInt($('.task-row').length)+1
-        let item = '<div class="row my-2 task-row row_'+count+'">'+
-            '<div class="col-md-10">'+
-                '<input type="text" class="form-control" name="task[]" id="task-name" value="'+task_name+'">'+
-            '</div>'+
-            '<div class="col-md-2">'+
-                '<button type="button" class="btn btn-danger remove-task" data-id="'+count+'" id="remove-task">Remove</button>'+
-            '</div>'+
-        '</div >';
-        $('#task-container').append(item)
-        $('#task-name').val('')
-    })
-
-    $(document).on('click', '.remove-task', function(){
-        $('.row_'+$(this).attr('data-id')).remove()
-    })
-
-    // $(document).on('click', '#new-standup', function(){
-    //     $.ajax({
-    //         url: 'get-project-field',
-    //         method: 'GET',
-    //         headers: {
-    //             'X-CSRFToken': '{{ csrf_token }}',
-    //         },
-    //         success: function (res) {
-    //             console.log(res)                
-    //         }
-    //     })
-    //     // let project = $('#project').html();
-    //     // $('#test').html(project)
-    // })
-</script>
+        
+        $(document).on('click', '.pull-task', function(){
+            count = parseInt($('.task-row').length)+1
+            task_id = $(this).data('task-id')
+            task_name = $(this).prev().html()
+            item = `<div class="row my-2 task-row row_${count}">
+                <div class="col-md-10">
+                    <span>${task_name}</span>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger remove-task" data-task-name="${task_name}" data-task-id="${task_id}" data-id="${count}" id="remove-task">Remove</button>
+                </div>
+            </div >`
+            $('#task-container').append(item)
+            previous_task_ids.push(task_id)
+            $(this).parent().remove()
+        })
+        
+        $(document).on('click', '.remove-task', function(){
+            $('.row_'+$(this).attr('data-id')).remove()
+            if ($(this).data('task-id')) {
+                previous_task_ids = previous_task_ids.filter(element => element != $(this).data('task-id'))
+                task_name = $(this).data('task-name')
+                let pending_task = `<div class="row">
+                    <li>${task_name}</li>
+                    <a class="btn btn-primary pull-task" data-task-id="${$(this).data('task-id')}">Pull</a>
+                <div>`
+                $('#pending-task').append(pending_task)
+            }
+        })
+        
+        $('#standup-form').submit(function(e){
+            $('#add-task').click()
+            $('#pending-task-ids').val(previous_task_ids)
+            return true
+        })
+    </script>
 {% endblock %}
