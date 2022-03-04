@@ -1,0 +1,88 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block breadcrumb %}
+<li class="breadcrumb-item">Home</li>
+<li class="breadcrumb-item">Projects</li>
+<li class="breadcrumb-item active">Task Form</li>
+{% endblock breadcrumb%}
+{% block content %}
+<div class="container animated fadeIn">
+    <div class="row justify-content-center">
+        <input type="date" id="date-filter" class="form-control" value="{{ date }}" />
+        <div class="col-7">
+            <div class="card-header">
+                All employees
+            </div>
+            <div class="card-group">
+                <div class="card p-4 mb-5">
+                    <div class="card-body">
+                        {% for employee in employees %}
+                            {% if employee.id in added_employee_ids %}
+                                <a class="row" href="{% url 'standup:view_standup' employee_id=employee.id %}">{{ employee.first_name }} {{employee.last_name}}</a>
+                            {% else %}
+                                <a class="row" href="{% url 'standup:new_standup' employee_id=employee.id %}">{{ employee.first_name }} {{employee.last_name}}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#id_employee').on('change', function(){
+            let employee_id = $(this).val()
+            $.ajax({
+                url: 'get-pending',
+                method: 'GET',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                data: {employee_id:employee_id},
+                success: function(res){
+                    // if(employee_id != parseInt(res.employee_id))
+                    //     $('#pending-task').empty()
+                    if(employee_id == parseInt(res.employee_id)){
+                        $('#pending-task').empty()
+                        res.task.map((task) => {
+                            $('#pending-task').append('<li>'+ task.task_name +'</li>')
+                        })
+                    }
+                }
+            })
+        })
+    })
+
+    $('#add-task').click(function(){
+        let task_name = $('#task-name').val()
+        if(task_name == '')
+            return
+        let count = parseInt($('.task-row').length)+1
+        let item = '<div class="row my-2 task-row row_'+count+'">'+
+            '<div class="col-md-10">'+
+                '<input type="text" class="form-control" name="task[]" id="task-name" value="'+task_name+'">'+
+            '</div>'+
+            '<div class="col-md-2">'+
+                '<button type="button" class="btn btn-danger remove-task" data-id="'+count+'" id="remove-task">Remove</button>'+
+            '</div>'+
+        '</div >';
+        $('#task-container').append(item)
+        $('#task-name').val('')
+    })
+
+    $(document).on('click', '.remove-task', function(){
+        $('.row_'+$(this).attr('data-id')).remove()
+    })
+    
+    $('#standup-form').submit(function(e){
+        $('#add-task').click()
+        return true
+    })
+
+    $('#date-filter').change(function(){
+        window.location.href = "{% url 'standup:employee_select' %}" + '?date=' +$(this).val()
+    })
+</script>
+{% endblock %}

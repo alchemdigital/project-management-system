@@ -1,5 +1,5 @@
 from django import forms
-from .models import Standup, Task as StandupTask
+from .models import Standup
 from projects.models import Project
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -35,36 +35,3 @@ class StandupRegistrationForm(forms.ModelForm):
         self.fields['is_any_issue'] = forms.CharField(
             widget=forms.Textarea, required=False)
         self.fields['is_any_issue'].widget.attrs['class'] = 'form-control'
-
-class StandupTaskRegistration(forms.ModelForm):
-    class Meta:
-        model = StandupTask
-        fields = ('standup', 'task')
-    
-    def save(self, commit=True):
-        standup_task = super(StandupTaskRegistration, self).save(commit=False)
-        standup_task.standup = self.cleaned_data['standup']
-        standup_task.task = self.cleaned_data['task']
-        standup_task.save()
-        return standup_task
-
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.get('user')
-        kwargs.pop('user')
-        super(StandupTaskRegistration, self).__init__(*args, **kwargs)
-
-       
-# class StandupField(forms.ModelForm):
-#     class Meta:
-#         model = Standup
-#         fields = ('is_any_issue', 'employee')
-    
-#     def __init__(self, *args, ** kwargs):
-#         self.user = kwargs.get('user')
-#         kwargs.pop('user')
-#         super(StandupField, self).__init__(*args, **kwargs)
-#         self.fields['project'] = forms.ModelChoiceField(queryset=Project.objects.filter(admin=self.user.admin), widget=autocomplete.ModelSelect2(
-#             url='/projects/project-autocomplete'), empty_label='Select a Project *')
-#         self.fields['project'].widget.attrs['class'] = 'form-control'
-#         self.fields['project'].widget.attrs['name'] = 'project[]'
-

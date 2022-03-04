@@ -44,3 +44,64 @@
     border: 0;
     box-shadow: 0px 8px 26px rgba(0, 0, 0, 0.08);
 }
+
+/* filter modal */
+.modal.task-filter-modal .modal-dialog{
+    position: fixed;
+    margin: auto;
+    width: 520px;
+    height: 100%;
+    -webkit-transform: translate3d(0%, 0, 0);
+    -ms-transform: translate3d(0%, 0, 0);
+    -o-transform: translate3d(0%, 0, 0);
+    transform: translate3d(0%, 0, 0);
+}
+
+.modal.task-filter-modal .modal-content{
+    height: 100%;
+	overflow-y: auto;
+}
+
+.modal.task-filter-modal .modal-body{
+    padding: 15px 15px 80px;
+}
+
+.modal.task-filter-modal.fade .modal-dialog {
+    right: -520px;
+    -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+    -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+    -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+    transition: opacity 0.3s linear, right 0.3s ease-out;
+}
+
+.modal.task-filter-modal.fade .modal-dialog {
+    right: 0;
+}
+
+#standup-form label{
+    font-size: 16px;
+    font-weight: 500;
+}
+
+#standup-form #pending-task{
+    list-style: none;
+    height: auto;
+    max-height: 50vh;
+    overflow: auto;
+    border: 1px solid #f2f2f2;
+    overflow-x: hidden;
+}
+
+#standup-form #pending-task li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+#standup-form #task-container{
+    max-height: 50vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
