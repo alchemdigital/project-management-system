@@ -7,6 +7,7 @@ from dal import autocomplete
 
 
 class StandupRegistrationForm(forms.ModelForm):
+
     class Meta:
         model = Standup
         fields = ('is_any_issue', 'employee')
@@ -27,7 +28,7 @@ class StandupRegistrationForm(forms.ModelForm):
         kwargs.pop('user')
         super(StandupRegistrationForm, self).__init__(*args, **kwargs)
         self.fields['project'] = forms.ModelChoiceField(queryset=Project.objects.filter(admin=self.user.admin), widget=autocomplete.ModelSelect2(
-            url='/projects/project-autocomplete'), empty_label='Select a Project *')
+            url='/projects/project-autocomplete'), empty_label='Select a Project *', required=False)
         self.fields['project'].widget.attrs['class'] = 'form-control'
         self.fields['employee'] = forms.ModelChoiceField(queryset=User.objects.filter(admin=self.user.admin, groups__in=(
             1, 2, 3)), widget=autocomplete.ModelSelect2(url='/projects/employee-autocomplete'), empty_label='Select an employee')

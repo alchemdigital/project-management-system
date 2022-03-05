@@ -15,15 +15,15 @@
             </div>
             <div class="card-group">
                 <div class="card p-4 mb-5">
-                    <div class="card-body">
-                        {% for employee in employees %}
-                            {% if employee.id in added_employee_ids %}
-                                <a class="row" href="{% url 'standup:view_standup' employee_id=employee.id %}">{{ employee.first_name }} {{employee.last_name}}</a>
-                            {% else %}
-                                <a class="row" href="{% url 'standup:new_standup' employee_id=employee.id %}">{{ employee.first_name }} {{employee.last_name}}</a>
+                    {% for employee in employees %}
+                        <div class="card-body">
+                            <span>{{ employee.first_name }} {{employee.last_name}}</span>
+                            <a class="row" href="{% url 'standup:new_standup' employee_id=employee.id %}">Add</a> 
+                            {% if employee.id in added_employee_ids %}  
+                                <a class="row" href="{% url 'standup:view_standup' employee_id=employee.id %}?date={{ date }}">View</a> 
                             {% endif %}
-                        {% endfor %}
-                    </div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>

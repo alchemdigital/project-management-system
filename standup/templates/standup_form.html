@@ -110,24 +110,26 @@
                                     <label for="">Added task(s)</label>
                                     <ul id="task-container"></ul>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-form-label">Anything blocking {{ employee.0.first_name }}'s progress?</label>
-                                    <div class="input-group">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-align-center"></i></span>
+                                {% if not is_standup_exist %}
+                                    <div class="form-group">
+                                        <label class="col-form-label">Anything blocking {{ employee.0.first_name }}'s progress?</label>
+                                        <div class="input-group">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="fa fa-align-center"></i></span>
+                                            </div>
+                                            {{ form.is_any_issue }}
+                                            {% if form.pending_task.errors %}
+                                            <ol>
+                                                {% for error in form.is_any_issue.errors %}
+                                                <li>
+                                                    <strong>{{ error|escape }}</strong>
+                                                </li>
+                                                {% endfor %}
+                                            </ol>
+                                            {% endif %}
                                         </div>
-                                        {{ form.is_any_issue }}
-                                        {% if form.pending_task.errors %}
-                                        <ol>
-                                            {% for error in form.is_any_issue.errors %}
-                                            <li>
-                                                <strong>{{ error|escape }}</strong>
-                                            </li>
-                                            {% endfor %}
-                                        </ol>
-                                        {% endif %}
                                     </div>
-                                </div>
+                                {% endif %}
                                 <input type="hidden" name="timezone" id="timezone" />
                                 <div>
                                     <button type="submit" class="btn btn-sm btn-success">

@@ -8,17 +8,29 @@
 {% block content %}
 <div class="container animated fadeIn">
     <div class="row justify-content-center">
-        <input type="date" id="date-filter" class="form-control" value="{{ date }}" />
         <div class="col-7">
             <div class="card-header">
-                All employees
+                Tasks
             </div>
             <div class="card-group">
                 <div class="card p-4 mb-5">
                     <div class="card-body">
-                        {% for standup in standups %}
-							<span>{{ standup.is_any_issue }}</span>
-						{% endfor %}
+                        {% comment %} {% for standup in standups %}
+                            {% if standup.is_any_issue %}
+                                <b>{{ standup.employee.first_name }}'s progress blocking:</b> <span>{{ standup.is_any_issue }}</span>
+                            {% else %}
+                                Nothing is blocking {{ standup.employee.first_name }}'s progress.
+                            {% endif %}
+						{% endfor %} {% endcomment %}
+                        Tasks:
+                        {% for standup_task in standup_tasks %}
+                            {{ standup_task.task.task_name }} {{ standup_task.task.get_status_display }}
+                        {% endfor %}
+                        {% if standup_tasks.0.standup.is_any_issue %}
+                                <b>{{ standup_tasks.0.standup.employee.first_name }}'s progress blocking:</b> <span>{{ standup_tasks.0.standup.is_any_issue }}</span>
+                            {% else %}
+                                Nothing is blocking {{ standup_tasks.0.standup.employee.first_name }}'s progress.
+                            {% endif %}
                     </div>
                 </div>
             </div>
