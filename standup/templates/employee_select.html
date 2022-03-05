@@ -7,9 +7,9 @@
 {% endblock breadcrumb%}
 {% block content %}
 <div class="container animated fadeIn">
-    <input type="date" id="date-filter" class="form-control" value="{{ date }}" />
+    <input type="date" id="date-filter" class="form-control daily-standup-date-filter" value="{{ date }}" />
     <div class="emp-container py-3">
-        <div class="row justify-content-center">
+        <div class="row">
         {% for employee in employees %}
             <div class="col-md-3">
                 <div class="card standup-emp-card">
