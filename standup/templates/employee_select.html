@@ -7,25 +7,33 @@
 {% endblock breadcrumb%}
 {% block content %}
 <div class="container animated fadeIn">
-    <div class="row justify-content-center">
-        <input type="date" id="date-filter" class="form-control" value="{{ date }}" />
-        <div class="col-7">
-            <div class="card-header">
-                All employees
-            </div>
-            <div class="card-group">
-                <div class="card p-4 mb-5">
+    <input type="date" id="date-filter" class="form-control" value="{{ date }}" />
+    <div class="emp-container py-3">
+        <div class="row justify-content-center">
+        {% for employee in employees %}
+            <div class="col-md-3">
+                <div class="card standup-emp-card">
                     <div class="card-body">
-                        {% for employee in employees %}
-                            {% if employee.id in added_employee_ids %}
-                                <a class="row" href="{% url 'standup:view_standup' employee_id=employee.id %}">{{ employee.first_name }} {{employee.last_name}}</a>
-                            {% else %}
-                                <a class="row" href="{% url 'standup:new_standup' employee_id=employee.id %}">{{ employee.first_name }} {{employee.last_name}}</a>
-                            {% endif %}
-                        {% endfor %}
+                        <div class="employee-cover text-center">
+                            <div class="employee-initial">
+                                <span>{{ employee.first_name.0 }}{{employee.last_name.0}}</span>
+                            </div>
+                            <h6>{{ employee.first_name }} {{employee.last_name}}</h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-end">
+                        <a href="{% url 'standup:new_standup' employee_id=employee.id %}">
+                            <button class="btn btn-sm btn-success mx-1">Add</button>
+                        </a>
+                        {% if employee.id in added_employee_ids %}
+                            <a href="{% url 'standup:view_standup' employee_id=employee.id %}?date={{ date }}">
+                                <button class="btn btn-sm btn-primary mx-1">View</button>
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
+        {% endfor %}
         </div>
     </div>
 </div>

@@ -7,22 +7,31 @@
 {% endblock breadcrumb%}
 {% block content %}
 <div class="container animated fadeIn">
-    <div class="row justify-content-center">
-        <input type="date" id="date-filter" class="form-control" value="{{ date }}" />
-        <div class="col-7">
+        <div class="card">
             <div class="card-header">
-                All employees
+                Tasks
             </div>
-            <div class="card-group">
-                <div class="card p-4 mb-5">
-                    <div class="card-body">
-                        {% for standup in standups %}
-							<span>{{ standup.is_any_issue }}</span>
-						{% endfor %}
-                    </div>
+            <div class="card p-4 mb-5">
+                <div class="card-body">
+                    <ul id="pending-task">
+                        {% for standup_task in standup_tasks %}
+                            <li>
+                                <span>{{ standup_task.task.task_name }}</span>
+                                <span class="badge p-2 {%if standup_task.task.status == '1' %} badge-danger {%elif standup_task.task.status == '2' %} badge-warning {%elif standup_task.task.status == '3' %} badge-info {%elif standup_task.task.status == '4' %} badge-success {%endif %}">{{ standup_task.task.get_status_display }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    
+                    {% if standup_tasks.0.standup.is_any_issue %}
+                        <div class="form-group">
+                            <label for=""><b>{{ standup_tasks.0.standup.employee.first_name }}'s progress blocking:</b></label>
+                            <p>{{ standup_tasks.0.standup.is_any_issue }}</p>
+                        </div>
+                    {% else %}
+                        <p><b>Nothing is blocking {{ standup_tasks.0.standup.employee.first_name }}'s progress.</b></p>
+                    {% endif %}
                 </div>
             </div>
         </div>
-    </div>
 </div>
 {% endblock %}
