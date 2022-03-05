@@ -7,34 +7,31 @@
 {% endblock breadcrumb%}
 {% block content %}
 <div class="container animated fadeIn">
-    <div class="row justify-content-center">
-        <div class="col-7">
+        <div class="card">
             <div class="card-header">
                 Tasks
             </div>
-            <div class="card-group">
-                <div class="card p-4 mb-5">
-                    <div class="card-body">
-                        {% comment %} {% for standup in standups %}
-                            {% if standup.is_any_issue %}
-                                <b>{{ standup.employee.first_name }}'s progress blocking:</b> <span>{{ standup.is_any_issue }}</span>
-                            {% else %}
-                                Nothing is blocking {{ standup.employee.first_name }}'s progress.
-                            {% endif %}
-						{% endfor %} {% endcomment %}
-                        Tasks:
+            <div class="card p-4 mb-5">
+                <div class="card-body">
+                    <ul id="pending-task">
                         {% for standup_task in standup_tasks %}
-                            {{ standup_task.task.task_name }} {{ standup_task.task.get_status_display }}
+                            <li>
+                                <span>{{ standup_task.task.task_name }}</span>
+                                <span class="badge p-2 {%if standup_task.task.status == '1' %} badge-danger {%elif standup_task.task.status == '2' %} badge-warning {%elif standup_task.task.status == '3' %} badge-info {%elif standup_task.task.status == '4' %} badge-success {%endif %}">{{ standup_task.task.get_status_display }}</span>
+                            </li>
                         {% endfor %}
-                        {% if standup_tasks.0.standup.is_any_issue %}
-                                <b>{{ standup_tasks.0.standup.employee.first_name }}'s progress blocking:</b> <span>{{ standup_tasks.0.standup.is_any_issue }}</span>
-                            {% else %}
-                                Nothing is blocking {{ standup_tasks.0.standup.employee.first_name }}'s progress.
-                            {% endif %}
-                    </div>
+                    </ul>
+                    
+                    {% if standup_tasks.0.standup.is_any_issue %}
+                        <div class="form-group">
+                            <label for=""><b>{{ standup_tasks.0.standup.employee.first_name }}'s progress blocking:</b></label>
+                            <p>{{ standup_tasks.0.standup.is_any_issue }}</p>
+                        </div>
+                    {% else %}
+                        <p><b>Nothing is blocking {{ standup_tasks.0.standup.employee.first_name }}'s progress.</b></p>
+                    {% endif %}
                 </div>
             </div>
         </div>
-    </div>
 </div>
 {% endblock %}
