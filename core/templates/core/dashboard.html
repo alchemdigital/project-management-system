@@ -5,6 +5,7 @@
 
 <div class="container-fluid">
 	<div class="animated fadeIn">
+		<h4 class="my-3"><span id="greeting"></span> {{ user.first_name }}</h4>
 		<div class="row">
 			<div class="col-sm-12 col-lg-6">
 				<div class="card text-white bg-primary border-0 shadow">
@@ -143,8 +144,30 @@
 			<!--/.col-->
 		</div>
 		<!--/.row-->
+		<a href="https://pms.alchemdigital.com/projects/tasks/?start_date_min={{start_date}}&start_date_max={{end_date}}&status=1&status=2">
+			<button class="btn btn-primary">View all pending task</button>
+		</a>
 	</div>
 
 </div>
+<script>
+	var thehours = new Date().getHours();
+		var themessage;
+		var morning = ('Good morning');
+		var afternoon = ('Good afternoon');
+		var evening = ('Good evening');
+
+		if (thehours >= 0 && thehours < 12) {
+			themessage = morning;
+
+		} else if (thehours >= 12 && thehours < 17) {
+			themessage = afternoon;
+
+		} else if (thehours >= 17 && thehours < 24) {
+			themessage = evening;
+		}
+
+		$('#greeting').append(themessage);
+</script>
 
 {% endblock %}

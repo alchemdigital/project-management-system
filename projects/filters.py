@@ -32,6 +32,7 @@ class TaskFilter(django_filters.FilterSet):
 		self.filters['search_all'].field.widget.attrs.update({'class': 'form-control'})
 		self.filters['created'].field.widget.attrs.update({'class': 'form-control'})
 		self.filters['status'].field.widget.attrs.update({'class': 'form-control'})
+		self.filters['deadline'].field.widget.attrs.update({'class': 'form-control'})
 		self.filters['start_date'].field.widget.attrs.update({'class': 'form-control'})
 		self.filters['project'].field.widget.attrs.update({'class': 'form-control'})
 		self.filters['employee'].field.widget.attrs.update({'class': 'form-control'})

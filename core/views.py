@@ -1,3 +1,5 @@
+import calendar
+from datetime import datetime
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth import get_user_model
@@ -37,12 +39,19 @@ def dashboard(request):
     companies = Company.objects.all()
     projects = Project.objects.all()
     tasks = Task.objects.all()
+    date = datetime.today()
+    start_date = calendar.monthrange(date.year, date.month)[0]
+    end_date = calendar.monthrange(date.year, date.month)[1]
+    start_date = date.replace(day=start_date).strftime('%Y-%m-%d')
+    end_date = date.replace(day=end_date).strftime('%Y-%m-%d')
     context = {
         'users' : users,
         'active_users' : active_users,
         'companies' : companies,
         'projects' : projects,
         'tasks' : tasks,
+        'start_date' : start_date,
+        'end_date' : end_date
     }
     return render(request, 'core/dashboard.html', context)
 
