@@ -27,7 +27,7 @@ def employee_select(request):
     # else:
     #     date = datetime.datetime.strptime(date, '%m/%d/%Y').strftime('%Y-%m-%d')
     added_employee_ids = Standup.objects.filter(employee__admin=request.user.admin).filter(
-        employee__groups__name__in=['employee', 'project_manager']).filter(created_at__date=date).values_list('employee_id', flat=True)
+        employee__groups__name__in=['employee', 'project_manager', 'admin']).filter(created_at__date=date).values_list('employee_id', flat=True)
     employees = User.objects.filter(admin=request.user.admin).filter(
         groups__name__in=['employee', 'project_manager', 'admin']).order_by('first_name')
     context = {'added_employee_ids': added_employee_ids, 'employees': employees, 'date': date}
@@ -97,9 +97,10 @@ def new_standup(request, employee_id = None):
                     if True:
                         type = 1  # Office
                     today = datetime.date.today()
-                    if not Attendance.objects.filter(admin=request.user.admin, employee=request.user, work_date__date=today).exists():
+                    employee = User.objects.get(pk=employee)
+                    if not Attendance.objects.filter(admin=request.user.admin, employee=employee, work_date__date=today).exists():
                         Attendance.objects.create(
-                            admin=request.user.admin, employee=request.user, type=type)
+                            admin=request.user.admin, employee=employee, type=type)
                     # Attendance functionality end
                     # messages.success(request, "Success")
                     created = True
