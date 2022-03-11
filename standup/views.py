@@ -63,6 +63,10 @@ def new_standup(request, employee_id = None):
                     task_request.update({'estimate_hours': 0})
                 if request.POST.get('status') is None:
                     task_request.update({'status': 1})
+                if request.POST.get('start_date') is None:
+                    now = datetime.datetime.now()
+                    now.strftime("%Y-%m-%d %H:%M:%S")
+                    task_request.update({'start_date': now})
                 for task in tasks:
                     task_request.update({'task_name': task})
                     task_form = TaskRegistrationForm(
