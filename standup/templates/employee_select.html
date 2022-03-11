@@ -22,9 +22,16 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-end">
+                        {% now "Y-m-d" as today %}
+                        {% ifequal today date %}
                         <a href="{% url 'standup:new_standup' employee_id=employee.id %}">
+                            {% if employee.id in added_employee_ids %}
+                            <button class="btn btn-sm btn-success mx-1">Add another</button>
+                            {% else %}
                             <button class="btn btn-sm btn-success mx-1">Add</button>
+                            {% endif %}
                         </a>
+                        {% endifequal %}
                         {% if employee.id in added_employee_ids %}
                             <a href="{% url 'standup:view_standup' employee_id=employee.id %}?date={{ date }}">
                                 <button class="btn btn-sm btn-primary mx-1">View</button>

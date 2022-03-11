@@ -14,6 +14,7 @@ from standup.models import Standup, Task as StandupTask
 import datetime
 from django.contrib.auth import get_user_model
 User = get_user_model()
+from register.models import Attendance
 
 # Create your views here.
 def index(request):
@@ -26,9 +27,9 @@ def employee_select(request):
     # else:
     #     date = datetime.datetime.strptime(date, '%m/%d/%Y').strftime('%Y-%m-%d')
     added_employee_ids = Standup.objects.filter(employee__admin=request.user.admin).filter(
-        employee__groups__name__in=['employee', 'project_manager']).filter(created_at__date=date).values_list('employee_id', flat=True)
+        employee__groups__name__in=['employee', 'project_manager', 'admin']).filter(created_at__date=date).values_list('employee_id', flat=True)
     employees = User.objects.filter(admin=request.user.admin).filter(
-        groups__name__in=['employee', 'project_manager']).order_by('first_name')
+        groups__name__in=['employee', 'project_manager', 'admin']).order_by('first_name')
     context = {'added_employee_ids': added_employee_ids, 'employees': employees, 'date': date}
     return render(request, 'employee_select.html', context)
 
@@ -91,6 +92,16 @@ def new_standup(request, employee_id = None):
                     for task_id in task_ids:
                         StandupTask.objects.create(admin=request.user.admin, standup_id=saved_standup.id, task_id=task_id)
                 
+                    # Attendance functionality start
+                    type = 2  # Work From Home
+                    if True:
+                        type = 1  # Office
+                    today = datetime.date.today()
+                    employee = User.objects.get(pk=employee)
+                    if not Attendance.objects.filter(admin=request.user.admin, employee=employee, work_date__date=today).exists():
+                        Attendance.objects.create(
+                            admin=request.user.admin, employee=employee, type=type)
+                    # Attendance functionality end
                     # messages.success(request, "Success")
                     created = True
                     context = {

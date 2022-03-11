@@ -19,6 +19,7 @@
                                 <span>{{ standup_task.task.project.name }}</span>
                                 <span>{{ standup_task.task.task_name }}</span>
                                 <span class="badge p-2 {%if standup_task.task.status == '1' %} badge-danger {%elif standup_task.task.status == '2' %} badge-warning {%elif standup_task.task.status == '3' %} badge-info {%elif standup_task.task.status == '4' %} badge-success {%endif %}">{{ standup_task.task.get_status_display }}</span>
+                                <a href="{% url 'projects:edit_task' task_id=standup_task.task.id %}" class="badge p-2 badge-primary">View / Edit</a>
                             </li>
                         {% endfor %}
                     </ul>

@@ -13,6 +13,6 @@ class EmailThread(threading.Thread):
         from_email = 'pms@alchemdigital.com'
         text_content = self.html_content
         html_content = self.html_content
-        msg = EmailMultiAlternatives('Registered with PMS', text_content, from_email, self.recipient_list)
+        msg = EmailMultiAlternatives(self.subject, text_content, from_email, self.recipient_list)
         msg.attach_alternative(html_content, "text/html")
         msg.send()
