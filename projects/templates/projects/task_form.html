@@ -34,6 +34,34 @@
                                     Task has been updated successfully
                                 </div>
                             {% endif %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            {{ message }}
+                                        </div>
+                                    {% endif %}
+                                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            {{ message }}
+                                        </div>
+                                    {% endif %}
+                                    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            {{ message }}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
                             {% csrf_token %}
                             <h1>Tasks</h1>
                             <p class="text-muted">Create your tasks here</p>
@@ -63,7 +91,7 @@
                                     <label class="col-form-label">Assign</label>
                                     <div class="input-group">
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                            <span class="input-group-text"><i class='bx bx-user bx-xs'></i></span>
                                         </div>
                                         {{ form.employee }}
                                         {% if form.employee.errors %}
@@ -79,7 +107,7 @@
                                     <label class="col-form-label">Task name</label>
                                     <div class="input-group">
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-align-center"></i></span>
+                                            <span class="input-group-text"><i class='bx bx-task bx-xs'></i></span>
                                         </div>
                                         {{ form.task_name }}
                                         {% if form.task_name.errors %}
@@ -95,7 +123,7 @@
                                     <label class="col-form-label">Status</label>
                                     <div class="input-group">
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-circle"></i></span>
+                                            <span class="input-group-text"><i class='bx bx-stats bx-xs'></i></span>
                                         </div>
                                         {{ form.status }}
                                         {% if form.status.errors %}
@@ -111,7 +139,7 @@
                                     <label class="col-form-label">Start Date</label>
                                     <div class="input-group">
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-circle"></i></span>
+                                            <span class="input-group-text"><i class='bx bx-calendar bx-xs'></i></span>
                                         </div>
                                         {{ form.start_date }}
                                         {% if form.start_date.errors %}
@@ -127,7 +155,7 @@
                                     <label class="col-form-label">Deadline</label>
                                     <div class="input-group">
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-circle"></i></span>
+                                            <span class="input-group-text"><i class='bx bx-calendar-check bx-xs'></i></span>
                                         </div>
                                         {{ form.deadline }}
                                         {% if form.deadline.errors %}
@@ -143,7 +171,7 @@
                                     <label class="col-form-label">Estimate Hours</label>
                                     <div class="input-group">
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-circle"></i></span>
+                                            <span class="input-group-text"><i class='bx bx-timer bx-xs'></i></span>
                                         </div>
                                         {{ form.estimate_hours }}
                                         {% if form.estimate_hours.errors %}
@@ -159,7 +187,7 @@
                                     <label class="col-form-label">Hours</label>
                                     <div class="input-group">
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-circle"></i></span>
+                                            <span class="input-group-text"><i class='bx bx-time bx-xs'></i></span>
                                         </div>
                                         {{ form.hours }}
                                         {% if form.hours.errors %}
@@ -175,7 +203,7 @@
                                     <label class="col-form-label">Description</label>
                                     <div class="input-group">
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-circle"></i></span>
+                                            <span class="input-group-text"><i class='bx bx-notepad bx-xs'></i></span>
                                         </div>
                                         {{ form.description }}
                                         {% if form.description.errors %}
@@ -232,6 +260,15 @@
             let deadline = $('#id_deadline').val()
             $('#id_start_date').val(UTCToLocalTime(startDate))
             $('#id_deadline').val(UTCToLocalTime(deadline))
+        })
+
+        $('#id_deadline').on('change', function(){
+            let startDate = new Date($('#id_start_date').val()).getTime()
+            let deadLine = new Date($(this).val()).getTime()
+            if(startDate > deadLine){
+                alert('Deadline should be greator than start date.')
+                $(this).val('')
+            }
         })
     </script>
 {% endblock %}

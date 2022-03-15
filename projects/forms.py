@@ -86,10 +86,10 @@ class TaskRegistrationForm(forms.ModelForm):
         self.fields['start_date'] = forms.DateTimeField(required=False, initial=datetime.datetime.now(), widget=forms.DateTimeInput(format="%Y-%m-%dT%H:%M"))
         self.fields['start_date'].widget.attrs['class'] = 'form-control'
         self.fields['start_date'].widget.attrs['placeholder'] = 'Start Date'
-        self.fields['estimate_hours'] = forms.IntegerField(required=False, initial=0)
+        self.fields['estimate_hours'] = forms.FloatField(required=False, initial=0)
         self.fields['estimate_hours'].widget.attrs['class'] = 'form-control'
         self.fields['estimate_hours'].widget.attrs['placeholder'] = 'Estimate Hours'
-        self.fields['hours'] = forms.IntegerField(required=False, initial=0)
+        self.fields['hours'] = forms.FloatField(required=False, initial=0)
         self.fields['hours'].widget.attrs['class'] = 'form-control'
         self.fields['hours'].widget.attrs['placeholder'] = 'Hours'
         self.fields['description'] = forms.CharField(widget=forms.Textarea, required=False)

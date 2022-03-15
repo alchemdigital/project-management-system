@@ -18,24 +18,31 @@ import datetime
 from django.urls import reverse
 from django.core.mail import send_mail
 from .filters import TaskFilter
+from django.contrib import messages
 
 # Create your views here.
 @user_passes_test(is_pm_or_admin)
 def new_project(request):
     if request.method == 'POST':
-        form = ProjectRegistrationForm(request.POST, user=request.user, use_required_attribute=False)
-        context = {'form': form}
-        if form.is_valid():
-            form.save()
-            created = True
+        project_name = request.POST.get('name')
+        if not Project.objects.filter(name=project_name).exists():
+            form = ProjectRegistrationForm(request.POST, user=request.user, use_required_attribute=False)
+            context = {'form': form}
+            if form.is_valid():
+                form.save()
+                created = True
+                form = ProjectRegistrationForm(user=request.user, use_required_attribute=False)
+                context = {
+                    'created': created,
+                    'form': form,
+                }
+                return render(request, 'projects/project_form.html', context)
+        else:
+            messages.error(request, 'Project name already exist')
             form = ProjectRegistrationForm(user=request.user, use_required_attribute=False)
             context = {
-                'created': created,
                 'form': form,
             }
-            return render(request, 'projects/project_form.html', context)
-        else:
-            print(form.errors)
             return render(request, 'projects/project_form.html', context)
     else:
         form = ProjectRegistrationForm(user=request.user, use_required_attribute=False)
@@ -136,6 +143,11 @@ def new_task(request):
         context = {'form': form}
         if form.is_valid():
             task = form.save()
+            created_at = task.created_at
+            start_date = task.start_date
+            if start_date is not None:
+                if created_at.date() != start_date.date():
+                    messages.warning(request, 'Task created date and start date is different!')
             # Email functionality start
             if request.user.id != int(employee):
                 employee_email = User.objects.get(pk=employee)
@@ -175,6 +187,11 @@ def tasks(request):
 def edit_task(request, task_id):
     this_user = request.user
     task = Task.objects.filter(admin=this_user.admin).get(id=task_id)
+    created_at = task.created_at
+    start_date = task.start_date
+    if start_date is not None:
+        if created_at.date() != start_date.date():
+            messages.warning(request, 'Task created date and start date is different')
     form = TaskRegistrationForm(instance=task, user=request.user, use_required_attribute=False)
     context = {
         'id': task.id,
@@ -202,7 +219,12 @@ def update_task(request):
     form = TaskRegistrationForm(request.POST, instance=instance, user=request.user, use_required_attribute=False)
     context = { 'form': form, 'id': instance.id, 'edit': True}
     if form.is_valid():
-        form.save()
+        task = form.save()
+        created_at = task.created_at
+        start_date = task.start_date
+        if start_date is not None:
+            if created_at.date() != start_date.date():
+                messages.warning(request, 'Task created date and start date is different')
         context['updated'] = True
     return redirect(reverse('projects:edit_task', kwargs = {'task_id': id}))
 

@@ -11,8 +11,11 @@
 <div class="container-fluid">
     <div class="animated fade-in">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between">
                 Users
+                <a href="{% url 'register:new-user' %}">
+                    <button class="btn btn-primary">New User</button>
+                </a>
             </div>
             <div class="card-body">
                 <table class="table table-responsive-sm table-hover table-outline mb-5 ">
