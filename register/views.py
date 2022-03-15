@@ -174,8 +174,7 @@ def delete_user(request, user_id):
 def new_company(request):
     if request.method == 'POST':
         company_name = request.POST.get('name')
-        print(company_name)
-        if not Company.objects.filter(name=company_name).exists():
+        if not Company.objects.filter(name=company_name, admin=request.user.admin).exists():
             form = CompanyRegistrationForm(request.POST, user=request.user, use_required_attribute=False)
             context = { 'form': form }
             if form.is_valid():

@@ -1,12 +1,13 @@
 {% extends 'core/base.html' %}
 {% load static %}
-
+{% load has_group %}
 {% block content %}
 
 <div class="container-fluid">
 	<div class="animated fadeIn">
 		<h4 class="my-3"><span id="greeting"></span> {{ user.first_name }}</h4>
 		<div class="row">
+			{% if user|has_group:'admin' %}
 			<div class="col-sm-12 col-lg-6">
 				<div class="card text-white bg-primary border-0 shadow">
 					<div class="card-body pb-0">
@@ -30,8 +31,8 @@
 					</div>
 				</div>
 			</div>
+			
 			<!--/.col-->
-
 			<div class="col-sm-12 col-lg-6">
 				<div class="card text-white bg-info border-0 shadow">
 					<div class="card-body pb-0">
@@ -55,8 +56,9 @@
 					</div>
 				</div>
 			</div>
+			{% endif %}
 			<!--/.col-->
-
+			{% if user|has_group:'admin' or user|has_group:'project_manager' %}
 			<div class="col-sm-12 col-lg-6">
 				<div class="card text-white bg-warning border-0 shadow">
 					<div class="card-body pb-0">
@@ -80,8 +82,9 @@
 					</div>
 				</div>
 			</div>
+			{% endif %}
 			<!--/.col-->
-
+			{% if user|has_group:'admin' or user|has_group:'project_manager' or user|has_group:'employee' %}
 			<div class="col-sm-12 col-lg-6">
 				<div class="card text-white bg-danger border-0 shadow">
 					<div class="card-body pb-0">
@@ -105,12 +108,15 @@
 					</div>
 				</div>
 			</div>
+			{% endif %}
 			<!--/.col-->
 		</div>
 		<!--/.row-->
+		{% if user|has_group:'admin' %}
 		<a href="https://pms.alchemdigital.com/projects/tasks/?start_date_min={{start_date}}&start_date_max={{end_date}}&status=1&status=2">
 			<button class="btn btn-primary">View all pending task</button>
 		</a>
+		{% endif %}
 	</div>
 
 </div>

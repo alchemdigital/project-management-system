@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %}
 {% load static %}
-
+{% load has_group %}
 {% block breadcrumb %}
         <li class="breadcrumb-item">Home</li>
         <li class="breadcrumb-item">Users</li>
@@ -26,25 +26,33 @@
                 <table class="table table-responsive-sm table-hover table-outline mb-5 ">
                     <thead class="thead-light">
                         <tr>
-                            <th class="text-center" onclick="order_by_selected('name')">Name</th>
-                            <th class="text-center" onclick="order_by_selected('company')">Company</th>
-                            <th class="text-center" onclick="order_by_selected('description')">Description</th>
-                            <th class="text-center">Action</th>
+                            <th class="text-left" onclick="order_by_selected('name')">Name</th>
+                            {% if user|has_group:'admin' %}
+                            <th class="text-left">Hours</th>
+                            {% endif %}
+                            <th class="text-left" onclick="order_by_selected('company')">Company</th>
+                            <th class="text-left" onclick="order_by_selected('description')">Description</th>
+                            <th class="text-left">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for project in page_obj %}
                         <tr>
-                            <td class="text-center">
+                            <td class="text-left">
                                 {{ project.name | default_if_none:'-' }}
                             </td>
-                            <td class="text-center">
+                            {% if user|has_group:'admin' %}
+                            <td class="text-left">
+                                {{ project.hours | default_if_none:'-' }}
+                            </td>
+                            {% endif %}
+                            <td class="text-left">
                                 {{ project.company | default_if_none:'-' }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 {{ project.description | default_if_none:'-' }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <a class="text-primary" href="#" onclick="edit_project(event, {{ project.id }});"><i
                                         class="fa fa-edit"></i></a>
                                 <a class="text-danger" href="#" onclick="delete_project(event, {{ project.id }});"><i
