@@ -26,46 +26,46 @@
                 <table class="table table-responsive-sm table-hover table-outline mb-5 ">
                     <thead class="thead-light">
                         <tr>
-                            <th class="text-center" onclick="order_by_selected('project')">Project</th>
-                            <th class="text-center" onclick="order_by_selected('employee')">Employee</th>
-                            <th class="text-center" onclick="order_by_selected('task_name')">Task Name</th>
-                            <th class="text-center" onclick="order_by_selected('status')">Status</th>
-                            <th class="text-center" onclick="order_by_selected('start_date')">Start Date</th>
-                            <th class="text-center" onclick="order_by_selected('deadline')">Deadline</th>
-                            <th class="text-center" onclick="order_by_selected('hours')">Hours</th>
-                            <th class="text-center" onclick="order_by_selected('description')">Description</th>
-                            <th class="text-center">Action</th>
+                            <th class="text-left" onclick="order_by_selected('project')">Project</th>
+                            <th class="text-left" onclick="order_by_selected('employee')">Employee</th>
+                            <th class="text-left" onclick="order_by_selected('task_name')">Task Name</th>
+                            <th class="text-left" onclick="order_by_selected('status')">Status</th>
+                            <th class="text-left" onclick="order_by_selected('start_date')">Start Date</th>
+                            <th class="text-left" onclick="order_by_selected('deadline')">Deadline</th>
+                            <th class="text-left" onclick="order_by_selected('hours')">Hours</th>
+                            <th class="text-left" onclick="order_by_selected('description')">Description</th>
+                            <th class="text-left">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for task in page_obj %}
                         <tr
                             class="alert {%if task.status == '1' %} alert-danger {% elif task.status == '4' %} alert-success {% elif task.status == '3' %} alert-primary {% endif %}">
-                            <td class="text-center">
+                            <td class="text-left">
                                 {{ task.project | default_if_none:'-' }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 {{ task.employee | default_if_none:'-' }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 {{ task.task_name | default_if_none:'-' }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 {{ task.get_status_display | default_if_none:'-' }}
                             </td>
-                            <td class="text-center">
-                                {{ task.start_date | default_if_none:'-' }}
+                            <td class="text-left">
+                                {{ task.start_date.date | default_if_none:'-' }}
                             </td>
-                            <td class="text-center">
-                                {{ task.deadline | default_if_none:'-' }}
+                            <td class="text-left">
+                                {{ task.deadline.date | default_if_none:'-' }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 {{ task.hours | default_if_none:'-' }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 {{ task.description | default_if_none:'-' }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <a class="text-primary" href="#" onclick="edit_task(event, {{ task.id }});"><i
                                         class="fa fa-edit"></i></a>
                                 <a class="text-danger" href="#" onclick="delete_task(event, {{ task.id }});"><i

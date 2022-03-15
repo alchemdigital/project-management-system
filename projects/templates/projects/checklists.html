@@ -26,26 +26,26 @@
                 <table class="table table-responsive-sm table-hover table-outline mb-5 ">
                     <thead class="thead-light">
                         <tr>
-                            <th class="text-center" onclick="order_by_selected('task')">Task</th>
-                            <th class="text-center" onclick="order_by_selected('checklist_name')">Name</th>
-                            <th class="text-center" onclick="order_by_selected('status')">Status</th>
-                            <th class="text-center">Action</th>
+                            <th class="text-left" onclick="order_by_selected('task')">Task</th>
+                            <th class="text-left" onclick="order_by_selected('checklist_name')">Name</th>
+                            <th class="text-left" onclick="order_by_selected('status')">Status</th>
+                            <th class="text-left">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for checklist in page_obj %}
                         <tr
                             class="{%if checklist.status == '1' %} bg-danger {% elif checklist.status == '4' %} bg-success {% elif checklist.status == '3' %} bg-primary {% endif %}">
-                            <td class="text-center">
+                            <td class="text-left">
                                 {{ checklist.task | default_if_none:'-' }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 {{ checklist.checklist_name | default_if_none:'-' }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 {{ checklist.get_status_display | default_if_none:'-' }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <a class="text-primary" href="#" onclick="edit_checklist(event, {{ checklist.id }});"><i
                                         class="fa fa-edit"></i></a>
                                 <a class="text-danger" href="#" onclick="delete_checklist(event, {{ checklist.id }});"><i

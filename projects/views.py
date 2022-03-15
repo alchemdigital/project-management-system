@@ -3,7 +3,7 @@ from django.shortcuts import render
 from projects.models import Project, Task, Checklist, status
 from projects.forms import ProjectRegistrationForm, TaskRegistrationForm, ChecklistRegistrationForm
 from django.contrib.auth.decorators import user_passes_test
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.core.paginator import Paginator
 from django.shortcuts import redirect
 import csv
@@ -25,7 +25,7 @@ from django.contrib import messages
 def new_project(request):
     if request.method == 'POST':
         project_name = request.POST.get('name')
-        if not Project.objects.filter(name=project_name).exists():
+        if not Project.objects.filter(name=project_name, admin=request.user.admin).exists():
             form = ProjectRegistrationForm(request.POST, user=request.user, use_required_attribute=False)
             context = {'form': form}
             if form.is_valid():
@@ -65,24 +65,29 @@ def projects(request, company_id = None):
         ordering = order_by
     search_term = request.GET.get('search')
     this_user = request.user
+    today = datetime.date.today()
     if search_term is not None:
         if company_id is not None:
             projects = Project.objects.filter(admin=this_user.admin).filter(
                 (Q(name__icontains=search_term) | 
                                 Q(description__icontains=search_term) | 
                                 Q(company__name__icontains=search_term))
-            ).filter(company_id=company_id).order_by(ordering)
+            ).filter(company_id=company_id).order_by(ordering).annotate(hours=Sum(
+                'task__hours', filter=Q(task__start_date__year=today.year) & Q(task__start_date__month=today.month)))
         else:
             projects = Project.objects.filter(admin=this_user.admin).filter(
                 Q(name__icontains=search_term) | 
                 Q(description__icontains=search_term) | 
                 Q(company__name__icontains=search_term)
-            ).order_by(ordering)
+            ).order_by(ordering).annotate(hours=Sum(
+                'task__hours', filter=Q(task__start_date__year=today.year) & Q(task__start_date__month=today.month)))
     else:
         if company_id is not None:
-            projects = Project.objects.filter(company_id=company_id)
+            projects = Project.objects.filter(company_id=company_id).annotate(hours=Sum(
+                'task__hours', filter=Q(task__start_date__year=today.year) & Q(task__start_date__month=today.month)))
         else:
-            projects = Project.objects.filter(admin=this_user.admin)
+            projects = Project.objects.filter(admin=this_user.admin).annotate(hours=Sum(
+                'task__hours', filter=Q(task__start_date__year=today.year) & Q(task__start_date__month=today.month)))
     paginated_projects = Paginator(projects, 10)
     page_number = request.GET.get('page')
     page_obj = paginated_projects.get_page(page_number)
@@ -148,6 +153,8 @@ def new_task(request):
             if start_date is not None:
                 if created_at.date() != start_date.date():
                     messages.warning(request, 'Task created date and start date is different!')
+            else:
+                messages.warning(request, 'Start date is empty!')
             # Email functionality start
             if request.user.id != int(employee):
                 employee_email = User.objects.get(pk=employee)
@@ -192,6 +199,8 @@ def edit_task(request, task_id):
     if start_date is not None:
         if created_at.date() != start_date.date():
             messages.warning(request, 'Task created date and start date is different')
+    else:
+        messages.warning(request, 'Start date is empty!')
     form = TaskRegistrationForm(instance=task, user=request.user, use_required_attribute=False)
     context = {
         'id': task.id,
@@ -225,6 +234,8 @@ def update_task(request):
         if start_date is not None:
             if created_at.date() != start_date.date():
                 messages.warning(request, 'Task created date and start date is different')
+        else:
+            messages.warning(request, 'Start date is empty!')
         context['updated'] = True
     return redirect(reverse('projects:edit_task', kwargs = {'task_id': id}))
 

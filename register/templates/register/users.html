@@ -21,29 +21,29 @@
                 <table class="table table-responsive-sm table-hover table-outline mb-5 ">
                     <thead class="thead-light">
                         <tr>
-                            <th class="text-center">Username</th>
-                            <th class="text-center">Email</th>
-                            <th class="text-center">Role</th>
-                            <th class="text-center">Last Logged In</th>
-                            <th class="text-center">Action</th>
+                            <th class="text-left">Username</th>
+                            <th class="text-left">Email</th>
+                            <th class="text-left">Role</th>
+                            <th class="text-left">Last Logged In</th>
+                            <th class="text-left">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for user in page_obj %}
                         <tr>
-                            <td class="text-center">
+                            <td class="text-left">
                                 {{ user.first_name }} {{user.last_name}}
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 {{ user.email }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 {{ user.groups.all|join:", " }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 {{ user.last_login }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <a class="text-primary" href="#" onclick="edit_user(event, {{ user.id }});"><i
                                         class="fa fa-edit"></i></a>
                                 <a class="text-danger" href="#" onclick="delete_user(event, {{ user.id }});"><i
