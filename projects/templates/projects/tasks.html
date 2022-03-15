@@ -13,7 +13,14 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 Tasks
-                <button class="btn btn-primary" data-toggle="modal" data-target="#filterModal">Filter</button>
+                <div class="d-flex">
+                    <button class="btn btn-secondary" data-toggle="modal" data-target="#filterModal">
+                        <i class='bx bx-filter-alt' style="color: white;"></i>
+                    </button>
+                    <a href="{% url 'projects:new-task'%}">
+                        <button class="btn btn-primary ml-3">New Task</button>
+                    </a>
+                </div>
             </div>
             <div class="card-body">
                 <table class="table table-responsive-sm table-hover table-outline mb-5 ">

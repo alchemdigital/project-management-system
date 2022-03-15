@@ -21,8 +21,8 @@
                                 </div>
                             {% endif %}
                             {% csrf_token %}
-                            <h1>Import Tasks</h1>
-                            <p class="text-muted">Import your tasks here</p>
+                            <h1>Export Tasks</h1>
+                            <p class="text-muted">Export your tasks here</p>
                             <form action="{%if edit %}{% url 'projects:export_tasks' %}{% endif %}" method="post">
                                 {% csrf_token %}
                                 {%if edit %}
@@ -31,7 +31,7 @@
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                            <span class="input-group-text"><i class="fa fa-puzzle-piece"></i></span>
                                         </div>
                                         <select name="project" class="form-control">
                                             {% for project in projects %}
@@ -50,7 +50,7 @@
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                            <span class="input-group-text"><i class='bx bx-calendar'></i></span>
                                         </div>
                                         <input type="text" name="date_range" class="form-control" />
                                         {% if form.project.errors %}
@@ -63,14 +63,21 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-append">
+                                    <!-- <div class="input-group"> -->
+                                        <!-- <div class="input-group-append">
                                             <span class="input-group-text"><i class="fa fa-user"></i></span>
-                                        </div>
+                                        </div> -->
+                                        <label class="d-flex align-items-center"><i class='bx bx-check bx-sm mr-2'></i> Select column(s) you would like to export</label>
                                         {% for field in fields %}
-                                            <input name="fields" type="checkbox" value="{{ field }}" />{{ field }}<br/>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="{{ field }}">
+                                                <label class="form-check-label" for="defaultCheck1">
+                                                    {{ field }}
+                                                </label>
+                                            </div>
+                                            <!-- <input name="fields" type="checkbox"  /><br/> -->
                                         {% endfor %}
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                                 <div class="">
                                     <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i> Submit</button>

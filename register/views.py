@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.urls import reverse
 from django.shortcuts import render
 from django.contrib.auth import login
@@ -172,18 +173,27 @@ def delete_user(request, user_id):
 @user_passes_test(is_admin)
 def new_company(request):
     if request.method == 'POST':
-        form = CompanyRegistrationForm(request.POST, user=request.user, use_required_attribute=False)
-        context = { 'form': form }
-        if form.is_valid():
-            form.save()
-            created = True
+        company_name = request.POST.get('name')
+        print(company_name)
+        if not Company.objects.filter(name=company_name).exists():
+            form = CompanyRegistrationForm(request.POST, user=request.user, use_required_attribute=False)
+            context = { 'form': form }
+            if form.is_valid():
+                form.save()
+                created = True
+                form = CompanyRegistrationForm(user=request.user, use_required_attribute=False)
+                context = {
+                    'created' : created,
+                    'form' : form,
+                }
+            return render(request, 'register/company_form.html', context)
+        else:
+            messages.error(request, 'Company name already exist')
             form = CompanyRegistrationForm(user=request.user, use_required_attribute=False)
             context = {
-                'created' : created,
-                'form' : form,
+                'form': form,
             }
-        
-        return render(request, 'register/company_form.html', context)
+            return render(request, 'register/company_form.html', context)
     else:
         form = CompanyRegistrationForm(user=request.user, use_required_attribute=False)
         context = {
