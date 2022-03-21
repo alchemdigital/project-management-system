@@ -132,3 +132,19 @@
 .daily-standup-date-filter{
     width: fit-content;
 }
+
+.bmc-btn-container{
+    position: relative;
+    z-index: 9999;
+}
+
+.bmc-btn-container .bmc-btn{
+    min-width: 159px;
+    height: 43px;
+    border-radius: 5px;
+    font-size: 24px;
+    padding: 0px 10px;
+    position: absolute;
+    right: 1rem;
+    top: -3rem;
+}
