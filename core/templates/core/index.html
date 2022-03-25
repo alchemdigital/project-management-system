@@ -26,9 +26,13 @@
             <div class="top-nav" id="top-nav">
 				<ul class="topnav-ul top-nav-dropdown">
 					<li><a href="https://github.com/alchemdigital/project-management-system" target="_blank"> <button class="btn log-in"><i class="fab fa-github mr-2" aria-hidden="true"></i> Open Source</button></a></li>
-					<li><a href="{% url 'core:login' %}"><button class="btn log-in">Login</button></a></li>
-			        <li><a href="{% url 'register:admin_register' %}"><button class="btn sign-up">Register
-						as Admin</button></a></li>
+					{% if user.is_authenticated %}
+						<li><a href="{% url 'core:dashboard' %}"><button class="btn log-in">Dashboard</button></a></li>
+					{% else %}
+						<li><a href="{% url 'core:login' %}"><button class="btn log-in">Login</button></a></li>
+						<li><a href="{% url 'register:admin_register' %}"><button class="btn sign-up">Register
+									as Admin</button></a></li>
+					{% endif %}
 				</ul>
 			</div>
 		</nav>

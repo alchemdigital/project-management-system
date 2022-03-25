@@ -1,4 +1,5 @@
 # from asyncore import file_dispatcher
+from email import message
 from django.shortcuts import render
 from projects.models import Project, Task, Checklist, status
 from projects.forms import ProjectRegistrationForm, TaskRegistrationForm, ChecklistRegistrationForm
@@ -36,9 +37,10 @@ def new_project(request):
                     'created': created,
                     'form': form,
                 }
+                messages.success(request, 'Project Created.')
                 return render(request, 'projects/project_form.html', context)
         else:
-            messages.error(request, 'Project name already exist')
+            messages.error(request, 'Project name already exist.')
             form = ProjectRegistrationForm(user=request.user, use_required_attribute=False)
             context = {
                 'form': form,
@@ -116,6 +118,7 @@ def update_project(request):
     if form.is_valid():
         form.save()
         context['updated'] = True
+        messages.success(request, "Updated.")
     return render(request, 'projects/project_form.html', context)
 
 @user_passes_test(is_pm_or_admin)
@@ -123,6 +126,7 @@ def delete_project(request, project_id):
     this_user = request.user
     project = Project.objects.filter(admin=this_user.admin).get(id=project_id)
     project.delete()
+    messages.success(request, "Deleted.")
     return redirect('projects:projects')
 #Project CRUD - end
 
@@ -169,6 +173,7 @@ def new_task(request):
             }
             return render(request, 'projects/task_form.html', context)
         else:
+            messages.error(request, 'Please fill all mandatory fields.')
             return render(request, 'projects/task_form.html', context)
     else:
         form = TaskRegistrationForm(user=request.user, use_required_attribute=False)
@@ -244,6 +249,7 @@ def delete_task(request, task_id):
     this_user = request.user
     task = Task.objects.filter(admin=this_user.admin).get(id=task_id)
     task.delete()
+    messages.success(request, 'Deleted.')
     return redirect('projects:tasks')
 # Task CRUD - end
 
@@ -260,8 +266,10 @@ def new_checklist(request):
                 'form': form,
                 'created': created,
             }
+            messages.success(request, 'Checklist created.')
             return render(request, 'projects/checklist_form.html', context)
         else:
+            messages.error(request, 'Please fill all mandatory fields.')
             return render(request, 'projects/checklist_form.html', context)
     else:
         form = ChecklistRegistrationForm(user=request.user, use_required_attribute=False)
@@ -327,12 +335,14 @@ def update_checklist(request):
     if form.is_valid():
         form.save()
         context['updated'] = True
+    messages.success(request, 'Updated.')
     return render(request, 'projects/checklist_form.html', context)
 
 def delete_checklist(request, checklist_id):
     this_user = request.user
     checklist = Checklist.objects.filter(admin=this_user.admin, user=this_user).get(id=checklist_id)
     checklist.delete()
+    messages.success(request, 'Deleted.')
     return redirect('projects:checklists')
 #Checklist CRUD - end
 
@@ -376,6 +386,7 @@ def import_tasks(request):
             Task.objects.create(admin=admin, project=project, employee=employee, task_name=task_name, status=status, deadline=deadline, start_date=start_date, estimate_hours=estimate_hours, hours=hours, description=description, created=created, created_at=created_at, updated=created, updated_at=created_at, imported=True)
         file.close()
         context['created'] = True
+        messages.success(request, 'Imported.')
     return render(request, 'projects/import-tasks.html', context)
 
 @user_passes_test(is_admin)

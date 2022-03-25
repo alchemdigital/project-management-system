@@ -7,6 +7,7 @@
 {% endblock breadcrumb%}
 {% block content %}
 <div class="container animated fadeIn">
+    {% include 'core\messages.html' %}
     <input type="date" id="date-filter" class="form-control daily-standup-date-filter" value="{{ date }}" />
     <div class="emp-container py-3">
         <div class="row">

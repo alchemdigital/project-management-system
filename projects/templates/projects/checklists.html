@@ -9,6 +9,7 @@
 
 {% block content %}
 <div class="container-fluid">
+    {% include 'core\messages.html' %}
     <div class="animated fade-in">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
@@ -35,7 +36,7 @@
                     <tbody>
                         {% for checklist in page_obj %}
                         <tr
-                            class="{%if checklist.status == '1' %} bg-danger {% elif checklist.status == '4' %} bg-success {% elif checklist.status == '3' %} bg-primary {% endif %}">
+                            class="alert {%if checklist.status == '1' %} alert-danger {% elif checklist.status == '4' %} alert-success {% elif checklist.status == '3' %} alert-primary {% endif %}">
                             <td class="text-left">
                                 {{ checklist.task | default_if_none:'-' }}
                             </td>

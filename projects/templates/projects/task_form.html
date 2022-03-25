@@ -12,56 +12,7 @@
                 <div class="card-group">
                     <div class="card p-4 mb-5">
                         <div class="card-body">
-                            {% if created %}
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    Task has been created successfully
-                                </div>
-                            {% elif updated %}
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    Task has been updated successfully
-                                </div>
-                            {% elif request.GET.updated%}
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    Task has been updated successfully
-                                </div>
-                            {% endif %}
-                            {% if messages %}
-                                {% for message in messages %}
-                                    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            {{ message }}
-                                        </div>
-                                    {% endif %}
-                                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            {{ message }}
-                                        </div>
-                                    {% endif %}
-                                    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
-                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            {{ message }}
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
+                            {% include 'core\messages.html' %}
                             {% csrf_token %}
                             <h1>Tasks</h1>
                             <p class="text-muted">Create your tasks here</p>

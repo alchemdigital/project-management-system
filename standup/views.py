@@ -112,6 +112,7 @@ def new_standup(request, employee_id = None):
                         'created': created,
                         'form': form,
                     }
+                    messages.success(request, 'Task has been assigned.')
                     # return redirect(reverse('standup:new_standup', args=(int(employee),)))
                     return redirect(reverse('standup:employee_select'))
                 else:
